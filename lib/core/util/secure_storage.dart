@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class SecureStorage {
   static const _storage = FlutterSecureStorage();
 
-  static const _apiKey = 'geminiAPIKey';
+  static const _apiKey = 'AIzaSyDOzvV8evnqK0Ih103c1XXqIwlA_NmWpiE';
 
   Future<void> storeApiKey(String apiKey) async {
     await _storage.write(key: _apiKey, value: apiKey);

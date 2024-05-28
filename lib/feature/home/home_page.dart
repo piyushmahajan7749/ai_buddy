@@ -146,14 +146,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Column(
+                    child: ListView(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const SizedBox(
-                              width: 60,
-                            ),
+                            const SizedBox(width: 60),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -175,7 +173,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Personal AI Buddy',
+                                    '9Roof AI',
                                     style: TextStyle(
                                       color: context.colorScheme.background,
                                       fontSize: 14,
@@ -205,25 +203,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   padding: EdgeInsets.zero,
                                 ),
                                 onPressed: () async {
-                                  final apiKey =
-                                      await SecureStorage().getApiKey();
-                                  final TextEditingController apiKeyController =
-                                      TextEditingController(text: apiKey);
-                                  await showModalBottomSheet<void>(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(20),
-                                      ),
-                                    ),
-                                    builder: (context) {
-                                      return APIKeyBottomSheet(
-                                        apiKeyController: apiKeyController,
-                                        isCalledFromHomePage: true,
-                                      );
-                                    },
-                                  );
+                                  // Preferences view
                                 },
                               ),
                             ),
@@ -250,7 +230,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           children: [
                             Expanded(
                               child: CardButton(
-                                title: 'Chat\nwith PDF',
+                                title: 'Upload chats',
                                 color: context.colorScheme.primary,
                                 imagePath: AssetConstants.pdfLogo,
                                 isMainButton: true,
@@ -258,7 +238,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   final result =
                                       await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
-                                    allowedExtensions: ['pdf'],
+                                    allowedExtensions: ['txt'],
                                   );
                                   if (result != null) {
                                     final filePath = result.files.single.path;
@@ -309,58 +289,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              child: Column(
-                                children: [
-                                  CardButton(
-                                    title: 'Chat with AI',
-                                    color: context.colorScheme.secondary,
-                                    imagePath: AssetConstants.textLogo,
-                                    isMainButton: false,
-                                    onPressed: () {
-                                      final chatBot = ChatBot(
-                                        messagesList: [],
-                                        id: uuid.v4(),
-                                        title: '',
-                                        typeOfBot: TypeOfBot.text,
-                                      );
-                                      ref
-                                          .read(chatBotListProvider.notifier)
-                                          .saveChatBot(chatBot);
-                                      ref
-                                          .read(messageListProvider.notifier)
-                                          .updateChatBot(chatBot);
-                                      AppRoute.chat.push(context);
-                                    },
-                                  ),
-                                  const SizedBox(height: 8),
-                                  CardButton(
-                                    title: 'Ask Image',
-                                    color: context.colorScheme.tertiary,
-                                    imagePath: AssetConstants.imageLogo,
-                                    isMainButton: false,
-                                    onPressed: () async {
-                                      final pickedFile = await ref
-                                          .read(chatBotListProvider.notifier)
-                                          .attachImageFilePath();
-                                      if (pickedFile != null) {
-                                        final chatBot = ChatBot(
-                                          messagesList: [],
-                                          id: uuid.v4(),
-                                          title: '',
-                                          typeOfBot: TypeOfBot.image,
-                                          attachmentPath: pickedFile,
-                                        );
-                                        await ref
-                                            .read(chatBotListProvider.notifier)
-                                            .saveChatBot(chatBot);
-                                        await ref
-                                            .read(messageListProvider.notifier)
-                                            .updateChatBot(chatBot);
-                                        AppRoute.chat.push(context);
-                                      }
-                                    },
-                                  ),
-                                ],
+                              child: CardButton(
+                                title: 'Search listings',
+                                color: context.colorScheme.secondary,
+                                imagePath: AssetConstants.searchLogo,
+                                isMainButton: true,
+                                onPressed: () {
+                                  final chatBot = ChatBot(
+                                    messagesList: [],
+                                    id: uuid.v4(),
+                                    title: '',
+                                    typeOfBot: TypeOfBot.text,
+                                  );
+                                  ref
+                                      .read(chatBotListProvider.notifier)
+                                      .saveChatBot(chatBot);
+                                  ref
+                                      .read(messageListProvider.notifier)
+                                      .updateChatBot(chatBot);
+                                  AppRoute.chat.push(context);
+                                },
                               ),
                             ),
                           ],
@@ -477,6 +425,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                           ],
                         ),
+                        const SizedBox(height: 48),
                       ],
                     ),
                   ),

@@ -1,5 +1,5 @@
 name: ai_buddy
-description: AI Buddy app.
+description: 9Roof AI app.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
@@ -37,6 +37,12 @@ dependencies:
 
   # iOS
   cupertino_icons: ^1.0.2
+  convex_bottom_bar: ^3.2.0
+  line_icons: ^2.0.3
+  sizer: ^2.0.15
+  modal_bottom_sheet: ^3.0.0
+  page_transition: ^2.1.0
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:

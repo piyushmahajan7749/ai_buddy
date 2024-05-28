@@ -10,6 +10,7 @@ class AssetConstants {
   static const String pdfLogo = '$baseImageUrl/pdf_logo.png';
   static const String textLogo = '$baseImageUrl/text_logo.png';
   static const String imageLogo = '$baseImageUrl/image_logo.png';
+  static const String searchLogo = '$baseImageUrl/search.png';
 
   // Animation assets URL
   static const String onboardingAnimation =

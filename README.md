@@ -7,17 +7,14 @@
   <a href="https://github.com/yatendra2001/ai_buddy/blob/main/LICENSE.txt"><img src="https://img.shields.io/github/license/yatendra2001/ai_buddy.svg?style=for-the-badge" alt="GPL License"></a>
 </p>
 
-
-
 <!-- PROJECT LOGO -->
-
 
 <br />
 <div align="center">
   <a href="https://github.com/yatendra2001/ai_buddy">
     <img src="https://github.com/yatendra2001/gemini_chat/assets/62821607/1e31abfa-7fe7-4775-a6c7-185ba03b48ef"  alt="Logo" width="200" height="200" >
   </a>
-  <h1 align="center" >AI Buddy</h1>
+  <h1 align="center" >9Roof AI</h1>
   <h4 align="center">
     Your personal completely open-sourced and free-to-use AI assistant, built with gemini & flutter.
   </h4>
@@ -31,27 +28,27 @@
       <img width="120" alt="Store=App Store, Style=Black" src="https://github.com/yatendra2001/ai_buddy/assets/62821607/6c8c9e04-f66f-4fe8-a4b0-167324326f17">
     </a>
   </div>
-</div> 
-
-
+</div>
 
 <!-- Project Features -->
+
 ## Features
 
-AI Buddy is a cross-platform mobile application that leverages the power of AI to provide users with a personal assistant capable of understanding and responding to various queries.
+9Roof AI is a cross-platform mobile application that leverages the power of AI to provide users with a personal assistant capable of understanding and responding to various queries.
 
-| Chat with PDF | Ask Image | Text Chatbot | 
-| --- | ----------- | ------ | 
+| Chat with PDF                                                                                                                                 | Ask Image                                                                                                                                 | Text Chatbot                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | <img height="500" alt="Chat with PDF" src="https://github.com/yatendra2001/gemini_chat/assets/62821607/66c9a316-0e34-42e4-a791-912e78a582da"> | <img height="500" alt="Ask Image" src="https://github.com/yatendra2001/gemini_chat/assets/62821607/983911b5-22a9-40bf-8a16-7b1294f3e44e"> | <img height="500" alt="Text Chatbot" src="https://github.com/yatendra2001/gemini_chat/assets/62821607/f26221c7-666b-49b3-91ee-47ec17dba728"> |
 
 <!-- ARCHITECTURE -->
+
 ## Architecture
 
-The architecture of the AI Buddy app is designed to efficiently process and interact with PDF documents. Here's a breakdown of the workflow:
+The architecture of the 9Roof AI app is designed to efficiently process and interact with PDF documents. Here's a breakdown of the workflow:
 
 ### Overview
 
-The "Chat with PDF" feature of the AI Buddy app allows users to interact with the content of a PDF document in a conversational manner. The app extracts information from the PDF, processes it, and provides relevant responses to user queries.
+The "Chat with PDF" feature of the 9Roof AI app allows users to interact with the content of a PDF document in a conversational manner. The app extracts information from the PDF, processes it, and provides relevant responses to user queries.
 
 ### Workflow Diagram
 
@@ -86,8 +83,8 @@ The "Chat with PDF" feature of the AI Buddy app allows users to interact with th
 - **Riverpod**: For managing states across the app.
 
 <!-- GETTING STARTED -->
-## Getting Started
 
+## Getting Started
 
 ### Prerequisites
 
@@ -106,6 +103,7 @@ git clone https://github.com/yatendra2001/ai_buddy.git
 ```
 
 2. Get all dependencies:
+
 ```bash
 flutter pub get
 ```
@@ -116,12 +114,11 @@ flutter pub get
 flutter run
 ```
 
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
 
 Contribution to the project can be made if you have some improvements for the project or if you find some bugs.
 You can contribute to the project by reporting issues, forking it, modifying the code and making a pull request to the repository.
@@ -144,16 +141,15 @@ refactor: Regular code refactoring and maintenance
 
 To know more extensively about how to contribute to this project, read our [Contribution Guide](https://github.com/yatendra2001/ai_buddy/blob/main/CONTRIBUTING.md).
 
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the AGPL-3.0 license. See `LICENSE` for more information.
 
-
 <!-- CONTACT -->
-## Contact
 
+## Contact
 
 Twitter: [@iamyatendrak](https://twitter.com/iamyatendrak)
 
@@ -161,9 +157,9 @@ LinkedIn: [linkedin](https://www.linkedin.com/in/iamyatendrak/)
 
 ### Make sure to leave us a ⭐️
 
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/yatendra2001/ai_buddy.svg?style=for-the-badge
 [contributors-url]: https://github.com/yatendra2001/ai_buddy/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/yatendra2001/ai_buddy.svg?style=for-the-badge

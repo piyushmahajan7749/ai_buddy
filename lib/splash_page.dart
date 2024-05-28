@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Center(
         child: Text(
-          'AI Buddy',
+          '9Roof AI',
           textAlign: TextAlign.center,
           style: context.textTheme.headlineLarge,
         ),
