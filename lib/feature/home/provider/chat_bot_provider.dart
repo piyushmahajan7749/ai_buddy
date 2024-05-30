@@ -61,20 +61,24 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
     state = state.where((item) => item.id != chatBot.id).toList();
   }
 
-  Future<void> uploadFile(String filePath) async {
+  Future<void> uploadFiles(List<String> filePaths) async {
     try {
-      final formData = FormData.fromMap({
-        'files': await MultipartFile.fromFile(filePath),
-      });
+      final formData = FormData();
 
-      // ignore: inference_failure_on_function_invocation
-      final response = await dio.post('/upload', data: formData);
+      for (String path in filePaths) {
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(path),
+        ));
+      }
+
+      final response = await dio.post<dynamic>('/upload', data: formData);
 
       // Handle response and update state as needed
       print(response.data);
     } catch (e) {
       // Handle error
-      print('Error uploading file: $e');
+      print('Error uploading files: $e');
       throw e;
     }
   }

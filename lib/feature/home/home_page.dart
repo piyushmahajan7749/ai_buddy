@@ -4,7 +4,6 @@ import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/config/type_of_bot.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
-import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:ai_buddy/feature/home/widgets/widgets.dart';
@@ -35,23 +34,24 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Future<void> _onUploadPressed() async {
+    setState(() {
+      _isBuildingChatBot = true;
+      currentState = 'Uploading files...';
+    });
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['txt'],
+      allowMultiple: true,
     );
     if (result != null) {
-      final filePath = result.files.single.path;
-      if (filePath != null) {
-        setState(() {
-          _isBuildingChatBot = true;
-          currentState = 'Uploading file...';
-        });
-
+      final filePaths =
+          result.paths.where((path) => path != null).cast<String>().toList();
+      if (filePaths.isNotEmpty) {
         try {
-          await ref.read(chatBotListProvider.notifier).uploadFile(filePath);
+          await ref.read(chatBotListProvider.notifier).uploadFiles(filePaths);
 
           setState(() {
-            currentState = 'File uploaded successfully!';
+            currentState = 'Files uploaded successfully!';
           });
 
           final chatBot = ChatBot(
@@ -59,13 +59,12 @@ class _HomePageState extends ConsumerState<HomePage> {
             id: uuid.v4(),
             title: 'Chat assistant',
             typeOfBot: TypeOfBot.pdf,
-            attachmentPath: filePath,
+            attachmentPath: filePaths.join(', '), // Store all file paths
           );
 
           await ref.read(chatBotListProvider.notifier).saveChatBot(chatBot);
-          await ref.read(messageListProvider.notifier).updateChatBot(chatBot);
           setState(() {
-            currentState = 'Chat file uploaded. You can now chat!';
+            currentState = 'Chat files uploaded. You can now chat!';
           });
           AppRoute.chat.push(context);
         } catch (e) {
