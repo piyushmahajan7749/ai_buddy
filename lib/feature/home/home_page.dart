@@ -34,6 +34,54 @@ class _HomePageState extends ConsumerState<HomePage> {
     ref.read(chatBotListProvider.notifier).fetchChatBots();
   }
 
+  Future<void> _onUploadPressed() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['txt'],
+    );
+    if (result != null) {
+      final filePath = result.files.single.path;
+      if (filePath != null) {
+        setState(() {
+          _isBuildingChatBot = true;
+          currentState = 'Uploading file...';
+        });
+
+        try {
+          await ref.read(chatBotListProvider.notifier).uploadFile(filePath);
+
+          setState(() {
+            currentState = 'File uploaded successfully!';
+          });
+
+          final chatBot = ChatBot(
+            messagesList: [],
+            id: uuid.v4(),
+            title: 'Chat assistant',
+            typeOfBot: TypeOfBot.pdf,
+            attachmentPath: filePath,
+          );
+
+          await ref.read(chatBotListProvider.notifier).saveChatBot(chatBot);
+          await ref.read(messageListProvider.notifier).updateChatBot(chatBot);
+          setState(() {
+            currentState = 'Chat file uploaded. You can now chat!';
+          });
+          AppRoute.chat.push(context);
+        } catch (e) {
+          print('File upload error: $e');
+          setState(() {
+            currentState = 'File upload error!';
+          });
+        } finally {
+          setState(() {
+            _isBuildingChatBot = false;
+          });
+        }
+      }
+    }
+  }
+
   Widget _buildLoadingIndicator(String currentState) {
     return Center(
       child: Column(
@@ -232,81 +280,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 color: context.colorScheme.primary,
                                 imagePath: AssetConstants.pdfLogo,
                                 isMainButton: true,
-                                onPressed: () async {
-                                  final result =
-                                      await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['txt'],
-                                  );
-                                  if (result != null) {
-                                    final filePath = result.files.single.path;
-                                    setState(() {
-                                      _isBuildingChatBot = true;
-                                      currentState = 'Extracting data';
-                                    });
-
-                                    await Future<void>.delayed(
-                                      const Duration(milliseconds: 100),
-                                    );
-
-                                    final textChunks = await ref
-                                        .read(chatBotListProvider.notifier)
-                                        .getChunksFromPDF(filePath!);
-
-                                    setState(() {
-                                      currentState = 'Building chatBot';
-                                    });
-
-                                    final embeddingsMap = await ref
-                                        .read(chatBotListProvider.notifier)
-                                        .batchEmbedChunks(textChunks);
-
-                                    final chatBot = ChatBot(
-                                      messagesList: [],
-                                      id: uuid.v4(),
-                                      title: '',
-                                      typeOfBot: TypeOfBot.pdf,
-                                      attachmentPath: filePath,
-                                      embeddings: embeddingsMap,
-                                    );
-
-                                    await ref
-                                        .read(chatBotListProvider.notifier)
-                                        .saveChatBot(chatBot);
-                                    await ref
-                                        .read(messageListProvider.notifier)
-                                        .updateChatBot(chatBot);
-
-                                    AppRoute.chat.push(context);
-                                    setState(() {
-                                      _isBuildingChatBot = false;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: CardButton(
-                                title: 'Search listings',
-                                color: context.colorScheme.secondary,
-                                imagePath: AssetConstants.searchLogo,
-                                isMainButton: true,
-                                onPressed: () {
-                                  final chatBot = ChatBot(
-                                    messagesList: [],
-                                    id: uuid.v4(),
-                                    title: '',
-                                    typeOfBot: TypeOfBot.text,
-                                  );
-                                  ref
-                                      .read(chatBotListProvider.notifier)
-                                      .saveChatBot(chatBot);
-                                  ref
-                                      .read(messageListProvider.notifier)
-                                      .updateChatBot(chatBot);
-                                  AppRoute.chat.push(context);
-                                },
+                                onPressed: _onUploadPressed,
                               ),
                             ),
                           ],
