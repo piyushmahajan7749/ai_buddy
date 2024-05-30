@@ -14,11 +14,11 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: AppRoute.home.path,
-      builder: (context, state) => MainPage(page: 0),
+      builder: (context, state) => const MainPage(page: 0),
     ),
     GoRoute(
       path: AppRoute.chat.path,
-      builder: (context, state) => MainPage(page: 1),
+      builder: (context, state) => const MainPage(page: 1),
     ),
     GoRoute(
       path: AppRoute.welcome.path,

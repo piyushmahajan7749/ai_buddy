@@ -5,11 +5,11 @@ import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:line_icons/line_icons.dart';
 
 class MainPage extends StatefulWidget {
-  final int page;
-  MainPage({
-    Key? key,
+  const MainPage({
     required this.page,
-  }) : super(key: key);
+    super.key,
+  });
+  final int page;
 
   @override
   MainPageState createState() => MainPageState();
@@ -18,12 +18,12 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   int _page = 1;
   final _pageOptions = [
-    HomePage(),
-    ChatPage(),
+    const HomePage(),
+    const ChatPage(),
   ];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _page = widget.page;
   }
@@ -42,8 +42,8 @@ class MainPageState extends State<MainPage> {
   }
 
   ConvexAppBar buildConvexAppBar() {
-    double width = 26;
-    double height = 50;
+    const double width = 26;
+    const double height = 50;
     return ConvexAppBar(
       height: height,
       style: TabStyle.react,
@@ -54,27 +54,29 @@ class MainPageState extends State<MainPage> {
       shadowColor: Theme.of(context).colorScheme.surface,
       items: [
         TabItem(
-            title: "Home",
-            icon: Icon(
-              LineIcons.home,
-              size: width,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            isIconBlend: true),
+          title: 'Home',
+          icon: Icon(
+            LineIcons.home,
+            size: width,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          isIconBlend: true,
+        ),
         TabItem(
-            title: "Chat",
-            icon: Icon(
-              Icons.inbox,
-              size: width,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            isIconBlend: true),
+          title: 'Chat',
+          icon: Icon(
+            Icons.inbox,
+            size: width,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          isIconBlend: true,
+        ),
       ],
       initialActiveIndex: _page,
       onTap: (i) => {
         setState(() {
           _page = i;
-        })
+        }),
       },
     );
   }
