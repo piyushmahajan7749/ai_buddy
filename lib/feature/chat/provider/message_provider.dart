@@ -1,13 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:ai_buddy/core/config/type_of_bot.dart';
 import 'package:ai_buddy/core/config/type_of_message.dart';
 import 'package:ai_buddy/core/logger/logger.dart';
-import 'package:ai_buddy/feature/gemini/gemini.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,7 +19,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
 
   final uuid = const Uuid();
-  final geminiRepository = GeminiRepository();
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
@@ -49,42 +47,21 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       chatBotId: state.id,
     );
     await updateChatBotWithMessage(message);
-    await getGeminiResponse(prompt: text, imageFilePath: imageFilePath);
+    await getPythonAPIResponse(prompt: text, imageFilePath: imageFilePath);
   }
 
-  Future<void> getGeminiResponse({
+  Future<void> getPythonAPIResponse({
     required String prompt,
     String? imageFilePath,
   }) async {
-    final List<Parts> chatParts = state.messagesList.map((msg) {
-      return Parts(text: msg['text'] as String);
+    final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
+      return {'text': msg['text'] as String};
     }).toList();
 
-    if (state.typeOfBot == TypeOfBot.pdf) {
-      final embeddingPrompt = await geminiRepository.promptForEmbedding(
-        userPrompt: prompt,
-        embeddings: state.embeddings,
-      );
-      chatParts.add(Parts(text: embeddingPrompt));
-    } else {
-      chatParts.add(Parts(text: prompt));
-    }
-
-    final content = Content(parts: chatParts);
-
-    Stream<Candidates> responseStream;
-    ChatMessage placeholderMessage;
-
-    if (imageFilePath != null && state.typeOfBot == TypeOfBot.image) {
-      final Uint8List imageBytes = File(imageFilePath).readAsBytesSync();
-      responseStream =
-          geminiRepository.streamContent(content: content, image: imageBytes);
-    } else {
-      responseStream = geminiRepository.streamContent(content: content);
-    }
-
+    // ignore: cascade_invocations
+    chatParts.add({'text': prompt});
     final String modelMessageId = uuid.v4();
-    placeholderMessage = ChatMessage(
+    final placeholderMessage = ChatMessage(
       id: modelMessageId,
       text: 'waiting for response...',
       createdAt: DateTime.now(),
@@ -96,9 +73,22 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
     final StringBuffer fullResponseText = StringBuffer();
 
-    responseStream.listen((response) async {
-      if (response.content!.parts!.isNotEmpty) {
-        fullResponseText.write(response.content!.parts!.first.text);
+    try {
+      final dio = Dio();
+      // ignore: inference_failure_on_function_invocation
+      final response = await dio.post(
+        'http://192.168.29.89:5000/chat',
+        data: jsonEncode({'message': prompt}),
+        options: Options(
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        fullResponseText.write(responseData['response']);
         final int messageIndex =
             state.messagesList.indexWhere((msg) => msg['id'] == modelMessageId);
         if (messageIndex != -1) {
@@ -115,11 +105,12 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           );
           await updateChatBot(newState);
         }
+      } else {
+        logError('Error in response: ${response.statusCode}');
       }
-      // ignore: inference_failure_on_untyped_parameter
-    }).onError((error) {
-      logError('Error in response stream $error');
-    });
+    } catch (e) {
+      logError('Error in response: $e');
+    }
   }
 
   Future<void> updateChatBot(ChatBot newChatBot) async {
