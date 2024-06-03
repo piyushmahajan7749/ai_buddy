@@ -10,6 +10,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+const String baseUrl = 'http://192.168.86.95:8081';
+
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
 );
@@ -71,13 +73,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
     await updateChatBotWithMessage(placeholderMessage);
 
-    final StringBuffer fullResponseText = StringBuffer();
-
     try {
       final dio = Dio();
       // ignore: inference_failure_on_function_invocation
       final response = await dio.post(
-        'http://192.168.29.89:5000/chat',
+        '$baseUrl/chat',
         data: jsonEncode({'message': prompt}),
         options: Options(
           headers: {
@@ -88,23 +88,42 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        fullResponseText.write(responseData['response']);
-        final int messageIndex =
-            state.messagesList.indexWhere((msg) => msg['id'] == modelMessageId);
-        if (messageIndex != -1) {
-          final newMessagesList =
-              List<Map<String, dynamic>>.from(state.messagesList);
-          newMessagesList[messageIndex]['text'] = fullResponseText.toString();
-          final newState = ChatBot(
-            id: state.id,
-            title: state.title,
-            typeOfBot: state.typeOfBot,
-            messagesList: newMessagesList,
-            attachmentPath: state.attachmentPath,
-            embeddings: state.embeddings,
+        final String rawResponse = responseData['response'] as String;
+        print(rawResponse);
+        final List<String> results = rawResponse
+            .split('###')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+
+        final List<ChatMessage> newMessages = results.map((result) {
+          return ChatMessage(
+            id: uuid.v4(),
+            text: result,
+            createdAt: DateTime.now(),
+            typeOfMessage: TypeOfMessage.bot,
+            chatBotId: state.id,
           );
-          await updateChatBot(newState);
+        }).toList();
+
+        final newMessageList =
+            List<Map<String, dynamic>>.from(state.messagesList);
+        final int placeholderIndex =
+            newMessageList.indexWhere((msg) => msg['id'] == modelMessageId);
+        if (placeholderIndex != -1) {
+          newMessageList.removeAt(placeholderIndex);
         }
+
+        newMessageList.addAll(newMessages.map((msg) => msg.toJson()));
+        final newState = ChatBot(
+          id: state.id,
+          title: state.title,
+          typeOfBot: state.typeOfBot,
+          messagesList: newMessageList,
+          attachmentPath: state.attachmentPath,
+          embeddings: state.embeddings,
+        );
+        await updateChatBot(newState);
       } else {
         logError('Error in response: ${response.statusCode}');
       }

@@ -7,6 +7,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'listing_card.dart';
+
 class ChatInterfaceWidget extends ConsumerWidget {
   const ChatInterfaceWidget({
     required this.messages,
@@ -91,6 +93,17 @@ class ChatInterfaceWidget extends ConsumerWidget {
           top: Radius.circular(20),
         ),
       ),
+      // customMessageBuilder: (message, {required messageWidth}) {
+      //   if (message.metadata != null) {
+      //     return ListingCard(
+      //       senderName: message.metadata!['sender_name'] as String,
+      //       senderNumber: message.metadata!['sender_number'] as String,
+      //       message: message.metadata!['message'] as String,
+      //       dateOfMessage: message.metadata!['date_of_message'] as String,
+      //     );
+      //   }
+      //   return const SizedBox.shrink();
+      // },
     );
   }
 }

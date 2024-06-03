@@ -52,12 +52,12 @@ class WelcomePage extends StatelessWidget {
                       alignment: Alignment.topCenter,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+                          horizontal: 24,
+                          vertical: 16,
                         ),
                         decoration: BoxDecoration(
                           color: context.colorScheme.onSurface,
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.white.withOpacity(0.25),
@@ -71,10 +71,10 @@ class WelcomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Personal 9Roof AI',
+                              '9Roof AI',
                               style: TextStyle(
                                 color: context.colorScheme.background,
-                                fontSize: 14,
+                                fontSize: 21,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -91,7 +91,7 @@ class WelcomePage extends StatelessWidget {
                       AssetConstants.onboardingAnimation,
                     ),
                     Text(
-                      'Chat with PDF & Images!',
+                      'Chat with your whatsapp data!',
                       style: context.textTheme.bodyLarge!.copyWith(
                         fontSize: 32,
                         fontWeight: FontWeight.w600,

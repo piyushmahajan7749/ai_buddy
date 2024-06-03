@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+const String baseUrl = 'http://192.168.86.95:8081';
+
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
   (ref) => ChatBotListNotifier(),
@@ -13,7 +15,7 @@ final chatBotListProvider =
 class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   ChatBotListNotifier() : super([]) {
     hiveRepository = HiveRepository();
-    dio = Dio(BaseOptions(baseUrl: 'http://192.168.29.89:5000'));
+    dio = Dio(BaseOptions(baseUrl: baseUrl));
     geminiRepository = GeminiRepository();
   }
 

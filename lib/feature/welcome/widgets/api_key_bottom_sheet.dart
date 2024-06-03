@@ -97,7 +97,7 @@ class _APIKeyBottomSheetState extends State<APIKeyBottomSheet> {
                   ),
                 ),
                 child: Text(
-                  'Get your Gemini API key from here',
+                  'Get your API key from here',
                   style: context.textTheme.labelMedium!.copyWith(
                     color: Colors.blue,
                   ),
