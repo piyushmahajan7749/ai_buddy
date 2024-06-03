@@ -51,26 +51,6 @@ class ChatPage extends ConsumerWidget {
         body: SafeArea(
           child: Stack(
             children: [
-              Positioned(
-                left: -300,
-                top: -00,
-                child: Container(
-                  height: 500,
-                  width: 600,
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: [
-                        color.withOpacity(0.5),
-                        context.colorScheme.background.withOpacity(0.5),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              CustomPaint(
-                painter: BackgroundCurvesPainter(),
-                size: Size.infinite,
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Column(

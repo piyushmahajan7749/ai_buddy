@@ -33,25 +33,11 @@ class ChatInterfaceWidget extends ConsumerWidget {
                 imageFilePath: chatBot.attachmentPath,
               ),
       user: const types.User(id: TypeOfMessage.user),
-      showUserAvatars: true,
-      avatarBuilder: (user) => Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: CircleAvatar(
-          backgroundColor: color,
-          radius: 19,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Image.asset(
-              imagePath,
-              color: context.colorScheme.surface,
-            ),
-          ),
-        ),
-      ),
+      showUserAvatars: false,
       theme: DefaultChatTheme(
         backgroundColor: Colors.transparent,
-        primaryColor: context.colorScheme.onSurface,
-        secondaryColor: color,
+        primaryColor: context.colorScheme.secondary,
+        secondaryColor: context.colorScheme.onBackground,
         inputBackgroundColor: context.colorScheme.onBackground,
         inputTextColor: context.colorScheme.onSurface,
         sendingIcon: Icon(
@@ -60,13 +46,13 @@ class ChatInterfaceWidget extends ConsumerWidget {
         ),
         inputTextCursorColor: context.colorScheme.onSurface,
         receivedMessageBodyTextStyle: TextStyle(
-          color: context.colorScheme.onBackground,
+          color: context.colorScheme.onSurface,
           fontSize: 16,
           fontWeight: FontWeight.w500,
           height: 1.5,
         ),
         sentMessageBodyTextStyle: TextStyle(
-          color: context.colorScheme.onBackground,
+          color: context.colorScheme.onSurface,
           fontSize: 16,
           fontWeight: FontWeight.w500,
           height: 1.5,
