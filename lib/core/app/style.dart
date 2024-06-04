@@ -5,7 +5,7 @@ final darkTheme = _getTheme();
 
 const _primary = Color(0xFFC5F432);
 const _secondary = Color(0xFF0A84FE);
-const _tertiary = Color(0xFFFEC4DD);
+const _tertiary = Color(0xFFdcf884);
 
 const _background = Color(0xFF000000);
 const _onBackground = Color(0xff26252A);

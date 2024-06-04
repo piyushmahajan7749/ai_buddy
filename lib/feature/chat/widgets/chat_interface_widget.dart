@@ -2,6 +2,7 @@ import 'package:ai_buddy/core/config/type_of_message.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -30,14 +31,25 @@ class ChatInterfaceWidget extends ConsumerWidget {
                 text: text.text,
                 imageFilePath: chatBot.attachmentPath,
               ),
+      onAttachmentPressed: () =>
+          ref.watch(messageListProvider.notifier).handleShowSourcesPressed(),
       user: const types.User(id: TypeOfMessage.user),
       showUserAvatars: false,
       theme: DefaultChatTheme(
         backgroundColor: Colors.transparent,
+        attachmentButtonIcon: Icon(
+          CupertinoIcons.eye,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
         primaryColor: context.colorScheme.secondary,
         secondaryColor: context.colorScheme.onBackground,
         inputBackgroundColor: context.colorScheme.onBackground,
         inputTextColor: context.colorScheme.onSurface,
+        messageMaxWidth: 600,
+        sentMessageBodyLinkTextStyle: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(color: Theme.of(context).colorScheme.secondary),
         sendingIcon: Icon(
           Icons.send,
           color: context.colorScheme.onSurface,

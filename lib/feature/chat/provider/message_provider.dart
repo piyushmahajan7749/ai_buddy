@@ -6,6 +6,8 @@ import 'package:ai_buddy/core/logger/logger.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
+// ignore: deprecated_member_use
+import 'package:collection/equality.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -21,9 +23,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
 
   final uuid = const Uuid();
+  List<ChatMessage> sourceMessageList = [];
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
+
     await updateChatBot(
       ChatBot(
         messagesList: newMessageList,
@@ -52,6 +56,41 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     await getPythonAPIResponse(prompt: text, imageFilePath: imageFilePath);
   }
 
+  Future<void> handleShowSourcesPressed() async {
+    final newMessageList = List<Map<String, dynamic>>.from(state.messagesList);
+
+    // Add new messages to the list
+    // ignore: cascade_invocations
+    newMessageList.addAll(sourceMessageList.map((msg) => msg.toJson()));
+
+    // Extract texts from messages and ensure uniqueness
+    final uniqueMessages = <String, Map<String, dynamic>>{};
+    for (final message in newMessageList) {
+      uniqueMessages[message['text'] as String] = message;
+    }
+
+    // Create a list of unique messages based on text
+    final uniqueMessageList = uniqueMessages.values.toList();
+
+    // Check if the list has changed
+    if (const ListEquality<Map<String, dynamic>>()
+        .equals(state.messagesList, uniqueMessageList)) {
+      // No change, return early
+      return;
+    }
+
+    final newStateWithNewMessage = ChatBot(
+      id: state.id,
+      title: state.title,
+      typeOfBot: state.typeOfBot,
+      messagesList: uniqueMessageList,
+      attachmentPath: state.attachmentPath,
+      embeddings: state.embeddings,
+    );
+
+    await updateChatBot(newStateWithNewMessage);
+  }
+
   Future<void> getPythonAPIResponse({
     required String prompt,
     String? imageFilePath,
@@ -65,7 +104,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     final String modelMessageId = uuid.v4();
     final placeholderMessage = ChatMessage(
       id: modelMessageId,
-      text: 'waiting for response...',
+      text: 'loading results...',
       createdAt: DateTime.now(),
       typeOfMessage: TypeOfMessage.bot,
       chatBotId: state.id,
@@ -95,14 +134,14 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
         final ChatMessage newMessage = ChatMessage(
           id: uuid.v4(),
-          text: '$rawResponse\n'
-              'For more details, check out the source messages above 👆🏻',
+          text: '$rawResponse\n\n'
+              'To see the source messages, tap the 👁️ icon below 👇',
           createdAt: DateTime.now(),
           typeOfMessage: TypeOfMessage.bot,
           chatBotId: state.id,
         );
 
-        final List<ChatMessage> sourceMessages = sources.map((source) {
+        sourceMessageList = sources.map((source) {
           return ChatMessage(
             id: uuid.v4(),
             text: source,
@@ -120,11 +159,9 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           newMessageList.removeAt(placeholderIndex);
         }
 
-        newMessageList
-          ..addAll(sourceMessages.map((msg) => msg.toJson()))
-          ..add(newMessage.toJson());
+        newMessageList.add(newMessage.toJson());
 
-        final newState = ChatBot(
+        final newStateWithNewMessage = ChatBot(
           id: state.id,
           title: state.title,
           typeOfBot: state.typeOfBot,
@@ -132,7 +169,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           attachmentPath: state.attachmentPath,
           embeddings: state.embeddings,
         );
-        await updateChatBot(newState);
+        await updateChatBot(newStateWithNewMessage);
       } else {
         logError('Error in response: ${response.statusCode}');
       }

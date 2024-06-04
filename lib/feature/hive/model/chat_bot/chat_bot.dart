@@ -11,6 +11,7 @@ class ChatBot extends HiveObject {
     required this.typeOfBot,
     this.attachmentPath,
     this.embeddings,
+    this.showSources,
   });
   @HiveField(0)
   final String id;
@@ -29,4 +30,7 @@ class ChatBot extends HiveObject {
 
   @HiveField(5)
   final Map<String, List<num>>? embeddings;
+
+  @HiveField(6)
+  final bool? showSources;
 }

@@ -44,6 +44,8 @@ dependencies:
   settings_ui: ^2.0.2
   flutter_archive: ^6.0.3
   flashy_tab_bar2: ^0.0.10
+  collection: ^1.18.0
+  nice_buttons: ^0.0.3
 
 dev_dependencies:
   flutter_test:

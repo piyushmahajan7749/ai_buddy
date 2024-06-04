@@ -247,7 +247,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: CardButton(
                               title: 'Upload chats',
                               color: context.colorScheme.primary,
@@ -260,110 +260,118 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 120),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'History',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary
-                                          .withOpacity(0.95),
-                                    ),
-                              ),
-                              TextButton(
-                                onPressed: () => _showAllHistory(context),
-                                child: Text(
-                                  'See all',
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'History',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
                                       .copyWith(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 14,
+                                        fontSize: 18,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onSurface
-                                            .withOpacity(0.8),
+                                            .onPrimary
+                                            .withOpacity(0.95),
                                       ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        if (chatBotsList.isEmpty)
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(64),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'No chats yet',
+                                TextButton(
+                                  onPressed: () => _showAllHistory(context),
+                                  child: Text(
+                                    'See all',
+                                    textAlign: TextAlign.right,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
                                         .copyWith(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 18,
+                                          fontSize: 14,
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .onPrimary
-                                              .withOpacity(0.95),
+                                              .onSurface
+                                              .withOpacity(0.8),
                                         ),
                                   ),
-                                  const Icon(CupertinoIcons.cube_box),
-                                  const SizedBox(width: 12),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          )
-                        else
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: chatBotsList.length > 3
-                                ? 3
-                                : chatBotsList.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 4),
-                            itemBuilder: (context, index) {
-                              final chatBot = chatBotsList[index];
-                              final imagePath =
-                                  chatBot.typeOfBot == TypeOfBot.pdf
-                                      ? AssetConstants.pdfLogo
-                                      : chatBot.typeOfBot == TypeOfBot.image
-                                          ? AssetConstants.imageLogo
-                                          : AssetConstants.textLogo;
-                              final tileColor = chatBot.typeOfBot ==
-                                      TypeOfBot.pdf
-                                  ? context.colorScheme.primary
-                                  : chatBot.typeOfBot == TypeOfBot.text
-                                      ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.tertiary;
-                              return HistoryItem(
-                                label: chatBot.title,
-                                imagePath: imagePath,
-                                color: tileColor,
-                                chatBot: chatBot,
-                              );
-                            },
                           ),
-                      ],
+                          const SizedBox(height: 8),
+                          if (chatBotsList.isEmpty)
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(64),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'No chats yet',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 18,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary
+                                                .withOpacity(0.95),
+                                          ),
+                                    ),
+                                    const Icon(CupertinoIcons.cube_box),
+                                    const SizedBox(width: 12),
+                                  ],
+                                ),
+                              ),
+                            )
+                          else
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: chatBotsList.length > 3
+                                  ? 3
+                                  : chatBotsList.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 4),
+                              itemBuilder: (context, index) {
+                                final chatBot = chatBotsList[index];
+                                final imagePath =
+                                    chatBot.typeOfBot == TypeOfBot.pdf
+                                        ? AssetConstants.pdfLogo
+                                        : chatBot.typeOfBot == TypeOfBot.image
+                                            ? AssetConstants.imageLogo
+                                            : AssetConstants.textLogo;
+                                final tileColor =
+                                    chatBot.typeOfBot == TypeOfBot.pdf
+                                        ? context.colorScheme.primary
+                                        : chatBot.typeOfBot == TypeOfBot.text
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .secondary
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .tertiary;
+                                return HistoryItem(
+                                  label: chatBot.title,
+                                  imagePath: imagePath,
+                                  color: tileColor,
+                                  chatBot: chatBot,
+                                );
+                              },
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 48),
                   ],
