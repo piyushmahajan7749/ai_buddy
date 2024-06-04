@@ -89,17 +89,23 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       if (response.statusCode == 200) {
         final responseData = response.data;
         final String rawResponse = responseData['response'] as String;
-        print(rawResponse);
-        final List<String> results = rawResponse
-            .split('###')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
-            .toList();
 
-        final List<ChatMessage> newMessages = results.map((result) {
+        final List<String> sources =
+            List<String>.from(responseData['sources'] as List);
+
+        final ChatMessage newMessage = ChatMessage(
+          id: uuid.v4(),
+          text: '$rawResponse\n'
+              'For more details, check out the source messages above 👆🏻',
+          createdAt: DateTime.now(),
+          typeOfMessage: TypeOfMessage.bot,
+          chatBotId: state.id,
+        );
+
+        final List<ChatMessage> sourceMessages = sources.map((source) {
           return ChatMessage(
             id: uuid.v4(),
-            text: result,
+            text: source,
             createdAt: DateTime.now(),
             typeOfMessage: TypeOfMessage.bot,
             chatBotId: state.id,
@@ -114,7 +120,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           newMessageList.removeAt(placeholderIndex);
         }
 
-        newMessageList.addAll(newMessages.map((msg) => msg.toJson()));
+        newMessageList
+          ..addAll(sourceMessages.map((msg) => msg.toJson()))
+          ..add(newMessage.toJson());
+
         final newState = ChatBot(
           id: state.id,
           title: state.title,

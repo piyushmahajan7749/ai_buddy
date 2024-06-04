@@ -55,7 +55,7 @@ class CardButton extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: isMainButton ? 50 : 8,
+            height: isMainButton ? 30 : 8,
           ),
           Align(
             alignment: Alignment.bottomLeft,
@@ -63,7 +63,7 @@ class CardButton extends StatelessWidget {
               title,
               style: context.textTheme.bodyLarge!.copyWith(
                 color: context.colorScheme.background,
-                fontSize: isMainButton ? 32 : 18,
+                fontSize: isMainButton ? 20 : 18,
               ),
             ),
           ),

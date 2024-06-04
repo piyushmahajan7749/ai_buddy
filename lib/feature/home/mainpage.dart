@@ -1,8 +1,9 @@
+import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/feature/chat/chat_page.dart';
 import 'package:ai_buddy/feature/home/home_page.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
-import 'package:line_icons/line_icons.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -20,6 +21,7 @@ class MainPageState extends State<MainPage> {
   final _pageOptions = [
     const HomePage(),
     const ChatPage(),
+    const HomePage(),
   ];
 
   @override
@@ -41,39 +43,55 @@ class MainPageState extends State<MainPage> {
     );
   }
 
-  ConvexAppBar buildConvexAppBar() {
+  FlashyTabBar buildConvexAppBar() {
     const double width = 26;
-    const double height = 50;
-    return ConvexAppBar(
-      height: height,
-      style: TabStyle.react,
+    return FlashyTabBar(
+      animationCurve: Curves.linear,
+      selectedIndex: _page,
+      iconSize: 30,
+      showElevation: false,
       backgroundColor: Theme.of(context).colorScheme.background,
-      color: Theme.of(context).colorScheme.onSurface,
-      activeColor: Theme.of(context).colorScheme.secondary,
-      elevation: 4,
-      shadowColor: Theme.of(context).colorScheme.surface,
+      // color: Theme.of(context).colorScheme.onSurface,
+      // activeColor: Theme.of(context).colorScheme.secondary,
+      // elevation: 4,
+      // shadowColor: Theme.of(context).colorScheme.surface,
       items: [
-        TabItem(
-          title: 'Home',
+        FlashyTabBarItem(
+          title: Text(
+            'Home',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
           icon: Icon(
-            LineIcons.home,
+            CupertinoIcons.home,
             size: width,
             color: Theme.of(context).colorScheme.secondary,
           ),
-          isIconBlend: true,
         ),
-        TabItem(
-          title: 'Chat',
+        FlashyTabBarItem(
+          title: Text(
+            'AI chat',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          icon: Image.asset(
+            AssetConstants.aiStarLogo,
+            scale: 23,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        FlashyTabBarItem(
+          title: Text(
+            'You',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
           icon: Icon(
-            Icons.inbox,
+            CupertinoIcons.profile_circled,
             size: width,
             color: Theme.of(context).colorScheme.secondary,
           ),
-          isIconBlend: true,
         ),
       ],
-      initialActiveIndex: _page,
-      onTap: (i) => {
+
+      onItemSelected: (i) => {
         setState(() {
           _page = i;
         }),

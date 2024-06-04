@@ -67,11 +67,13 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
     try {
       final formData = FormData();
 
-      for (String path in filePaths) {
-        formData.files.add(MapEntry(
-          'files',
-          await MultipartFile.fromFile(path),
-        ));
+      for (final String path in filePaths) {
+        formData.files.add(
+          MapEntry(
+            'files',
+            await MultipartFile.fromFile(path),
+          ),
+        );
       }
 
       final response = await dio.post<dynamic>('/upload', data: formData);
@@ -81,7 +83,7 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
     } catch (e) {
       // Handle error
       print('Error uploading files: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -95,7 +97,7 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
     } catch (e) {
       // Handle error
       print('Error sending message: $e');
-      throw e;
+      rethrow;
     }
   }
 }

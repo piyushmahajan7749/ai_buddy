@@ -37,13 +37,13 @@ dependencies:
 
   # iOS
   cupertino_icons: ^1.0.2
-  convex_bottom_bar: ^3.2.0
   line_icons: ^2.0.3
   sizer: ^2.0.15
   modal_bottom_sheet: ^3.0.0
   page_transition: ^2.1.0
   settings_ui: ^2.0.2
   flutter_archive: ^6.0.3
+  flashy_tab_bar2: ^0.0.10
 
 dev_dependencies:
   flutter_test:

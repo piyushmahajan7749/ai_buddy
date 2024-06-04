@@ -160,143 +160,160 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: _isBuildingChatBot
           ? _buildLoadingIndicator(currentState)
           : SafeArea(
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: -300,
-                    top: -00,
-                    child: Container(
-                      height: 500,
-                      width: 600,
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          colors: [
-                            Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.3),
-                            Theme.of(context)
-                                .colorScheme
-                                .background
-                                .withOpacity(0.5),
-                          ],
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+                child: ListView(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(width: 60),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.onSurface,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.25),
+                                offset: const Offset(4, 4),
+                                blurRadius: 8,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '9Roof AI',
+                                style: TextStyle(
+                                  color: context.colorScheme.background,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Image.asset(
+                                AssetConstants.aiStarLogo,
+                                scale: 23,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CircleAvatar(
+                          maxRadius: 20,
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.2),
+                          child: IconButton(
+                            icon: const Icon(
+                              CupertinoIcons.settings,
+                              size: 20,
+                            ),
+                            style: IconButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            onPressed: () async {
+                              // Preferences view
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Start uploading your\nwhatsapp chats',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 18),
                         ),
                       ),
                     ),
-                  ),
-                  CustomPaint(
-                    painter: BackgroundCurvesPainter(),
-                    size: Size.infinite,
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: ListView(
+                    const SizedBox(height: 12),
+                    Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(width: 60),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.onSurface,
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white.withOpacity(0.25),
-                                    offset: const Offset(4, 4),
-                                    blurRadius: 8,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '9Roof AI',
-                                    style: TextStyle(
-                                      color: context.colorScheme.background,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Image.asset(
-                                    AssetConstants.aiStarLogo,
-                                    scale: 23,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            CircleAvatar(
-                              maxRadius: 16,
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.2),
-                              child: IconButton(
-                                icon: const Icon(
-                                  CupertinoIcons.settings,
-                                  size: 18,
-                                ),
-                                style: IconButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                ),
-                                onPressed: () async {
-                                  // Preferences view
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'How may I help\nyou today?',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(fontSize: 32),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: CardButton(
+                              title: 'Upload chats',
+                              color: context.colorScheme.primary,
+                              imagePath: AssetConstants.pdfLogo,
+                              isMainButton: true,
+                              onPressed: _onUploadPressed,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 32),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CardButton(
-                                title: 'Upload chats',
-                                color: context.colorScheme.primary,
-                                imagePath: AssetConstants.pdfLogo,
-                                isMainButton: true,
-                                onPressed: _onUploadPressed,
+                      ],
+                    ),
+                    const SizedBox(height: 120),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'History',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(0.95),
+                                    ),
                               ),
-                            ),
-                          ],
+                              TextButton(
+                                onPressed: () => _showAllHistory(context),
+                                child: Text(
+                                  'See all',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.8),
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 32),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                        const SizedBox(height: 8),
+                        if (chatBotsList.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(64),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
+                                  const SizedBox(width: 12),
                                   Text(
-                                    'History',
+                                    'No chats yet',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -309,98 +326,48 @@ class _HomePageState extends ConsumerState<HomePage> {
                                               .withOpacity(0.95),
                                         ),
                                   ),
-                                  TextButton(
-                                    onPressed: () => _showAllHistory(context),
-                                    child: Text(
-                                      'See all',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface
-                                                .withOpacity(0.8),
-                                          ),
-                                    ),
-                                  ),
+                                  const Icon(CupertinoIcons.cube_box),
+                                  const SizedBox(width: 12),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            if (chatBotsList.isEmpty)
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(64),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        'No chats yet',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary
-                                                  .withOpacity(0.95),
-                                            ),
-                                      ),
-                                      const Icon(CupertinoIcons.cube_box),
-                                      const SizedBox(width: 12),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            else
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: chatBotsList.length > 3
-                                    ? 3
-                                    : chatBotsList.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 4),
-                                itemBuilder: (context, index) {
-                                  final chatBot = chatBotsList[index];
-                                  final imagePath =
-                                      chatBot.typeOfBot == TypeOfBot.pdf
-                                          ? AssetConstants.pdfLogo
-                                          : chatBot.typeOfBot == TypeOfBot.image
-                                              ? AssetConstants.imageLogo
-                                              : AssetConstants.textLogo;
-                                  final tileColor =
-                                      chatBot.typeOfBot == TypeOfBot.pdf
-                                          ? context.colorScheme.primary
-                                          : chatBot.typeOfBot == TypeOfBot.text
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .tertiary;
-                                  return HistoryItem(
-                                    label: chatBot.title,
-                                    imagePath: imagePath,
-                                    color: tileColor,
-                                    chatBot: chatBot,
-                                  );
-                                },
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 48),
+                          )
+                        else
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: chatBotsList.length > 3
+                                ? 3
+                                : chatBotsList.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 4),
+                            itemBuilder: (context, index) {
+                              final chatBot = chatBotsList[index];
+                              final imagePath =
+                                  chatBot.typeOfBot == TypeOfBot.pdf
+                                      ? AssetConstants.pdfLogo
+                                      : chatBot.typeOfBot == TypeOfBot.image
+                                          ? AssetConstants.imageLogo
+                                          : AssetConstants.textLogo;
+                              final tileColor = chatBot.typeOfBot ==
+                                      TypeOfBot.pdf
+                                  ? context.colorScheme.primary
+                                  : chatBot.typeOfBot == TypeOfBot.text
+                                      ? Theme.of(context).colorScheme.secondary
+                                      : Theme.of(context).colorScheme.tertiary;
+                              return HistoryItem(
+                                label: chatBot.title,
+                                imagePath: imagePath,
+                                color: tileColor,
+                                chatBot: chatBot,
+                              );
+                            },
+                          ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 48),
+                  ],
+                ),
               ),
             ),
     );
