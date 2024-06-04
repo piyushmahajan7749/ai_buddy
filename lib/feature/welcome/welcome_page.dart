@@ -58,8 +58,11 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Lottie.asset(AssetConstants.onboardingAnimation,
-                    height: 200, fit: BoxFit.fitHeight),
+                Lottie.asset(
+                  AssetConstants.onboardingAnimation,
+                  height: 200,
+                  fit: BoxFit.fitHeight,
+                ),
                 Text(
                   'Your personal real estate assistant',
                   style: context.textTheme.bodyLarge!.copyWith(

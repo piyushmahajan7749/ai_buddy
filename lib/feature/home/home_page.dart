@@ -9,6 +9,7 @@ import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:ai_buddy/feature/home/widgets/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -68,7 +69,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           });
           AppRoute.chat.push(context);
         } catch (e) {
-          print('File upload error: $e');
+          if (kDebugMode) {
+            print('File upload error: $e');
+          }
           setState(() {
             currentState = 'File upload error!';
           });

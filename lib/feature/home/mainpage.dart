@@ -1,6 +1,7 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/feature/chat/chat_page.dart';
 import 'package:ai_buddy/feature/home/home_page.dart';
+import 'package:ai_buddy/feature/home/widgets/settings.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
@@ -21,7 +22,11 @@ class MainPageState extends State<MainPage> {
   final _pageOptions = [
     const HomePage(),
     const ChatPage(),
-    const HomePage(),
+    const UserProfileSettings(
+      profilePictureUrl: 'https://example.com/profile_picture.png',
+      userName: 'John Doe',
+      email: 'john.doe@example.com',
+    ),
   ];
 
   @override

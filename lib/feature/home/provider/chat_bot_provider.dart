@@ -2,6 +2,7 @@ import 'package:ai_buddy/feature/gemini/repository/gemini_repository.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -79,10 +80,14 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
       final response = await dio.post<dynamic>('/upload', data: formData);
 
       // Handle response and update state as needed
-      print(response.data);
+      if (kDebugMode) {
+        print(response.data);
+      }
     } catch (e) {
       // Handle error
-      print('Error uploading files: $e');
+      if (kDebugMode) {
+        print('Error uploading files: $e');
+      }
       rethrow;
     }
   }
@@ -96,7 +101,9 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
       return response.data['response'] as String;
     } catch (e) {
       // Handle error
-      print('Error sending message: $e');
+      if (kDebugMode) {
+        print('Error sending message: $e');
+      }
       rethrow;
     }
   }
