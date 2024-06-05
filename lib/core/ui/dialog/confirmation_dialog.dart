@@ -12,6 +12,7 @@ class ConfirmationDialog extends StatelessWidget {
     required this.message,
     required this.confirmText,
     required this.isDestructive,
+    required this.onConfirm,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String message;
   final String confirmText;
   final bool isDestructive;
+  final Function onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +30,14 @@ class ConfirmationDialog extends StatelessWidget {
             message: message,
             confirmText: confirmText,
             isDestructive: isDestructive,
+            onConfirm: onConfirm,
           )
         : _AndroidConfirmationDialog(
             title: title,
             message: message,
             confirmText: confirmText,
             isDestructive: isDestructive,
+            onConfirm: onConfirm,
           );
   }
 }
@@ -44,12 +48,14 @@ class _AndroidConfirmationDialog extends StatelessWidget {
     required this.message,
     required this.confirmText,
     required this.isDestructive,
+    required this.onConfirm,
   });
 
   final String title;
   final String message;
   final String confirmText;
   final bool isDestructive;
+  final Function onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +76,10 @@ class _AndroidConfirmationDialog extends StatelessWidget {
                 ? context.colorScheme.error
                 : context.colorScheme.onBackground,
           ),
-          onPressed: () => context.pop(true),
+          onPressed: () {
+            onConfirm();
+            context.pop(true);
+          },
           child: Text(confirmText),
         ),
       ],
@@ -84,12 +93,14 @@ class _IosConfirmationDialog extends StatelessWidget {
     required this.message,
     required this.confirmText,
     required this.isDestructive,
+    required this.onConfirm,
   });
 
   final String title;
   final String message;
   final String confirmText;
   final bool isDestructive;
+  final Function onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +127,10 @@ class _IosConfirmationDialog extends StatelessWidget {
                 : context.colorScheme.onBackground,
             shape: buttonShape,
           ),
-          onPressed: () => context.pop(true),
+          onPressed: () {
+            onConfirm();
+            context.pop(true);
+          },
           child: Text(confirmText),
         ),
       ],

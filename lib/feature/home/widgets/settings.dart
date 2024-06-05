@@ -1,4 +1,7 @@
+import 'package:ai_buddy/core/ui/dialog/confirmation_dialog.dart';
+import 'package:ai_buddy/core/util/secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class UserProfileSettings extends StatelessWidget {
   const UserProfileSettings({
@@ -13,6 +16,8 @@ class UserProfileSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SecureStorage secureStorage = SecureStorage();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -23,35 +28,8 @@ class UserProfileSettings extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                userName,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Center(
-              child: Text(
-                email,
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              'Settings',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
             const Divider(
-              height: 30,
-            ),
-            ListTile(
-              leading: const Icon(Icons.lock),
-              title: const Text('Change Password'),
-              onTap: () {
-                // Handle change password action
-              },
+              height: 48,
             ),
             ListTile(
               leading: const Icon(Icons.notifications),
@@ -62,7 +40,21 @@ class UserProfileSettings extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.privacy_tip),
-              title: const Text('Privacy Settings'),
+              title: const Text('Account Settings'),
+              onTap: () {
+                // Handle privacy settings action
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.text_snippet_rounded),
+              title: const Text('Privacy Policy'),
+              onTap: () {
+                // Handle privacy settings action
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.text_snippet),
+              title: const Text('Terms of use'),
               onTap: () {
                 // Handle privacy settings action
               },
@@ -70,7 +62,15 @@ class UserProfileSettings extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
-              onTap: () {
+              onTap: () async {
+                ConfirmationDialog(
+                  message: 'Are you sure you want to sign out of your account?',
+                  title: 'Sign out',
+                  confirmText: 'Yes',
+                  isDestructive: true,
+                  onConfirm: () async => secureStorage.deleteApiKey(),
+                );
+
                 // Handle log out action
               },
             ),

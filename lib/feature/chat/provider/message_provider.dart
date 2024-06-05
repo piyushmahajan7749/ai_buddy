@@ -12,7 +12,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.86.95:8081';
+const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -113,10 +113,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     await updateChatBotWithMessage(placeholderMessage);
 
     try {
-      final dio = Dio();
+      final dio = Dio(BaseOptions(baseUrl: baseUrl));
       // ignore: inference_failure_on_function_invocation
-      final response = await dio.post(
-        '$baseUrl/chat',
+      final response = await dio.post<dynamic>(
+        '/chat',
         data: jsonEncode({'message': prompt}),
         options: Options(
           headers: {

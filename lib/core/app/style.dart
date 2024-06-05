@@ -16,6 +16,7 @@ const _disabled = Colors.grey;
 
 const _divider = Color(0xff363635);
 const _red = Colors.red;
+const _primaryBlue = Color(0xFF6132f4);
 
 final _darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
@@ -28,7 +29,7 @@ final _darkColorScheme = ColorScheme(
   secondary: _secondary,
   onSecondary: _lightest,
   secondaryContainer: _secondary.withOpacity(0.2),
-  onSecondaryContainer: _lightest,
+  onSecondaryContainer: _primaryBlue,
 
   // Tertiary
   tertiary: _tertiary,

@@ -23,9 +23,9 @@ class CardButton extends StatelessWidget {
     return NiceButtons(
       height: 140,
       gradientOrientation: GradientOrientation.Horizontal,
-      borderColor: Theme.of(context).colorScheme.primary,
-      endColor: Theme.of(context).colorScheme.tertiary,
-      startColor: Theme.of(context).colorScheme.tertiary,
+      // borderColor: Theme.of(context).colorScheme.onSecondaryContainer,
+      // endColor: Theme.of(context).colorScheme.primary,
+      // startColor: Theme.of(context).colorScheme.primary,
       onTap: (finish) {
         onPressed();
       },

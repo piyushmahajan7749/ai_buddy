@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -165,66 +166,38 @@ class _HomePageState extends ConsumerState<HomePage> {
           : SafeArea(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
                 child: ListView(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const SizedBox(width: 60),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.colorScheme.onSurface,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.25),
-                                offset: const Offset(4, 4),
-                                blurRadius: 8,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '9Roof AI',
-                                style: TextStyle(
-                                  color: context.colorScheme.background,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Image.asset(
-                                AssetConstants.aiStarLogo,
-                                scale: 23,
-                              ),
-                            ],
-                          ),
+                        Lottie.asset(
+                          AssetConstants.onboardingAnimation,
+                          height: 64,
+                          fit: BoxFit.fitHeight,
                         ),
-                        CircleAvatar(
-                          maxRadius: 20,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.2),
-                          child: IconButton(
-                            icon: const Icon(
-                              CupertinoIcons.settings,
-                              size: 20,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: CircleAvatar(
+                            maxRadius: 20,
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.2),
+                            child: IconButton(
+                              icon: const Icon(
+                                CupertinoIcons.settings,
+                                size: 20,
+                              ),
+                              style: IconButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: () async {
+                                // Preferences view
+                              },
                             ),
-                            style: IconButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                            ),
-                            onPressed: () async {
-                              // Preferences view
-                            },
                           ),
                         ),
                       ],
@@ -237,7 +210,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Start uploading your\nwhatsapp chats',
+                          'How may I help you today?',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -245,7 +218,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
@@ -262,7 +234,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 120),
+                    const SizedBox(height: 60),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(

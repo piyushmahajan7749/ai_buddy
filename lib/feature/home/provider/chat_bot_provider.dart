@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String baseUrl = 'http://192.168.86.95:8081';
+const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
 
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
@@ -67,7 +67,6 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   Future<void> uploadFiles(List<String> filePaths) async {
     try {
       final formData = FormData();
-
       for (final String path in filePaths) {
         formData.files.add(
           MapEntry(
@@ -76,9 +75,7 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
           ),
         );
       }
-
       final response = await dio.post<dynamic>('/upload', data: formData);
-
       // Handle response and update state as needed
       if (kDebugMode) {
         print(response.data);
@@ -95,7 +92,8 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   Future<String> sendMessage(String message) async {
     try {
       // ignore: inference_failure_on_function_invocation
-      final response = await dio.post('/chat', data: {'message': message});
+      final response =
+          await dio.post<dynamic>('/chat', data: {'message': message});
 
       // Return the response from the server
       return response.data['response'] as String;

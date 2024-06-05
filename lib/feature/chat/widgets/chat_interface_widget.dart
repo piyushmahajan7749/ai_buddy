@@ -39,7 +39,7 @@ class ChatInterfaceWidget extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         attachmentButtonIcon: Icon(
           CupertinoIcons.eye,
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
         primaryColor: context.colorScheme.secondary,
         secondaryColor: context.colorScheme.onBackground,
