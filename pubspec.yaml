@@ -50,13 +50,21 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.0
   build_runner: ^2.4.8
   freezed: ^2.4.7
   hive_generator: ^2.0.0
   json_serializable: ^6.7.1
   mockito: ^5.4.4
+
+flutter_icons:
+  android: "launcher_icon_android"
+  image_path: "assets/images/vibeup-logo.png"
+  adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/images/ic_launcher.png" # o
+  ios: "launcher_icon_ios" # can specify file name here e.g. "My-Launcher-Icon"
+  image_path_ios: "assets/images/vibeup-icon.png"
 
 flutter:
   uses-material-design: true

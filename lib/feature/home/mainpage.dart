@@ -22,11 +22,7 @@ class MainPageState extends State<MainPage> {
   final _pageOptions = [
     const HomePage(),
     const ChatPage(),
-    const UserProfileSettings(
-      profilePictureUrl: 'https://example.com/profile_picture.png',
-      userName: 'John Doe',
-      email: 'john.doe@example.com',
-    ),
+    const Preferences(),
   ];
 
   @override

@@ -1,18 +1,29 @@
-import 'package:ai_buddy/core/ui/dialog/confirmation_dialog.dart';
+import 'package:ai_buddy/core/config/assets_constants.dart';
+import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/core/util/secure_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:ai_buddy/core/util/utils.dart';
+import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
+import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class UserProfileSettings extends StatelessWidget {
-  const UserProfileSettings({
-    required this.profilePictureUrl,
-    required this.userName,
-    required this.email,
+class Preferences extends StatefulWidget {
+  const Preferences({
     super.key,
   });
-  final String profilePictureUrl;
-  final String userName;
-  final String email;
+  @override
+  // ignore: library_private_types_in_public_api
+  _PreferencesState createState() => _PreferencesState();
+}
+
+class _PreferencesState extends State<Preferences> {
+  bool lockInBackground = true;
+  bool notificationsEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,63 +31,127 @@ class UserProfileSettings extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Preferences'),
         centerTitle: true,
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Divider(
-              height: 48,
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Notification Settings'),
-              onTap: () {
-                // Handle notification settings action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip),
-              title: const Text('Account Settings'),
-              onTap: () {
-                // Handle privacy settings action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.text_snippet_rounded),
-              title: const Text('Privacy Policy'),
-              onTap: () {
-                // Handle privacy settings action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.text_snippet),
-              title: const Text('Terms of use'),
-              onTap: () {
-                // Handle privacy settings action
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Log Out'),
-              onTap: () async {
-                ConfirmationDialog(
-                  message: 'Are you sure you want to sign out of your account?',
-                  title: 'Sign out',
-                  confirmText: 'Yes',
-                  isDestructive: true,
-                  onConfirm: () async => secureStorage.deleteApiKey(),
-                );
+      body: SafeArea(child: buildSettingsList(secureStorage)),
+    );
+  }
 
-                // Handle log out action
-              },
+  SettingsSection? getSecuritySections() {
+    return SettingsSection(
+      title: Text(
+        'Legal Information',
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
-          ],
-        ),
       ),
+      tiles: [
+        SettingsTile(
+          title: Text(
+            'Terms of use',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          leading: const Icon(LineIcons.fileInvoice),
+          trailing: const SizedBox(),
+          onPressed: (context) {
+            launchInWebViewOrVC(
+              Uri(
+                scheme: 'https',
+                host: 'www.apple.com',
+                path: '/legal/internet-services/itunes/dev/stdeula/',
+              ),
+            );
+          },
+        ),
+        SettingsTile(
+          title: Text(
+            'Privacy Policy',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          leading: const Icon(LineIcons.fileInvoice),
+          trailing: const SizedBox(),
+          onPressed: (context) {
+            launchInWebViewOrVC(
+              Uri(
+                scheme: 'https',
+                host: 'www.9roof.ai',
+                path: '/privacy/',
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  SettingsSection? getAccountSections(SecureStorage secureStorage) {
+    return SettingsSection(
+      title: Text(
+        'Account',
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+      ),
+      tiles: [
+        SettingsTile(
+          title: Text(
+            'Sign out',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          trailing: const SizedBox(),
+          leading: const Icon(LineIcons.alternateSignOut),
+          onPressed: (context) async {
+            await secureStorage.deleteApiKey();
+            // ignore: use_build_context_synchronously
+            AppRoute.welcome.go(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildSettingsList(SecureStorage secureStorage) {
+    return SettingsList(
+      sections: [
+        getAccountSections(secureStorage)!,
+        getSecuritySections()!,
+        CustomSettingsSection(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 80),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Lottie.asset(
+                    AssetConstants.onboardingAnimation,
+                    height: 40,
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+                const Text(
+                  'Version: 1.0.1',
+                  style: TextStyle(color: Color(0xFF777777)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

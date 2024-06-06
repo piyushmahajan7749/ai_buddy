@@ -1,4 +1,4 @@
-package com.superawesomeapps.ai_buddy
+package com.mahajanwellness.roofai
 
 import io.flutter.embedding.android.FlutterActivity
 
