@@ -4,6 +4,7 @@ import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/feature/home/mainpage.dart';
 import 'package:ai_buddy/feature/welcome/welcome_page.dart';
 import 'package:ai_buddy/splash_page.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -14,7 +15,20 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: AppRoute.home.path,
-      builder: (context, state) => const MainPage(page: 0),
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(milliseconds: 1800),
+          child: const MainPage(page: 0),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity:
+                  CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+              child: child,
+            );
+          },
+        );
+      },
     ),
     GoRoute(
       path: AppRoute.chat.path,
