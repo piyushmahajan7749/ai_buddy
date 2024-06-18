@@ -1,5 +1,7 @@
+import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/config/type_of_message.dart';
 import 'package:ai_buddy/core/extension/context.dart';
+import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatInterfaceWidget extends ConsumerWidget {
   const ChatInterfaceWidget({
@@ -33,6 +37,58 @@ class ChatInterfaceWidget extends ConsumerWidget {
               ),
       onAttachmentPressed: () =>
           ref.watch(messageListProvider.notifier).handleShowSourcesPressed(),
+      customMessageBuilder: (p0, {required messageWidth}) {
+        return Row(
+          children: [
+            Lottie.asset(
+              AssetConstants.onboardingAnimation,
+              height: 64,
+              fit: BoxFit.fitHeight,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: Text(
+                'Looking for results...',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          ],
+        );
+      },
+      onMessageDoubleTap: (context, message) {
+        final phoneNumber = extractPhoneNumber(message.toString());
+        if (phoneNumber != null) {
+          showDialog<void>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Phone Number Detected'),
+                content: Text('Do you want to call $phoneNumber?'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Call'),
+                    onPressed: () async {
+                      final url = 'tel:$phoneNumber';
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
       user: const types.User(id: TypeOfMessage.user),
       showUserAvatars: false,
       theme: DefaultChatTheme(

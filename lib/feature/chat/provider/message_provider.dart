@@ -9,10 +9,11 @@ import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 // ignore: deprecated_member_use
 import 'package:collection/equality.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -33,6 +34,21 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         messagesList: newMessageList,
         id: state.id,
         title: state.title.isEmpty ? message.text : state.title,
+        typeOfBot: state.typeOfBot,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+      ),
+    );
+  }
+
+  Future<void> updateChatBotWithCustomMessage(CustomMessage message) async {
+    final newMessageList = [...state.messagesList, message.toJson()];
+
+    await updateChatBot(
+      ChatBot(
+        messagesList: newMessageList,
+        id: state.id,
+        title: state.title,
         typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
@@ -102,15 +118,16 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     // ignore: cascade_invocations
     chatParts.add({'text': prompt});
     final String modelMessageId = uuid.v4();
-    final placeholderMessage = ChatMessage(
+    final placeholderMessage = CustomMessage(
       id: modelMessageId,
-      text: 'loading results...',
-      createdAt: DateTime.now(),
-      typeOfMessage: TypeOfMessage.bot,
-      chatBotId: state.id,
+      author: User(
+        id: modelMessageId,
+        createdAt: DateTime.now().day,
+      ),
+      type: MessageType.custom,
     );
 
-    await updateChatBotWithMessage(placeholderMessage);
+    await updateChatBotWithCustomMessage(placeholderMessage);
 
     try {
       final dio = Dio(BaseOptions(baseUrl: baseUrl));
@@ -132,14 +149,21 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         final List<String> sources =
             List<String>.from(responseData['sources'] as List);
 
-        final ChatMessage newMessage = ChatMessage(
-          id: uuid.v4(),
-          text: '$rawResponse\n\n'
-              'To see the source messages, tap the 👁️ icon below 👇',
-          createdAt: DateTime.now(),
-          typeOfMessage: TypeOfMessage.bot,
-          chatBotId: state.id,
-        );
+        final List<String> rawMsgs =
+            List<String>.from(rawResponse.split('###|||') as List);
+
+        // ignore: cascade_invocations
+        rawMsgs.removeWhere((element) => element.isEmpty);
+
+        final List<ChatMessage> rawMessageList = rawMsgs.map((source) {
+          return ChatMessage(
+            id: uuid.v4(),
+            text: source,
+            createdAt: DateTime.now(),
+            typeOfMessage: TypeOfMessage.bot,
+            chatBotId: state.id,
+          );
+        }).toList();
 
         sourceMessageList = sources.map((source) {
           return ChatMessage(
@@ -153,13 +177,14 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
         final newMessageList =
             List<Map<String, dynamic>>.from(state.messagesList);
+
         final int placeholderIndex =
             newMessageList.indexWhere((msg) => msg['id'] == modelMessageId);
         if (placeholderIndex != -1) {
           newMessageList.removeAt(placeholderIndex);
         }
 
-        newMessageList.add(newMessage.toJson());
+        newMessageList.addAll(rawMessageList.map((msg) => msg.toJson()));
 
         final newStateWithNewMessage = ChatBot(
           id: state.id,

@@ -12,3 +12,10 @@ Future<void> launchInWebViewOrVC(Uri url) async {
     throw 'Could not launch $url';
   }
 }
+
+String? extractPhoneNumber(String text) {
+  final phonePattern =
+      RegExp(r'\b\d{10}\b'); // Simple pattern for 10-digit phone numbers
+  final match = phonePattern.firstMatch(text);
+  return match?.group(0);
+}

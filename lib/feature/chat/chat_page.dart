@@ -5,6 +5,7 @@ import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/chat/widgets/chat_interface_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatPage extends ConsumerWidget {
@@ -25,6 +26,13 @@ class ChatPage extends ConsumerWidget {
             : AssetConstants.textLogo;
 
     final List<types.Message> messages = chatBot.messagesList.map((msg) {
+      if (msg['type'] == 'custom') {
+        return types.CustomMessage(
+          author: const User(id: 'cd', createdAt: 11),
+          id: msg['id'] as String,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+        );
+      }
       return types.TextMessage(
         author: types.User(id: msg['typeOfMessage'] as String),
         createdAt:
