@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:ai_buddy/feature/hive/model/search_item/search_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> launchInWebViewOrVC(Uri url) async {
@@ -19,3 +22,69 @@ String? extractPhoneNumber(String text) {
   final match = phonePattern.firstMatch(text);
   return match?.group(0);
 }
+
+List<SearchItem> getFeaturedSearches() {
+  final list = allSearchesStatic.map((item) {
+    final SearchItem obj = item;
+    return obj;
+  }).toList();
+  return list;
+}
+
+UnmodifiableListView<SearchItem> get allSearchesStatic => UnmodifiableListView([
+      SearchItem(
+        title: 'Furnished office spaces',
+        id: 'officespaces',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: '2 bhk Furnished flats',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Studios (RK)',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Plots for sale',
+        id: 'bhk1',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Plots required',
+        id: 'officespaces',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Plots and houses in ujjain road',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Flats for sale in 140',
+        id: 'bhk1',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Flats for sale in under 60 lakhs',
+        id: 'officespaces',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Plots and houses in bypass',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Flats for rent in Rajendra Nagar',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Commercial plot for sale',
+        id: 'bhk1',
+        searchTerm: '',
+      ),
+    ]);

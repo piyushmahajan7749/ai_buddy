@@ -265,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
+  dots_indicator:
+    dependency: "direct main"
+    description:
+      name: dots_indicator
+      sha256: "58b6a365744aa62aa1b70c4ea29e5106fbe064f5edaf7e9652e9b856edbfd9bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   equatable:
     dependency: transitive
     description:
@@ -398,6 +406,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.12"
+  flutter_horizontal_featured_list:
+    dependency: "direct main"
+    description:
+      name: flutter_horizontal_featured_list
+      sha256: "813cc1584d2e3f10e0cad0cde889510c2966ba60084c2a3e54c71018243bf933"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -415,7 +431,7 @@ packages:
     source: hosted
     version: "3.2.2"
   flutter_linkify:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_linkify
       sha256: "74669e06a8f358fee4512b4320c0b80e51cffc496607931de68d28f099254073"
@@ -824,14 +840,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  nice_buttons:
-    dependency: "direct main"
-    description:
-      name: nice_buttons
-      sha256: "280bcd1e7aa236f7f9acb213e75a6f9375d12094cc4aed03abb25ef0845331ce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   octo_image:
     dependency: transitive
     description:

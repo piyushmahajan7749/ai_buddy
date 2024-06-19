@@ -45,10 +45,10 @@ dependencies:
   flutter_archive: ^6.0.3
   flashy_tab_bar2: ^0.0.10
   collection: ^1.18.0
-  nice_buttons: ^0.0.3
-  flutter_linkify: ^6.0.0
   flash: ^3.1.0
   fluttertoast: ^8.2.6
+  flutter_horizontal_featured_list: ^1.0.1+1
+  dots_indicator: ^3.0.0
 
 dev_dependencies:
   flutter_test:
