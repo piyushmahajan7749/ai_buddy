@@ -3,22 +3,21 @@
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/feature/home/mainpage.dart';
 import 'package:ai_buddy/feature/welcome/welcome_page.dart';
-import 'package:ai_buddy/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
   routes: [
-    GoRoute(
-      path: AppRoute.splash.path,
-      builder: (context, state) => const SplashPage(),
-    ),
+    // GoRoute(
+    //   path: AppRoute.splash.path,
+    //   builder: (context, state) => const SplashPage(),
+    // ),
     GoRoute(
       path: AppRoute.home.path,
       pageBuilder: (context, state) {
         return CustomTransitionPage(
           key: state.pageKey,
-          transitionDuration: const Duration(milliseconds: 1800),
+          transitionDuration: const Duration(milliseconds: 2400),
           child: const MainPage(page: 0),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(

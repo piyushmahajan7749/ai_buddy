@@ -6,7 +6,6 @@ import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:uuid/uuid.dart';
 
 class SearchGridView extends ConsumerWidget {

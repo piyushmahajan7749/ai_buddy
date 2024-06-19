@@ -166,7 +166,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
           ),
-          leading: const Icon(LineIcons.fileInvoice),
+          leading: const Icon(CupertinoIcons.doc_plaintext),
           trailing: const SizedBox(),
           onPressed: (context) {
             launchInWebViewOrVC(
@@ -186,7 +186,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
           ),
-          leading: const Icon(LineIcons.fileInvoice),
+          leading: const Icon(CupertinoIcons.doc_richtext),
           trailing: const SizedBox(),
           onPressed: (context) {
             launchInWebViewOrVC(
@@ -253,7 +253,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
           ),
           trailing: const SizedBox(),
           leading: Icon(
-            LineIcons.locationArrow,
+            CupertinoIcons.location_solid,
             color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
           ),
           onPressed: (context) async {},
@@ -285,17 +285,14 @@ class _PreferencesState extends ConsumerState<Preferences> {
         getSecuritySections()!,
         CustomSettingsSection(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 80),
+            padding: const EdgeInsets.symmetric(vertical: 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Lottie.asset(
-                    AssetConstants.onboardingAnimation,
-                    height: 40,
-                    fit: BoxFit.fitHeight,
-                  ),
+                Lottie.asset(
+                  AssetConstants.onboardingAnimation,
+                  height: 40,
+                  fit: BoxFit.fitHeight,
                 ),
                 const Text(
                   'Version: 1.0.1',
