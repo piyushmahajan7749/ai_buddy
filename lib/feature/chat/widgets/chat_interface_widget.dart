@@ -75,11 +75,13 @@ class ChatInterfaceWidget extends ConsumerWidget {
                     child: const Text('Call'),
                     onPressed: () async {
                       final url = 'tel:$phoneNumber';
-                      if (await canLaunch(url)) {
-                        await launch(url);
+                      if (await canLaunchUrl(Uri.dataFromString(url))) {
+                        await launchUrl(Uri.dataFromString(url));
                       } else {
+                        // ignore: only_throw_errors
                         throw 'Could not launch $url';
                       }
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
                   ),

@@ -13,7 +13,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.1.2:5000';
+const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),

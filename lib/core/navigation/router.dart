@@ -38,5 +38,9 @@ final GoRouter router = GoRouter(
       path: AppRoute.welcome.path,
       builder: (context, state) => const WelcomePage(),
     ),
+    GoRoute(
+      path: AppRoute.preferences.path,
+      builder: (context, state) => const MainPage(page: 3),
+    ),
   ],
 );

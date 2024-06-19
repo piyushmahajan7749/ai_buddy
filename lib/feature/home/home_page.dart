@@ -12,7 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
@@ -68,7 +68,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           setState(() {
             currentState = 'Chat files uploaded. You can now chat!';
           });
-          AppRoute.chat.push(context);
+
+          await Fluttertoast.showToast(
+            msg: 'Files Uploaded successfully!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            textColor: Theme.of(context).colorScheme.background,
+            fontSize: 16,
+          );
+
+          // AppRoute.chat.push(context);
         } catch (e) {
           if (kDebugMode) {
             print('File upload error: $e');
@@ -76,6 +87,16 @@ class _HomePageState extends ConsumerState<HomePage> {
           setState(() {
             currentState = 'File upload error!';
           });
+
+          await Fluttertoast.showToast(
+            msg: 'File upload error!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            textColor: Theme.of(context).colorScheme.background,
+            fontSize: 16,
+          );
         } finally {
           setState(() {
             _isBuildingChatBot = false;
@@ -90,8 +111,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SpinKitDoubleBounce(
-            color: context.colorScheme.onSurface,
+          Lottie.asset(
+            AssetConstants.onboardingAnimation,
+            height: 120,
+            fit: BoxFit.fitHeight,
           ),
           const SizedBox(height: 8),
           Text(currentState, style: context.textTheme.titleMedium),
@@ -196,6 +219,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                               onPressed: () async {
                                 // Preferences view
+                                AppRoute.preferences.push(context);
                               },
                             ),
                           ),
