@@ -4,7 +4,7 @@ import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:ai_buddy/feature/home/widgets/search_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -12,12 +12,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ChatInterfaceWidget extends ConsumerWidget {
+class ChatInterfaceWidget extends ConsumerStatefulWidget {
   const ChatInterfaceWidget({
     required this.messages,
     required this.chatBot,
     required this.color,
     required this.imagePath,
+    required this.lastReadMessageId,
     super.key,
   });
 
@@ -25,18 +26,78 @@ class ChatInterfaceWidget extends ConsumerWidget {
   final ChatBot chatBot;
   final Color color;
   final String imagePath;
+  final String lastReadMessageId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  // ignore: library_private_types_in_public_api
+  _ChatInterfaceWidgetState createState() => _ChatInterfaceWidgetState();
+}
+
+class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void didUpdateWidget(covariant ChatInterfaceWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToLastReadMessage();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToLastReadMessage() {
+    // Find the index of the last read message
+    final index =
+        widget.messages.indexWhere((msg) => msg.id == widget.lastReadMessageId);
+    if (index != -1) {
+      _scrollController.animateTo(
+        index * 72.0, // Assuming each message has a height of 72.0
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Chat(
-      messages: messages,
+      messages: widget.messages,
+      scrollToUnreadOptions: ScrollToUnreadOptions(
+        lastReadMessageId: widget.lastReadMessageId,
+        scrollDuration: const Duration(milliseconds: 800),
+      ),
+      emptyState: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Lottie.asset(
+                AssetConstants.onboardingAnimation,
+                height: 120,
+                fit: BoxFit.fitHeight,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Let the Search Begin',
+                style: TextStyle(fontSize: 24, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+          const SearchGridView(),
+        ],
+      ),
       onSendPressed: (text) =>
           ref.watch(messageListProvider.notifier).handleSendPressed(
                 text: text.text,
-                imageFilePath: chatBot.attachmentPath,
+                imageFilePath: widget.chatBot.attachmentPath,
               ),
-      onAttachmentPressed: () =>
-          ref.watch(messageListProvider.notifier).handleShowSourcesPressed(),
       customMessageBuilder: (p0, {required messageWidth}) {
         return Row(
           children: [
@@ -93,12 +154,8 @@ class ChatInterfaceWidget extends ConsumerWidget {
       },
       user: const types.User(id: TypeOfMessage.user),
       showUserAvatars: false,
-      theme: DefaultChatTheme(
+      theme: DarkChatTheme(
         backgroundColor: Colors.transparent,
-        attachmentButtonIcon: Icon(
-          CupertinoIcons.eye,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
         primaryColor: context.colorScheme.secondary,
         secondaryColor: context.colorScheme.onBackground,
         inputBackgroundColor: context.colorScheme.onBackground,

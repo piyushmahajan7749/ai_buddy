@@ -47,24 +47,22 @@ class ChatPage extends ConsumerWidget {
       canPop: false,
       child: Scaffold(
         body: SafeArea(
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ChatInterfaceWidget(
-                        messages: messages,
-                        chatBot: chatBot,
-                        color: color,
-                        imagePath: imagePath,
-                      ),
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ChatInterfaceWidget(
+                    messages: messages,
+                    chatBot: chatBot,
+                    color: color,
+                    imagePath: imagePath,
+                    lastReadMessageId: chatBot.lastReadMessageId ?? '',
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

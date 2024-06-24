@@ -43,7 +43,17 @@ UnmodifiableListView<SearchItem> get allSearchesStatic => UnmodifiableListView([
         searchTerm: '',
       ),
       SearchItem(
-        title: 'Studios (RK)',
+        title: 'Studio apartments',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: '1 bhk Flats for rent',
+        id: 'bhk3',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: '1RK flats',
         id: 'bhk3',
         searchTerm: '',
       ),
@@ -68,6 +78,11 @@ UnmodifiableListView<SearchItem> get allSearchesStatic => UnmodifiableListView([
         searchTerm: '',
       ),
       SearchItem(
+        title: 'Hostels in Vijay nagar',
+        id: 'bhk1',
+        searchTerm: '',
+      ),
+      SearchItem(
         title: 'Flats for sale in under 60 lakhs',
         id: 'officespaces',
         searchTerm: '',
@@ -84,6 +99,11 @@ UnmodifiableListView<SearchItem> get allSearchesStatic => UnmodifiableListView([
       ),
       SearchItem(
         title: 'Commercial plot for sale',
+        id: 'bhk1',
+        searchTerm: '',
+      ),
+      SearchItem(
+        title: 'Commercial shop for rent',
         id: 'bhk1',
         searchTerm: '',
       ),

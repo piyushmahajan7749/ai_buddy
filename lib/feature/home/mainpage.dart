@@ -1,4 +1,3 @@
-import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/feature/chat/chat_page.dart';
 import 'package:ai_buddy/feature/home/home_page.dart';
 import 'package:ai_buddy/feature/home/widgets/settings.dart';
@@ -20,8 +19,8 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   int _page = 1;
   final _pageOptions = [
-    const HomePage(),
     const ChatPage(),
+    const ChatHistoryPage(),
     const Preferences(),
   ];
 
@@ -73,9 +72,9 @@ class MainPageState extends State<MainPage> {
             'AI chat',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          icon: Image.asset(
-            AssetConstants.aiStarLogo,
-            scale: 23,
+          icon: Icon(
+            CupertinoIcons.time,
+            size: width,
             color: Theme.of(context).colorScheme.secondary,
           ),
         ),

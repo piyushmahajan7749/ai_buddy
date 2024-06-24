@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,14 +8,12 @@ import 'package:ai_buddy/core/logger/logger.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
-// ignore: deprecated_member_use
-import 'package:collection/equality.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -24,7 +24,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
 
   final uuid = const Uuid();
-  List<ChatMessage> sourceMessageList = [];
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
@@ -37,6 +36,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
+        lastReadMessageId: state.id,
       ),
     );
   }
@@ -66,56 +66,28 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       text: text,
       createdAt: DateTime.now(),
       typeOfMessage: TypeOfMessage.user,
-      chatBotId: state.id,
+      chatBotId: messageId,
     );
     await updateChatBotWithMessage(message);
-    await getPythonAPIResponse(prompt: text, imageFilePath: imageFilePath);
-  }
-
-  Future<void> handleShowSourcesPressed() async {
-    final newMessageList = List<Map<String, dynamic>>.from(state.messagesList);
-
-    // Add new messages to the list
-    // ignore: cascade_invocations
-    newMessageList.addAll(sourceMessageList.map((msg) => msg.toJson()));
-
-    // Extract texts from messages and ensure uniqueness
-    final uniqueMessages = <String, Map<String, dynamic>>{};
-    for (final message in newMessageList) {
-      uniqueMessages[message['text'] as String] = message;
-    }
-
-    // Create a list of unique messages based on text
-    final uniqueMessageList = uniqueMessages.values.toList();
-
-    // Check if the list has changed
-    if (const ListEquality<Map<String, dynamic>>()
-        .equals(state.messagesList, uniqueMessageList)) {
-      // No change, return early
-      return;
-    }
-
-    final newStateWithNewMessage = ChatBot(
-      id: state.id,
-      title: state.title,
-      typeOfBot: state.typeOfBot,
-      messagesList: uniqueMessageList,
-      attachmentPath: state.attachmentPath,
-      embeddings: state.embeddings,
+    await getPythonAPIResponse(prompt: text);
+    await updateChatBot(
+      ChatBot(
+        messagesList: state.messagesList,
+        id: state.id,
+        title: state.title,
+        typeOfBot: state.typeOfBot,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+        lastReadMessageId: messageId,
+      ),
     );
-
-    await updateChatBot(newStateWithNewMessage);
   }
 
-  Future<void> getPythonAPIResponse({
-    required String prompt,
-    String? imageFilePath,
-  }) async {
+  Future<void> getPythonAPIResponse({required String prompt}) async {
     final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
       return {'text': msg['text'] as String};
     }).toList();
 
-    // ignore: cascade_invocations
     chatParts.add({'text': prompt});
     final String modelMessageId = uuid.v4();
     final placeholderMessage = CustomMessage(
@@ -144,36 +116,71 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        final String rawResponse = responseData['response'] as String;
+        final rawResponse = responseData['response'];
+        final properties = rawResponse['properties'] as List;
 
-        final List<String> sources =
-            List<String>.from(responseData['sources'] as List);
+        final Map<String, Map<String, dynamic>> groupedListings = {};
+        for (final property in properties) {
+          final contact = property['contact'];
+          final name = property['name'];
+          final listings = property['listings'] as List;
 
-        final List<String> rawMsgs =
-            List<String>.from(rawResponse.split('###|||') as List);
+          if (!groupedListings.containsKey(contact)) {
+            groupedListings[contact as String] = {
+              'contact': contact,
+              'name': name,
+              // ignore: inference_failure_on_collection_literal
+              'listings': [],
+            };
+          }
 
-        // ignore: cascade_invocations
-        rawMsgs.removeWhere((element) => element.isEmpty);
+          for (final listing in listings) {
+            groupedListings[contact]!['listings'].add({
+              'date': listing['date'],
+              'time': listing['time'],
+              'location': listing['location'],
+              'description': listing['description'],
+            });
+          }
+        }
 
-        final List<ChatMessage> rawMessageList = rawMsgs.map((source) {
-          return ChatMessage(
+        final List<ChatMessage> rawMessageList = [];
+
+        groupedListings.forEach((contact, data) {
+          final name = data['name'];
+          final listings = data['listings'] as List;
+
+          // Sort listings by date and time
+          listings.sort((a, b) {
+            final dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            final dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeA.compareTo(dateTimeB); // Sort in descending order
+          });
+
+          // Select top 5 most recent listings
+          final topListings = listings.take(5).toList();
+
+          // Combine listings into a single message
+          final messageText = StringBuffer();
+          messageText.writeln('Name: $name');
+          messageText.writeln('Contact: $contact');
+          for (final listing in topListings) {
+            messageText.writeln('Listing date: ${listing['date']}');
+            messageText.writeln('Location: ${listing['location']}');
+            messageText.writeln('Description: ${listing['description']}');
+            messageText.writeln();
+          }
+
+          final chatMessage = ChatMessage(
             id: uuid.v4(),
-            text: source,
+            text: messageText.toString(),
             createdAt: DateTime.now(),
             typeOfMessage: TypeOfMessage.bot,
             chatBotId: state.id,
           );
-        }).toList();
 
-        sourceMessageList = sources.map((source) {
-          return ChatMessage(
-            id: uuid.v4(),
-            text: source,
-            createdAt: DateTime.now(),
-            typeOfMessage: TypeOfMessage.bot,
-            chatBotId: state.id,
-          );
-        }).toList();
+          rawMessageList.add(chatMessage);
+        });
 
         final newMessageList =
             List<Map<String, dynamic>>.from(state.messagesList);
