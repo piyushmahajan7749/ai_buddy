@@ -25,6 +25,7 @@ mixin _$ChatMessage {
   DateTime get createdAt => throw _privateConstructorUsedError;
   String get typeOfMessage => throw _privateConstructorUsedError;
   String get chatBotId => throw _privateConstructorUsedError;
+  String? get contactNumber => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $ChatMessageCopyWith<$Res> {
       String text,
       DateTime createdAt,
       String typeOfMessage,
-      String chatBotId});
+      String chatBotId,
+      String? contactNumber});
 }
 
 /// @nodoc
@@ -64,6 +66,7 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
     Object? createdAt = null,
     Object? typeOfMessage = null,
     Object? chatBotId = null,
+    Object? contactNumber = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -86,6 +89,10 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
           ? _value.chatBotId
           : chatBotId // ignore: cast_nullable_to_non_nullable
               as String,
+      contactNumber: freezed == contactNumber
+          ? _value.contactNumber
+          : contactNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$ChatMessageImplCopyWith<$Res>
       String text,
       DateTime createdAt,
       String typeOfMessage,
-      String chatBotId});
+      String chatBotId,
+      String? contactNumber});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? typeOfMessage = null,
     Object? chatBotId = null,
+    Object? contactNumber = freezed,
   }) {
     return _then(_$ChatMessageImpl(
       id: null == id
@@ -144,6 +153,10 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
           ? _value.chatBotId
           : chatBotId // ignore: cast_nullable_to_non_nullable
               as String,
+      contactNumber: freezed == contactNumber
+          ? _value.contactNumber
+          : contactNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -156,7 +169,8 @@ class _$ChatMessageImpl implements _ChatMessage {
       required this.text,
       required this.createdAt,
       required this.typeOfMessage,
-      required this.chatBotId});
+      required this.chatBotId,
+      this.contactNumber});
 
   factory _$ChatMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageImplFromJson(json);
@@ -171,10 +185,12 @@ class _$ChatMessageImpl implements _ChatMessage {
   final String typeOfMessage;
   @override
   final String chatBotId;
+  @override
+  final String? contactNumber;
 
   @override
   String toString() {
-    return 'ChatMessage(id: $id, text: $text, createdAt: $createdAt, typeOfMessage: $typeOfMessage, chatBotId: $chatBotId)';
+    return 'ChatMessage(id: $id, text: $text, createdAt: $createdAt, typeOfMessage: $typeOfMessage, chatBotId: $chatBotId, contactNumber: $contactNumber)';
   }
 
   @override
@@ -189,13 +205,15 @@ class _$ChatMessageImpl implements _ChatMessage {
             (identical(other.typeOfMessage, typeOfMessage) ||
                 other.typeOfMessage == typeOfMessage) &&
             (identical(other.chatBotId, chatBotId) ||
-                other.chatBotId == chatBotId));
+                other.chatBotId == chatBotId) &&
+            (identical(other.contactNumber, contactNumber) ||
+                other.contactNumber == contactNumber));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, text, createdAt, typeOfMessage, chatBotId);
+  int get hashCode => Object.hash(runtimeType, id, text, createdAt,
+      typeOfMessage, chatBotId, contactNumber);
 
   @JsonKey(ignore: true)
   @override
@@ -217,7 +235,8 @@ abstract class _ChatMessage implements ChatMessage {
       required final String text,
       required final DateTime createdAt,
       required final String typeOfMessage,
-      required final String chatBotId}) = _$ChatMessageImpl;
+      required final String chatBotId,
+      final String? contactNumber}) = _$ChatMessageImpl;
 
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
       _$ChatMessageImpl.fromJson;
@@ -232,6 +251,8 @@ abstract class _ChatMessage implements ChatMessage {
   String get typeOfMessage;
   @override
   String get chatBotId;
+  @override
+  String? get contactNumber;
   @override
   @JsonKey(ignore: true)
   _$$ChatMessageImplCopyWith<_$ChatMessageImpl> get copyWith =>

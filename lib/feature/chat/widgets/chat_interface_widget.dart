@@ -117,7 +117,8 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
         );
       },
       onMessageDoubleTap: (context, message) {
-        final phoneNumber = extractPhoneNumber(message.toString());
+        final Map<String, dynamic> newMsg = message.toJson();
+        final phoneNumber = extractPhoneNumber(newMsg['text'] as String);
         if (phoneNumber != null) {
           showDialog<void>(
             context: context,

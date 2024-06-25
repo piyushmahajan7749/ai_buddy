@@ -13,7 +13,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.1.2:5000';
+const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -158,7 +158,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           });
 
           // Select top 5 most recent listings
-          final topListings = listings.take(5).toList();
+          final topListings = listings.take(10).toList();
 
           // Combine listings into a single message
           final messageText = StringBuffer();
@@ -176,6 +176,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
             text: messageText.toString(),
             createdAt: DateTime.now(),
             typeOfMessage: TypeOfMessage.bot,
+            contactNumber: contact,
             chatBotId: state.id,
           );
 

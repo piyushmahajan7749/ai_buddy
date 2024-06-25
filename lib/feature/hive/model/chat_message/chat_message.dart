@@ -11,6 +11,7 @@ class ChatMessage with _$ChatMessage {
     required DateTime createdAt,
     required String typeOfMessage,
     required String chatBotId,
+    String? contactNumber,
   }) = _ChatMessage;
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) =>

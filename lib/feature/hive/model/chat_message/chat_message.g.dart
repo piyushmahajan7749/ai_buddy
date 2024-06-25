@@ -13,6 +13,7 @@ _$ChatMessageImpl _$$ChatMessageImplFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       typeOfMessage: json['typeOfMessage'] as String,
       chatBotId: json['chatBotId'] as String,
+      contactNumber: json['contactNumber'] as String?,
     );
 
 Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'typeOfMessage': instance.typeOfMessage,
       'chatBotId': instance.chatBotId,
+      'contactNumber': instance.contactNumber,
     };

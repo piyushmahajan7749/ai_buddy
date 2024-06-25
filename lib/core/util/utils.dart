@@ -17,10 +17,18 @@ Future<void> launchInWebViewOrVC(Uri url) async {
 }
 
 String? extractPhoneNumber(String text) {
-  final phonePattern =
-      RegExp(r'\b\d{10}\b'); // Simple pattern for 10-digit phone numbers
-  final match = phonePattern.firstMatch(text);
-  return match?.group(0);
+  // Regular expression to find a 10-digit number
+  final RegExp regExp = RegExp(r'\b\d{10}\b');
+
+  // Find the first match
+  final Match? match = regExp.firstMatch(text);
+
+  if (match != null) {
+    final String contactNumber = match.group(0)!;
+    return contactNumber;
+  } else {
+    return '';
+  }
 }
 
 List<SearchItem> getFeaturedSearches() {

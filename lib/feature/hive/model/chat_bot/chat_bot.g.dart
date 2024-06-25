@@ -24,17 +24,17 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
       title: fields[2] as String,
       typeOfBot: fields[3] as String,
       attachmentPath: fields[1] as String?,
-      embeddings: (fields[5] as Map?)?.map(
-        (dynamic k, dynamic v) =>
-            MapEntry(k as String, (v as List).cast<num>()),
-      ),
+      embeddings: (fields[5] as Map?)?.map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<num>())),
+      showSources: fields[6] as bool?,
+      lastReadMessageId: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatBot obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,7 +46,11 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
       ..writeByte(4)
       ..write(obj.messagesList)
       ..writeByte(5)
-      ..write(obj.embeddings);
+      ..write(obj.embeddings)
+      ..writeByte(6)
+      ..write(obj.showSources)
+      ..writeByte(7)
+      ..write(obj.lastReadMessageId);
   }
 
   @override

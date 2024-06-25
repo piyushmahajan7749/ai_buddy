@@ -25,7 +25,7 @@ class _SearchGridViewState extends ConsumerState<SearchGridView> {
   Widget buildGridTile(SearchItem option, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        AppRoute.home.go(context);
+        AppRoute.home.push(context);
 
         ref
             .read(messageListProvider.notifier)

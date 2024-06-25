@@ -26,7 +26,7 @@ class HistoryItem extends ConsumerWidget {
       child: ElevatedButton(
         onPressed: () {
           ref.read(messageListProvider.notifier).updateChatBot(chatBot);
-          AppRoute.chat.push(context);
+          AppRoute.home.push(context);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: context.colorScheme.onBackground,
