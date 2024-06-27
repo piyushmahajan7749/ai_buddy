@@ -39,28 +39,12 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
   @override
   void didUpdateWidget(covariant ChatInterfaceWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToLastReadMessage();
-    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _scrollToLastReadMessage() {
-    // Find the index of the last read message
-    final index =
-        widget.messages.indexWhere((msg) => msg.id == widget.lastReadMessageId);
-    if (index != -1) {
-      _scrollController.animateTo(
-        index * 72.0, // Assuming each message has a height of 72.0
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
   }
 
   @override
@@ -136,12 +120,15 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                   TextButton(
                     child: const Text('Call'),
                     onPressed: () async {
-                      final url = 'tel:$phoneNumber';
-                      if (await canLaunchUrl(Uri.dataFromString(url))) {
-                        await launchUrl(Uri.dataFromString(url));
+                      final uri = Uri.parse('tel:$phoneNumber');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } else {
                         // ignore: only_throw_errors
-                        throw 'Could not launch $url';
+                        throw 'Could not launch $uri';
                       }
                       // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
