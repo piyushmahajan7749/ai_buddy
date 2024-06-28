@@ -65,9 +65,13 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18)
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20)
                   .copyWith(
-                bottom: (isLastMessage && isAiMessage) ? 0 : 16,
+                bottom: (isLastMessage && isAiMessage)
+                    ? 0
+                    : !isAiMessage
+                        ? 20
+                        : 0,
               ),
               child: Text(
                 p0.text,
@@ -211,7 +215,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      phoneNumber,
+                      '+91$phoneNumber',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -225,17 +229,22 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                     icon: const Icon(Icons.call, color: Colors.green),
                     label: const Text('Call'),
                     onPressed: () async {
-                      final uri = Uri.parse('tel:$phoneNumber');
+                      final uri = Uri.parse('tel:+91$phoneNumber');
                       if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } else {
                         // Handle error
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Unable to make a call')),
+                            content: Text('Unable to make a call'),
+                          ),
                         );
                       }
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
                   ),
@@ -243,17 +252,22 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                     icon: const Icon(LineIcons.whatSApp, color: Colors.blue),
                     label: const Text('WhatsApp'),
                     onPressed: () async {
-                      final uri = Uri.parse('https://wa.me/$phoneNumber');
+                      final uri = Uri.parse('https://wa.me/+91$phoneNumber');
                       if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } else {
                         // Handle error
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Unable to open WhatsApp')),
+                            content: Text('Unable to open WhatsApp'),
+                          ),
                         );
                       }
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
                   ),

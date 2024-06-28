@@ -194,9 +194,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           for (final listing in listings) {
             final existingListings =
                 groupedListings[contact]!['listings'] as List;
-            final isDuplicate = existingListings.any((existingListing) =>
-                existingListing['location'] == listing['location'] &&
-                existingListing['description'] == listing['description']);
+            final isDuplicate = existingListings.any(
+              (existingListing) =>
+                  existingListing['location'] == listing['location'] &&
+                  existingListing['description'] == listing['description'],
+            );
 
             if (!isDuplicate) {
               groupedListings[contact]!['listings'].add({
