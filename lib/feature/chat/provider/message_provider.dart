@@ -11,9 +11,10 @@ import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.1.2:5000';
+const String baseUrl = 'http://192.168.1.9:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -26,11 +27,29 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   final uuid = const Uuid();
   bool _isGenerating = false;
   bool get isGenerating => _isGenerating;
+  CancelToken? _cancelToken;
 
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
+  String placeholderId = '';
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
+    final newMessageList = [...state.messagesList, message.toJson()];
+
+    await updateChatBot(
+      ChatBot(
+        messagesList: newMessageList,
+        id: state.id,
+        title: state.title.isEmpty ? message.text : state.title,
+        typeOfBot: state.typeOfBot,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+        lastReadMessageId: state.id,
+      ),
+    );
+  }
+
+  Future<void> updateChatBotRemovePlaceholder(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
 
     await updateChatBot(
@@ -88,8 +107,33 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     );
   }
 
+  DateTime getMostRecentDate(List<dynamic> listings) {
+    return listings
+        .map((listing) => parseDate(listing['date'] as String))
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+  }
+
+  DateTime parseDate(String dateStr) {
+    DateTime date;
+    try {
+      date = DateFormat('yyyy-MM-dd').parse(dateStr);
+    } catch (e) {
+      try {
+        date = DateFormat('MM-yy').parse(dateStr);
+      } catch (e) {
+        date = DateTime.now();
+      }
+    }
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+    );
+  }
+
   Future<void> getPythonAPIResponse({required String prompt}) async {
     _isGenerating = true;
+    _cancelToken = CancelToken(); // Create a new token for this request
     _errorMessage = '';
 
     final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
@@ -97,11 +141,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     }).toList();
 
     chatParts.add({'text': prompt});
-    final String modelMessageId = uuid.v4();
+    placeholderId = uuid.v4();
     final placeholderMessage = CustomMessage(
-      id: modelMessageId,
+      id: placeholderId,
       author: User(
-        id: modelMessageId,
+        id: placeholderId,
         createdAt: DateTime.now().day,
       ),
       type: MessageType.custom,
@@ -110,7 +154,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     await updateChatBotWithCustomMessage(placeholderMessage);
 
     try {
-      final dio = Dio(BaseOptions(baseUrl: baseUrl));
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+        ),
+      );
       // ignore: inference_failure_on_function_invocation
       final response = await dio.post<dynamic>(
         '/chat',
@@ -120,12 +168,8 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
             HttpHeaders.contentTypeHeader: 'application/json',
           },
         ),
+        cancelToken: _cancelToken, // Add the cancel token here
       );
-
-      if (_isGenerating == false) {
-        // Generation was stopped by user
-        return;
-      }
 
       if (response.statusCode == 200 && response.data != null) {
         final responseData = response.data;
@@ -134,11 +178,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
         final Map<String, Map<String, dynamic>> groupedListings = {};
         for (final property in properties) {
-          if (_isGenerating == false) {
-            // Generation was stopped by user
-            return;
-          }
-
           final contact = property['contact'];
           final name = property['name'];
           final listings = property['listings'] as List;
@@ -155,7 +194,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           for (final listing in listings) {
             groupedListings[contact]!['listings'].add({
               'date': listing['date'],
-              'time': listing['time'],
               'location': listing['location'],
               'description': listing['description'],
             });
@@ -168,22 +206,26 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           final name = data['name'];
           final listings = data['listings'] as List;
 
-          // Sort listings by date and time
           listings.sort((a, b) {
-            final dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
-            final dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
-            return dateTimeA.compareTo(dateTimeB); // Sort in descending order
+            final dateTimeA = parseDate(a['date'] as String);
+            final dateTimeB = parseDate(b['date'] as String);
+            return dateTimeB.compareTo(dateTimeA); // Sort in descending order
           });
 
-          // Select top 5 most recent listings
+          // Select top 10 most recent listings
           final topListings = listings.take(10).toList();
 
           // Combine listings into a single message
           final messageText = StringBuffer();
           messageText.writeln('Name: $name');
           messageText.writeln('Contact: $contact');
+
           for (final listing in topListings) {
-            messageText.writeln('Listing date: ${listing['date']}');
+            final dateTime = parseDate(listing['date'] as String);
+
+            messageText.writeln(
+              'Listing date: ${DateFormat('dd/MM/yyyy').format(dateTime)}',
+            );
             messageText.writeln('Location: ${listing['location']}');
             messageText.writeln('Description: ${listing['description']}');
             messageText.writeln();
@@ -205,7 +247,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
             List<Map<String, dynamic>>.from(state.messagesList);
 
         final int placeholderIndex =
-            newMessageList.indexWhere((msg) => msg['id'] == modelMessageId);
+            newMessageList.indexWhere((msg) => msg['id'] == placeholderId);
         if (placeholderIndex != -1) {
           newMessageList.removeAt(placeholderIndex);
         }
@@ -225,29 +267,20 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         logError('Error in response: ${response.statusCode}');
         _errorMessage =
             'Sorry, an error occurred while processing your request.';
-        await addErrorMessage();
+        await addErrorMessage(placeholderId);
       }
     } catch (e) {
       logError('Error in response: $e');
       _errorMessage = 'Sorry, an error occurred while processing your request.';
-      await addErrorMessage();
+
+      await addErrorMessage(placeholderId);
     } finally {
       _isGenerating = false;
+      _cancelToken = null; // Clear the token
     }
   }
 
-  Future<void> addRegenerateOption() async {
-    final regenerateMessage = ChatMessage(
-      id: uuid.v4(),
-      text: '',
-      createdAt: DateTime.now(),
-      typeOfMessage: TypeOfMessage.bot,
-      chatBotId: state.id,
-    );
-    await updateChatBotWithMessage(regenerateMessage);
-  }
-
-  Future<void> addErrorMessage() async {
+  Future<void> addErrorMessage(String placeholderMsgId) async {
     final errorMessage = ChatMessage(
       id: uuid.v4(),
       text: _errorMessage,
@@ -255,11 +288,58 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       typeOfMessage: TypeOfMessage.bot,
       chatBotId: state.id,
     );
-    await updateChatBotWithMessage(errorMessage);
+
+    final newMessageList = List<Map<String, dynamic>>.from(state.messagesList);
+
+    final int placeholderIndex =
+        newMessageList.indexWhere((msg) => msg['id'] == placeholderMsgId);
+    if (placeholderIndex != -1) {
+      newMessageList.removeAt(placeholderIndex);
+    }
+    newMessageList.add(errorMessage.toJson());
+
+    final newStateWithNewMessage = ChatBot(
+      id: state.id,
+      title: state.title,
+      typeOfBot: state.typeOfBot,
+      messagesList: newMessageList,
+      attachmentPath: state.attachmentPath,
+      embeddings: state.embeddings,
+    );
+    await updateChatBot(newStateWithNewMessage);
   }
 
-  void stopGeneration() {
+  Future<void> stopGeneration() async {
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
+      _cancelToken!.cancel('Request cancelled by user');
+    }
     _isGenerating = false;
+    final newMessageList = List<Map<String, dynamic>>.from(state.messagesList);
+
+    final int placeholderIndex =
+        newMessageList.indexWhere((msg) => msg['id'] == placeholderId);
+    if (placeholderIndex != -1) {
+      newMessageList.removeAt(placeholderIndex);
+    }
+
+    final stopMessage = ChatMessage(
+      id: uuid.v4(),
+      text: 'Search was cancelled',
+      createdAt: DateTime.now(),
+      typeOfMessage: TypeOfMessage.bot,
+      chatBotId: state.id,
+    );
+
+    newMessageList.add(stopMessage.toJson());
+    final newStateWithNewMessage = ChatBot(
+      id: state.id,
+      title: state.title,
+      typeOfBot: state.typeOfBot,
+      messagesList: newMessageList,
+      attachmentPath: state.attachmentPath,
+      embeddings: state.embeddings,
+    );
+    await updateChatBot(newStateWithNewMessage);
   }
 
   Future<void> regenerateResults() async {
@@ -268,9 +348,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       (msg) => msg['typeOfMessage'] == TypeOfMessage.user,
     );
 
-    if (lastUserMessage != null) {
-      await getPythonAPIResponse(prompt: lastUserMessage['text'] as String);
-    }
+    await getPythonAPIResponse(prompt: lastUserMessage['text'] as String);
   }
 
   Future<void> updateChatBot(ChatBot newChatBot) async {

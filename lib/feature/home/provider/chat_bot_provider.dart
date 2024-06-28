@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String baseUrl = 'http://192.168.1.2:5000';
+const String baseUrl = 'http://192.168.1.9:5000';
 
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
@@ -81,23 +81,6 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
       // Handle error
       if (kDebugMode) {
         print('Error uploading files: $e');
-      }
-      rethrow;
-    }
-  }
-
-  Future<String> sendMessage(String message) async {
-    try {
-      // ignore: inference_failure_on_function_invocation
-      final response =
-          await dio.post<dynamic>('/chat', data: {'message': message});
-
-      // Return the response from the server
-      return response.data['response'] as String;
-    } catch (e) {
-      // Handle error
-      if (kDebugMode) {
-        print('Error sending message: $e');
       }
       rethrow;
     }

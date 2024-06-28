@@ -5,6 +5,7 @@ import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/home/widgets/search_grid.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -63,31 +64,43 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(p0.text),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18)
+                  .copyWith(
+                bottom: (isLastMessage && isAiMessage) ? 0 : 16,
+              ),
+              child: Text(
+                p0.text,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
             if (isLastMessage && isAiMessage)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.stop, size: 20),
-                    onPressed: () {
-                      // Add stop functionality
-                      ref.read(messageListProvider.notifier).stopGeneration();
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh, size: 20),
-                    onPressed: () {
-                      // Add regenerate functionality
-                      ref
-                          .read(messageListProvider.notifier)
-                          .regenerateResults();
-                    },
-                  ),
-                ],
-              )
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Regenerate',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.refresh_outlined,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      onPressed: () {
+                        // Add regenerate functionality
+                        ref
+                            .read(messageListProvider.notifier)
+                            .regenerateResults();
+                      },
+                    ),
+                  ],
+                ),
+              ),
           ],
         );
       },
@@ -119,21 +132,60 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                 imageFilePath: widget.chatBot.attachmentPath,
               ),
       customMessageBuilder: (p0, {required messageWidth}) {
-        return Row(
-          children: [
-            Lottie.asset(
-              AssetConstants.onboardingAnimation,
-              height: 64,
-              fit: BoxFit.fitHeight,
+        return SizedBox(
+          width: messageWidth.toDouble(),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Lottie.asset(
+                      AssetConstants.onboardingAnimation,
+                      height: 60,
+                      fit: BoxFit.fitHeight,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Text(
+                        'Searching for results...',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Cancel',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          CupertinoIcons.stop_fill,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        tooltip: 'Cancel request',
+                        onPressed: () {
+                          // Add stop functionality
+                          ref
+                              .read(messageListProvider.notifier)
+                              .stopGeneration();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 4),
-              child: Text(
-                'Looking for results...',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          ],
+          ),
         );
       },
       onMessageDoubleTap: (context, message) {

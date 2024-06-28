@@ -1,9 +1,7 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
-import 'package:ai_buddy/core/config/type_of_bot.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/core/util/secure_storage.dart';
 import 'package:ai_buddy/core/util/utils.dart';
-import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,19 +73,6 @@ class _PreferencesState extends ConsumerState<Preferences> {
 
           setState(() {
             currentState = 'Files uploaded successfully!';
-          });
-
-          final chatBot = ChatBot(
-            messagesList: [],
-            id: uuid.v4(),
-            title: 'Chat assistant',
-            typeOfBot: TypeOfBot.pdf,
-            attachmentPath: filePaths.join(', '), // Store all file paths
-          );
-
-          await ref.read(chatBotListProvider.notifier).saveChatBot(chatBot);
-          setState(() {
-            currentState = 'Chat files uploaded. You can now chat!';
           });
 
           await Fluttertoast.showToast(
