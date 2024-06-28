@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -196,33 +197,69 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text('Phone Number Detected'),
-                content: Text('Do you want to call $phoneNumber?'),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                title: const Text(
+                  'Number detected',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-                  TextButton(
-                    child: const Text('Call'),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      phoneNumber,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton.icon(
+                    icon: const Icon(Icons.call, color: Colors.green),
+                    label: const Text('Call'),
                     onPressed: () async {
                       final uri = Uri.parse('tel:$phoneNumber');
                       if (await canLaunchUrl(uri)) {
-                        await launchUrl(
-                          uri,
-                          mode: LaunchMode.externalApplication,
-                        );
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
                       } else {
-                        // ignore: only_throw_errors
-                        throw 'Could not launch $uri';
+                        // Handle error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Unable to make a call')),
+                        );
                       }
-                      // ignore: use_build_context_synchronously
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton.icon(
+                    icon: const Icon(LineIcons.whatSApp, color: Colors.blue),
+                    label: const Text('WhatsApp'),
+                    onPressed: () async {
+                      final uri = Uri.parse('https://wa.me/$phoneNumber');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
+                      } else {
+                        // Handle error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Unable to open WhatsApp')),
+                        );
+                      }
                       Navigator.of(context).pop();
                     },
                   ),
                 ],
+                actionsPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               );
             },
           );
