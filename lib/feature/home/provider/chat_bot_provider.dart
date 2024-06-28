@@ -1,4 +1,3 @@
-import 'package:ai_buddy/feature/gemini/repository/gemini_repository.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 import 'package:dio/dio.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String baseUrl = 'http://192.168.1.9:5000';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
@@ -17,12 +16,10 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   ChatBotListNotifier() : super([]) {
     hiveRepository = HiveRepository();
     dio = Dio(BaseOptions(baseUrl: baseUrl));
-    geminiRepository = GeminiRepository();
   }
 
   late final HiveRepository hiveRepository;
   late final Dio dio;
-  late final GeminiRepository geminiRepository;
 
   Future<String?>? attachImageFilePath() async {
     final pickedFile = await ImagePicker().pickImage(

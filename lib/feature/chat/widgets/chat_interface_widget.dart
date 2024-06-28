@@ -55,6 +55,42 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
         lastReadMessageId: widget.lastReadMessageId,
         scrollDuration: const Duration(milliseconds: 800),
       ),
+      textMessageBuilder: (p0, {required messageWidth, required showName}) {
+        final isLastMessage = widget.messages.first.id == p0.id;
+        final isAiMessage = p0.author.id == TypeOfMessage.bot;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(p0.text),
+            ),
+            if (isLastMessage && isAiMessage)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.stop, size: 20),
+                    onPressed: () {
+                      // Add stop functionality
+                      ref.read(messageListProvider.notifier).stopGeneration();
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.refresh, size: 20),
+                    onPressed: () {
+                      // Add regenerate functionality
+                      ref
+                          .read(messageListProvider.notifier)
+                          .regenerateResults();
+                    },
+                  ),
+                ],
+              )
+          ],
+        );
+      },
       emptyState: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -13,7 +13,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.1.9:5000';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -24,6 +24,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
 
   final uuid = const Uuid();
+  bool _isGenerating = false;
+  bool get isGenerating => _isGenerating;
+
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
@@ -84,6 +89,9 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   }
 
   Future<void> getPythonAPIResponse({required String prompt}) async {
+    _isGenerating = true;
+    _errorMessage = '';
+
     final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
       return {'text': msg['text'] as String};
     }).toList();
@@ -114,13 +122,23 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         ),
       );
 
-      if (response.statusCode == 200) {
+      if (_isGenerating == false) {
+        // Generation was stopped by user
+        return;
+      }
+
+      if (response.statusCode == 200 && response.data != null) {
         final responseData = response.data;
         final rawResponse = responseData['response'];
         final properties = rawResponse['properties'] as List;
 
         final Map<String, Map<String, dynamic>> groupedListings = {};
         for (final property in properties) {
+          if (_isGenerating == false) {
+            // Generation was stopped by user
+            return;
+          }
+
           final contact = property['contact'];
           final name = property['name'];
           final listings = property['listings'] as List;
@@ -205,9 +223,53 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         await updateChatBot(newStateWithNewMessage);
       } else {
         logError('Error in response: ${response.statusCode}');
+        _errorMessage =
+            'Sorry, an error occurred while processing your request.';
+        await addErrorMessage();
       }
     } catch (e) {
       logError('Error in response: $e');
+      _errorMessage = 'Sorry, an error occurred while processing your request.';
+      await addErrorMessage();
+    } finally {
+      _isGenerating = false;
+    }
+  }
+
+  Future<void> addRegenerateOption() async {
+    final regenerateMessage = ChatMessage(
+      id: uuid.v4(),
+      text: '',
+      createdAt: DateTime.now(),
+      typeOfMessage: TypeOfMessage.bot,
+      chatBotId: state.id,
+    );
+    await updateChatBotWithMessage(regenerateMessage);
+  }
+
+  Future<void> addErrorMessage() async {
+    final errorMessage = ChatMessage(
+      id: uuid.v4(),
+      text: _errorMessage,
+      createdAt: DateTime.now(),
+      typeOfMessage: TypeOfMessage.bot,
+      chatBotId: state.id,
+    );
+    await updateChatBotWithMessage(errorMessage);
+  }
+
+  void stopGeneration() {
+    _isGenerating = false;
+  }
+
+  Future<void> regenerateResults() async {
+    // Get the last user message and regenerate
+    final lastUserMessage = state.messagesList.lastWhere(
+      (msg) => msg['typeOfMessage'] == TypeOfMessage.user,
+    );
+
+    if (lastUserMessage != null) {
+      await getPythonAPIResponse(prompt: lastUserMessage['text'] as String);
     }
   }
 
