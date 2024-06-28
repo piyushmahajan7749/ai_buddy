@@ -192,11 +192,19 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           }
 
           for (final listing in listings) {
-            groupedListings[contact]!['listings'].add({
-              'date': listing['date'],
-              'location': listing['location'],
-              'description': listing['description'],
-            });
+            final existingListings =
+                groupedListings[contact]!['listings'] as List;
+            final isDuplicate = existingListings.any((existingListing) =>
+                existingListing['location'] == listing['location'] &&
+                existingListing['description'] == listing['description']);
+
+            if (!isDuplicate) {
+              groupedListings[contact]!['listings'].add({
+                'date': listing['date'],
+                'location': listing['location'],
+                'description': listing['description'],
+              });
+            }
           }
         }
 
