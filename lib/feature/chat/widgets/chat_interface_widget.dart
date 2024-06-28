@@ -67,14 +67,10 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20)
                   .copyWith(
-                bottom: (isLastMessage && isAiMessage)
-                    ? 0
-                    : !isAiMessage
-                        ? 20
-                        : 0,
+                bottom: (isLastMessage && isAiMessage) ? 10 : 20,
               ),
               child: Text(
-                p0.text,
+                p0.text.trim(),
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),

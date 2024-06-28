@@ -273,17 +273,17 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           embeddings: state.embeddings,
         );
         await updateChatBot(newStateWithNewMessage);
+      }
+    } catch (e) {
+      if (e is DioError && e.type == DioErrorType.cancel) {
+        // The request was cancelled, so we don't need to add an error message
+        logInfo('Request was cancelled');
       } else {
-        logError('Error in response: ${response.statusCode}');
+        logError('Error in response: $e');
         _errorMessage =
             'Sorry, an error occurred while processing your request.';
         await addErrorMessage(placeholderId);
       }
-    } catch (e) {
-      logError('Error in response: $e');
-      _errorMessage = 'Sorry, an error occurred while processing your request.';
-
-      await addErrorMessage(placeholderId);
     } finally {
       _isGenerating = false;
       _cancelToken = null; // Clear the token
