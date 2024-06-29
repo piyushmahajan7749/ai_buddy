@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'http://192.168.1.9:5000';
+const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -274,10 +274,9 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         );
         await updateChatBot(newStateWithNewMessage);
       }
-    } catch (e) {
-      if (e is DioError && e.type == DioErrorType.cancel) {
-        // The request was cancelled, so we don't need to add an error message
-        logInfo('Request was cancelled');
+    } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) {
+        print('Request canceled: ${e.message}');
       } else {
         logError('Error in response: $e');
         _errorMessage =

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/config/type_of_message.dart';
 import 'package:ai_buddy/core/extension/context.dart';
@@ -76,24 +78,23 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
             ),
             if (isLastMessage && isAiMessage)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Regenerate',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                    ),
-                    IconButton(
+                    TextButton.icon(
+                      label: Text(
+                        'Regenerate',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
                       icon: Icon(
                         Icons.refresh_outlined,
-                        size: 18,
+                        size: 24,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                       onPressed: () {
-                        // Add regenerate functionality
                         ref
                             .read(messageListProvider.notifier)
                             .regenerateResults();
@@ -157,32 +158,26 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Row(
-                    children: [
-                      Text(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      label: Text(
                         'Cancel',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          CupertinoIcons.stop_fill,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        tooltip: 'Cancel request',
-                        onPressed: () {
-                          // Add stop functionality
-                          ref
-                              .read(messageListProvider.notifier)
-                              .stopGeneration();
-                        },
+                      icon: Icon(
+                        CupertinoIcons.stop_fill,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
-                    ],
-                  ),
+                      onPressed: () {
+                        ref.read(messageListProvider.notifier).stopGeneration();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -225,7 +220,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                     icon: const Icon(Icons.call, color: Colors.green),
                     label: const Text('Call'),
                     onPressed: () async {
-                      final uri = Uri.parse('tel:+91$phoneNumber');
+                      final uri = Uri.parse('tel:$phoneNumber');
                       if (await canLaunchUrl(uri)) {
                         await launchUrl(
                           uri,
@@ -248,18 +243,24 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                     icon: const Icon(LineIcons.whatSApp, color: Colors.blue),
                     label: const Text('WhatsApp'),
                     onPressed: () async {
-                      final uri = Uri.parse('https://wa.me/+91$phoneNumber');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(
-                          uri,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      } else {
-                        // Handle error
-                        // ignore: use_build_context_synchronously
+                      final contact = '+91$phoneNumber';
+                      final androidUrl =
+                          'whatsapp://send?phone=$contact&text=Hi, is this property still available?\n\n${newMsg["text"]}';
+                      final iosUrl =
+                          "https://wa.me/$contact?text=${Uri.parse('Hi, is this property still available?\n\n${newMsg["text"]}')}";
+
+                      try {
+                        if (Platform.isIOS) {
+                          await launchUrl(Uri.parse(iosUrl));
+                        } else {
+                          await launchUrl(Uri.parse(androidUrl));
+                        }
+                      } on Exception {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Unable to open WhatsApp'),
+                          SnackBar(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onBackground,
+                            content: const Text('Unable to open WhatsApp'),
                           ),
                         );
                       }
