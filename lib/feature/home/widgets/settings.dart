@@ -3,6 +3,7 @@ import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/core/util/secure_storage.dart';
 import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
+import 'package:ai_buddy/main.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -208,9 +209,9 @@ class _PreferencesState extends ConsumerState<Preferences> {
           trailing: const SizedBox(),
           leading: const Icon(LineIcons.alternateSignOut),
           onPressed: (context) async {
-            await secureStorage.deleteApiKey();
+            await auth.signOut();
             // ignore: use_build_context_synchronously
-            AppRoute.welcome.go(context);
+            AppRoute.login.go(context);
           },
         ),
       ],

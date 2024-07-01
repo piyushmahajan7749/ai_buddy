@@ -3,7 +3,7 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
-import 'package:ai_buddy/core/util/secure_storage.dart';
+import 'package:ai_buddy/main.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -15,22 +15,25 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final SecureStorage secureStorage = SecureStorage();
-
   @override
   void initState() {
     super.initState();
-    _navigateToNextPage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateToNextPage();
+    });
   }
 
   Future<void> _navigateToNextPage() async {
-    final String? apiKey = await secureStorage.getApiKey();
-    if (apiKey == null || apiKey.isEmpty) {
-      AppRoute.welcome.go(context);
+    // Add a delay to show the splash screen for a moment
+    await Future<void>.delayed(const Duration(seconds: 2));
+
+    // Check if the user is signed in
+    final bool isSignedIn = auth.currentUser != null;
+
+    if (isSignedIn) {
+      AppRoute.home.go(context);
     } else {
-      await Future<void>.delayed(const Duration(milliseconds: 1200), () async {
-        AppRoute.home.go(context);
-      });
+      AppRoute.welcome.go(context);
     }
   }
 

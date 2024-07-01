@@ -256,9 +256,11 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                           await launchUrl(Uri.parse(androidUrl));
                         }
                       } on Exception {
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor:
+                                // ignore: use_build_context_synchronously
                                 Theme.of(context).colorScheme.onBackground,
                             content: const Text('Unable to open WhatsApp'),
                           ),

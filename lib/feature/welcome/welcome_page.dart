@@ -1,6 +1,6 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/extension/context.dart';
-import 'package:ai_buddy/feature/welcome/widgets/api_key_bottom_sheet.dart';
+import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -76,23 +76,7 @@ class WelcomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: ElevatedButton(
                     onPressed: () {
-                      final TextEditingController apiKeyController =
-                          TextEditingController();
-
-                      showModalBottomSheet<void>(
-                        context: context,
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
-                        builder: (context) {
-                          return APIKeyBottomSheet(
-                            apiKeyController: apiKeyController,
-                            isCalledFromHomePage: false,
-                          );
-                        },
-                      );
+                      AppRoute.login.go(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colorScheme.onSurface,

@@ -2,6 +2,7 @@
 
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/feature/home/mainpage.dart';
+import 'package:ai_buddy/feature/welcome/login.dart';
 import 'package:ai_buddy/feature/welcome/welcome_page.dart';
 import 'package:ai_buddy/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,12 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoute.splash.path,
       builder: (context, state) => const SplashPage(),
+    ),
+    GoRoute(
+      path: AppRoute.login.path,
+      builder: (context, state) => const LoginScreen(
+        showClose: false,
+      ),
     ),
     GoRoute(
       path: AppRoute.home.path,

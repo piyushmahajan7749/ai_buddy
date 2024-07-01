@@ -1,5 +1,8 @@
 import 'package:ai_buddy/core/app/app.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
+import 'package:ai_buddy/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +12,14 @@ import 'package:hive/hive.dart';
 import 'package:loggy/loggy.dart';
 import 'package:path_provider/path_provider.dart';
 
+late FirebaseAuth auth;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  auth = FirebaseAuth.instance;
   _initLoggy();
   _initGoogleFonts();
 

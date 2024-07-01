@@ -276,7 +276,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       }
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) {
-        print('Request canceled: ${e.message}');
+        // print('Request canceled: ${e.message}');
       } else {
         logError('Error in response: $e');
         _errorMessage =
