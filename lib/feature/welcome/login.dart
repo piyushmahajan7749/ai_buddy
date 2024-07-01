@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
             cardTheme: CardTheme(
               color: Theme.of(context).colorScheme.surface,
-              margin: const EdgeInsets.symmetric(vertical: 40),
+              margin: const EdgeInsets.symmetric(vertical: 80),
             ),
             errorColor: Theme.of(context).colorScheme.primary,
             switchAuthTextColor: Theme.of(context).colorScheme.onPrimary,
