@@ -9,9 +9,12 @@ import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:ai_buddy/feature/home/widgets/search_grid.dart';
 import 'package:ai_buddy/feature/home/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class ChatHistoryPage extends ConsumerStatefulWidget {
   const ChatHistoryPage({super.key});
@@ -22,6 +25,63 @@ class ChatHistoryPage extends ConsumerStatefulWidget {
 
 class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
   late List<SearchItem> searchItems;
+  @override
+  void initState() {
+    super.initState();
+    initSharingIntent();
+  }
+
+  Future<void> initSharingIntent() async {
+    // For sharing files coming from outside the app while the app is closed
+    await ReceiveSharingIntent.instance.getInitialMedia().then((value) {
+      if (value.isNotEmpty) {
+        _handleSharedFiles(value);
+      }
+    });
+
+    // For handling files shared from WhatsApp while the app is in memory
+    ReceiveSharingIntent.instance.getMediaStream().listen((value) {
+      if (value.isNotEmpty) {
+        _handleSharedFiles(value);
+      }
+    }, onError: (err) {
+      print('getIntentDataStream error: $err');
+    });
+  }
+
+  Future<void> _handleSharedFiles(List<SharedMediaFile> sharedFiles) async {
+    final filePaths = sharedFiles.map((file) => file.path).toList();
+
+    if (filePaths.isNotEmpty) {
+      try {
+        await ref.read(chatBotListProvider.notifier).uploadFiles(filePaths);
+
+        await Fluttertoast.showToast(
+          msg: 'Files Uploaded successfully!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          textColor: Theme.of(context).colorScheme.background,
+          fontSize: 16,
+        );
+      } catch (e) {
+        if (kDebugMode) {
+          print('File upload error: $e');
+        }
+
+        await Fluttertoast.showToast(
+          msg: 'File upload error!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          textColor: Theme.of(context).colorScheme.background,
+          fontSize: 16,
+        );
+      }
+    }
+  }
 
   @override
   void didChangeDependencies() {

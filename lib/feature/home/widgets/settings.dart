@@ -62,7 +62,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
     });
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['txt'],
+      allowedExtensions: ['zip'],
       allowMultiple: true,
     );
     if (result != null) {
@@ -158,8 +158,8 @@ class _PreferencesState extends ConsumerState<Preferences> {
             launchInWebViewOrVC(
               Uri(
                 scheme: 'https',
-                host: 'www.apple.com',
-                path: '/legal/internet-services/itunes/dev/stdeula/',
+                host: '10970870-1215108.renderforestsites.com',
+                path: '/terms/',
               ),
             );
           },
@@ -178,7 +178,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             launchInWebViewOrVC(
               Uri(
                 scheme: 'https',
-                host: 'www.9roof.ai',
+                host: '10970870-1215108.renderforestsites.com',
                 path: '/privacy/',
               ),
             );
