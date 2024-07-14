@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:ai_buddy/core/config/assets_constants.dart';
@@ -142,12 +141,9 @@ class _PreferencesState extends ConsumerState<Preferences> {
         await launchUrl(Uri.parse(androidUrl));
       }
     } on Exception {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor:
-              // ignore: use_build_context_synchronously
-              Theme.of(context).colorScheme.onBackground,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
           content: const Text('Unable to open WhatsApp'),
         ),
       );
@@ -180,9 +176,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 3,
-            // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            // ignore: use_build_context_synchronously
             textColor: Theme.of(context).colorScheme.background,
             fontSize: 16,
           );
@@ -201,9 +195,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 2,
-            // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            // ignore: use_build_context_synchronously
             textColor: Theme.of(context).colorScheme.background,
             fontSize: 16,
           );
@@ -437,7 +429,6 @@ class _PreferencesState extends ConsumerState<Preferences> {
           leading: const Icon(LineIcons.alternateSignOut),
           onPressed: (context) async {
             await auth.signOut();
-            // ignore: use_build_context_synchronously
             AppRoute.login.go(context);
           },
         ),
