@@ -2,7 +2,7 @@ name: ai_buddy
 description: 9Roof AI app.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.12+13
+version: 1.1.14+15
 
 environment:
   sdk: ">=3.1.3 <4.0.0"
@@ -71,11 +71,11 @@ dev_dependencies:
 
 flutter_icons:
   android: "launcher_icon_android"
-  image_path: "assets/images/9Roof-icon.png"
-  adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
-  adaptive_icon_foreground: "assets/images/9Roof-icon.png" # o
+  image_path: "assets/images/roofbot.png"
+  adaptive_icon_background: "#000" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/images/roofbot.png" # o
   ios: "launcher_icon_ios" # can specify file name here e.g. "My-Launcher-Icon"
-  image_path_ios: "assets/images/9Roof-icon.png"
+  image_path_ios: "assets/images/roofbot.png"
 
 flutter:
   uses-material-design: true

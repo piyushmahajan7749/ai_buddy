@@ -17,6 +17,8 @@ class AuthService {
         return 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
         return 'Wrong password provided for that user.';
+      } else if (e.code == 'invalid-credential') {
+        return 'Invalid user credentials.';
       }
     }
     return '';
