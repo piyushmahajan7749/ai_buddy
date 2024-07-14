@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:ai_buddy/core/config/assets_constants.dart';
+import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
+import 'package:ai_buddy/core/util/auth.dart';
 import 'package:ai_buddy/core/util/secure_storage.dart';
 import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
@@ -13,6 +19,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 class Preferences extends ConsumerStatefulWidget {
@@ -38,6 +45,14 @@ class _PreferencesState extends ConsumerState<Preferences> {
     ref.read(chatBotListProvider.notifier).fetchChatBots();
   }
 
+  Future<Map<String, dynamic>> getUserData() async {
+    final String? userId = AuthService().getCurrentUserId();
+    if (userId == null) {
+      return {};
+    }
+    return DbServiceUser(uid: userId).getUserData();
+  }
+
   Widget _buildLoadingIndicator(String currentState) {
     return Center(
       child: Column(
@@ -53,6 +68,90 @@ class _PreferencesState extends ConsumerState<Preferences> {
         ],
       ),
     );
+  }
+
+  void _showUpgradeDialog() {
+    // ignore: inference_failure_on_function_invocation
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Upgrade to Pro'),
+          content:
+              const Text('Contact us on WhatsApp to upgrade your account.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Contact on WhatsApp'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _launchWhatsApp();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteDialog() {
+    // ignore: inference_failure_on_function_invocation
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Account?'),
+          content: const Text('Are you sure you want to delete your account?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () async {
+                await AuthService().deleteUser();
+                Navigator.pop(context);
+                AppRoute.login.go(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _launchWhatsApp() async {
+    const contact = '+91-8818888870';
+    const androidUrl =
+        'whatsapp://send?phone=$contact&text=Hi, I would like to upgrade my 9Roof AI account to Pro.';
+    final iosUrl =
+        "https://wa.me/$contact?text=${Uri.parse('Hi, I would like to upgrade my 9Roof AI account to Pro.')}";
+
+    try {
+      if (Platform.isIOS) {
+        await launchUrl(Uri.parse(iosUrl));
+      } else {
+        await launchUrl(Uri.parse(androidUrl));
+      }
+    } on Exception {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor:
+              // ignore: use_build_context_synchronously
+              Theme.of(context).colorScheme.onBackground,
+          content: const Text('Unable to open WhatsApp'),
+        ),
+      );
+    }
   }
 
   Future<void> _onUploadPressed() async {
@@ -134,6 +233,120 @@ class _PreferencesState extends ConsumerState<Preferences> {
     );
   }
 
+  SettingsSection? getUserInfoSection() {
+    return SettingsSection(
+      title: Text(
+        'Account Info',
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+      ),
+      tiles: [
+        SettingsTile(
+          leading: const Icon(CupertinoIcons.person),
+          trailing: const SizedBox(),
+          title: FutureBuilder<Map<String, dynamic>>(
+            future: getUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              final userId = AuthService().getCurrentUserEmail() ?? 'N/A';
+              return Text(
+                userId,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+              );
+            },
+          ),
+        ),
+        SettingsTile(
+          leading: const Icon(CupertinoIcons.star),
+          title: FutureBuilder<Map<String, dynamic>>(
+            future: getUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              final bool isPro = snapshot.data?['is_pro'] as bool;
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    isPro ? "You're on the pro plan" : "You're on trial plan",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  if (!isPro) ...[
+                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: _showUpgradeDialog,
+                      child: Text(
+                        'Upgrade',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ],
+              );
+            },
+          ),
+        ),
+        SettingsTile(
+          title: Text(
+            'Credits Left',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          leading: const Icon(CupertinoIcons.money_dollar_circle),
+          trailing: FutureBuilder<Map<String, dynamic>>(
+            future: getUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              final creditsLeft = snapshot.data?['credits_left'] ?? 'N/A';
+              final bool isPro = snapshot.data?['is_pro'] as bool;
+
+              return Text(
+                isPro ? 'Unlimited' : '$creditsLeft',
+                style: Theme.of(context).textTheme.headlineSmall,
+              );
+            },
+          ),
+        ),
+        SettingsTile(
+          title: Text(
+            'Location',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+                ),
+          ),
+          trailing: Text(
+            'Indore',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+                ),
+          ),
+          leading: Icon(
+            CupertinoIcons.location,
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+          ),
+          onPressed: (context) async {},
+        ),
+      ],
+    );
+  }
+
   SettingsSection? getSecuritySections() {
     return SettingsSection(
       title: Text(
@@ -188,16 +401,30 @@ class _PreferencesState extends ConsumerState<Preferences> {
     );
   }
 
-  SettingsSection? getAccountSections(SecureStorage secureStorage) {
+  SettingsSection? getAppSettingsSections(SecureStorage secureStorage) {
     return SettingsSection(
       title: Text(
-        'Account',
+        'Settings',
         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),
       tiles: [
+        SettingsTile(
+          title: Text(
+            'Upload chats',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          trailing: const SizedBox(),
+          leading: const Icon(CupertinoIcons.cloud_upload),
+          onPressed: (context) async {
+            await _onUploadPressed();
+          },
+        ),
         SettingsTile(
           title: Text(
             'Sign out',
@@ -214,48 +441,17 @@ class _PreferencesState extends ConsumerState<Preferences> {
             AppRoute.login.go(context);
           },
         ),
-      ],
-    );
-  }
-
-  SettingsSection? getAppSettingsSections(SecureStorage secureStorage) {
-    return SettingsSection(
-      title: Text(
-        'Settings',
-        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-      ),
-      tiles: [
         SettingsTile(
           title: Text(
-            'Indore',
+            'Delete Account',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w500,
-                  color:
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
                 ),
           ),
+          leading: const Icon(LineIcons.trash),
           trailing: const SizedBox(),
-          leading: Icon(
-            CupertinoIcons.location_solid,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
-          ),
-          onPressed: (context) async {},
-        ),
-        SettingsTile(
-          title: Text(
-            'Upload chats',
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-          ),
-          trailing: const SizedBox(),
-          leading: const Icon(CupertinoIcons.cloud_upload),
-          onPressed: (context) async {
-            await _onUploadPressed();
+          onPressed: (context) {
+            _showDeleteDialog();
           },
         ),
       ],
@@ -266,8 +462,8 @@ class _PreferencesState extends ConsumerState<Preferences> {
     return SettingsList(
       applicationType: ApplicationType.both,
       sections: [
+        getUserInfoSection()!,
         getAppSettingsSections(secureStorage)!,
-        getAccountSections(secureStorage)!,
         getSecuritySections()!,
         CustomSettingsSection(
           child: Padding(

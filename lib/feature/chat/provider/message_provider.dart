@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ai_buddy/core/config/type_of_message.dart';
+import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/core/logger/logger.dart';
+import 'package:ai_buddy/core/util/auth.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
@@ -136,6 +138,27 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     _cancelToken = CancelToken(); // Create a new token for this request
     _errorMessage = '';
 
+    final String? userId = AuthService().getCurrentUserId();
+    if (userId == null) {
+      _errorMessage = 'User not authenticated';
+      await addErrorMessage(placeholderId);
+      _isGenerating = false;
+      return;
+    }
+
+    final userData = await DbServiceUser(uid: userId).getUserData();
+    final bool isPro = userData['is_pro'] as bool;
+    final int creditsUsed = userData['credits_used'] as int;
+
+    if (!isPro && creditsUsed >= 9) {
+      _errorMessage =
+          // ignore: lines_longer_than_80_chars
+          'You have reached your limit. Please upgrade to Pro from settings tab.';
+      await addErrorMessage(placeholderId);
+      _isGenerating = false;
+      return;
+    }
+
     final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
       return {'text': msg['text'] as String};
     }).toList();
@@ -175,6 +198,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         final responseData = response.data;
         final rawResponse = responseData['response'];
         final properties = rawResponse['properties'] as List;
+
+        if (!isPro) {
+          await DbServiceUser(uid: userId).updateCredits();
+        }
 
         final Map<String, Map<String, dynamic>> groupedListings = {};
         for (final property in properties) {

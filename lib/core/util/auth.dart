@@ -1,3 +1,4 @@
+import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,32 @@ class AuthService {
       return 'Password reset email has been sent!';
     } on Exception catch (e) {
       return 'Error: $e';
+    }
+  }
+
+  String? getCurrentUserId() {
+    return auth.currentUser?.uid;
+  }
+
+  String? getCurrentUserEmail() {
+    return auth.currentUser?.email;
+  }
+
+  Future<String> registerWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final UserCredential result = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final User? user = result.user;
+
+      await DbServiceUser(uid: user!.uid).createUserPref();
+      return '';
+    } on Exception catch (error) {
+      return error.toString();
     }
   }
 

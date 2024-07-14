@@ -22,6 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return response;
   }
 
+  Future<String?> _signup(SignupData data) async {
+    final response = await auth.registerWithEmailAndPassword(
+      data.name.toString(),
+      data.password.toString(),
+    );
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: FlutterLogin(
           theme: LoginTheme(
-            primaryColor: Theme.of(context).colorScheme.onBackground,
-            pageColorLight: Theme.of(context).colorScheme.background,
+            primaryColor: Theme.of(context).colorScheme.background,
             accentColor: Theme.of(context).colorScheme.primary,
             buttonStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.background,
@@ -44,13 +51,10 @@ class _LoginScreenState extends State<LoginScreen> {
             errorColor: Theme.of(context).colorScheme.primary,
             switchAuthTextColor: Theme.of(context).colorScheme.onPrimary,
             authButtonPadding: const EdgeInsets.symmetric(vertical: 20),
-            titleStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
+            titleStyle: Theme.of(context).textTheme.headlineMedium!.copyWith(
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
             textFieldStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-            footerTextStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.secondary,
                 ),
             buttonTheme: LoginButtonTheme(
@@ -59,10 +63,22 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           title: '9Roof AI',
-          logo: 'assets/images/9Roof-icon.png',
+          logo: 'assets/images/roofbot.png',
           onLogin: _authUser,
+          headerWidget: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Center(
+              child: Text(
+                'Already registered? Click log in',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+              ),
+            ),
+          ),
           hideForgotPasswordButton: true,
-          initialAuthMode: AuthMode.login,
+          initialAuthMode: AuthMode.signup,
+          onSignup: _signup,
           onRecoverPassword: auth.sendPasswordResetEmail,
           userValidator: (value) {
             if (!value!.contains('@')) {

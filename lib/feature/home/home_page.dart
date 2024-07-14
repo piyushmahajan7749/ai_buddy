@@ -40,13 +40,15 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
     });
 
     // For handling files shared from WhatsApp while the app is in memory
-    ReceiveSharingIntent.instance.getMediaStream().listen((value) {
-      if (value.isNotEmpty) {
-        _handleSharedFiles(value);
-      }
-    }, onError: (err) {
-      print('getIntentDataStream error: $err');
-    });
+    ReceiveSharingIntent.instance.getMediaStream().listen(
+      (value) {
+        if (value.isNotEmpty) {
+          _handleSharedFiles(value);
+        }
+        // ignore: inference_failure_on_untyped_parameter
+      },
+      onError: (err) {},
+    );
   }
 
   Future<void> _handleSharedFiles(List<SharedMediaFile> sharedFiles) async {
