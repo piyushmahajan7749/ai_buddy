@@ -13,6 +13,7 @@ class ChatBot extends HiveObject {
     this.embeddings,
     this.showSources,
     this.lastReadMessageId,
+    this.shownMessagesCount = 4, // Add this line
   });
   @HiveField(0)
   final String id;
@@ -37,4 +38,7 @@ class ChatBot extends HiveObject {
 
   @HiveField(7)
   final String? lastReadMessageId;
+
+  @HiveField(8) // Add this field
+  int shownMessagesCount;
 }

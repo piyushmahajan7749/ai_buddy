@@ -25,7 +25,8 @@ class ChatPage extends ConsumerWidget {
             ? AssetConstants.imageLogo
             : AssetConstants.textLogo;
 
-    final List<types.Message> messages = chatBot.messagesList.map((msg) {
+    final List<types.Message> messages =
+        chatBot.messagesList.take(chatBot.shownMessagesCount).map((msg) {
       if (msg['type'] == 'custom') {
         return types.CustomMessage(
           author: const User(id: 'cd', createdAt: 11),
@@ -41,7 +42,7 @@ class ChatPage extends ConsumerWidget {
         text: msg['text'] as String,
       );
     }).toList()
-      ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+          ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
     return PopScope(
       canPop: false,

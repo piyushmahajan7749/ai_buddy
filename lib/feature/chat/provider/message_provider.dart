@@ -318,6 +318,25 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     }
   }
 
+  Future<void> showMoreMessages() async {
+    final newShownCount = state.shownMessagesCount + 4;
+    final updatedChatBot = ChatBot(
+      messagesList: state.messagesList,
+      id: state.id,
+      title: state.title,
+      typeOfBot: state.typeOfBot,
+      attachmentPath: state.attachmentPath,
+      embeddings: state.embeddings,
+      lastReadMessageId: state.lastReadMessageId,
+      shownMessagesCount: newShownCount,
+    );
+    await updateChatBot(updatedChatBot);
+  }
+
+  bool hasMoreMessages() {
+    return state.shownMessagesCount < state.messagesList.length;
+  }
+
   Future<void> addErrorMessage(String placeholderMsgId) async {
     final errorMessage = ChatMessage(
       id: uuid.v4(),

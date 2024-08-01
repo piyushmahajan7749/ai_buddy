@@ -53,8 +53,12 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final chatBot = ref.watch(messageListProvider);
+    final shownMessages =
+        widget.messages.take(chatBot.shownMessagesCount).toList();
+
     return Chat(
-      messages: widget.messages,
+      messages: shownMessages,
       scrollToUnreadOptions: ScrollToUnreadOptions(
         lastReadMessageId: widget.lastReadMessageId,
         scrollDuration: const Duration(milliseconds: 800),
@@ -82,24 +86,32 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton.icon(
-                      label: Text(
-                        'Regenerate',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
-                      icon: Icon(
-                        Icons.refresh_outlined,
-                        size: 24,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      onPressed: () {
-                        ref
-                            .read(messageListProvider.notifier)
-                            .regenerateResults();
-                      },
-                    ),
+                    if (ref
+                        .read(messageListProvider.notifier)
+                        .hasMoreMessages())
+                      TextButton.icon(
+                        onPressed: () {
+                          ref
+                              .read(messageListProvider.notifier)
+                              .showMoreMessages();
+                        },
+                        label: Text(
+                          'Show More',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                        ),
+                        icon: Icon(
+                          Icons.remove_red_eye_outlined,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      )
+                    else
+                      const SizedBox()
                   ],
                 ),
               ),
