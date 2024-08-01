@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '984079280576',
     projectId: 'roof-58b29',
     storageBucket: 'roof-58b29.appspot.com',
-    androidClientId: '984079280576-1ekdupcfeupovuurf18pm1ebbdm2strt.apps.googleusercontent.com',
-    iosClientId: '984079280576-th2djsiaceadm0ifltc5b5qm4psm2jo9.apps.googleusercontent.com',
-    iosBundleId: 'com.superawesomeapps.AIBuddy',
+    androidClientId:
+        '984079280576-1ekdupcfeupovuurf18pm1ebbdm2strt.apps.googleusercontent.com',
+    iosClientId:
+        '984079280576-th2djsiaceadm0ifltc5b5qm4psm2jo9.apps.googleusercontent.com',
+    iosBundleId: 'com.piyushmahajan.9roofai',
   );
 }

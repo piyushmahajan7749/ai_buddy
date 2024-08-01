@@ -16,7 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+// const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),

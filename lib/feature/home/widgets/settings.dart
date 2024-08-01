@@ -73,7 +73,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
     // ignore: inference_failure_on_function_invocation
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Upgrade to Pro'),
           content:
@@ -242,7 +242,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             future: getUserData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const SizedBox();
               }
               final userId = AuthService().getCurrentUserEmail() ?? 'N/A';
               return Text(
@@ -261,7 +261,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             future: getUserData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const SizedBox();
               }
               final bool isPro = snapshot.data?['is_pro'] as bool;
               return Row(
@@ -300,7 +300,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             future: getUserData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const SizedBox();
               }
               final creditsLeft = snapshot.data?['credits_left'] ?? 'N/A';
               final bool isPro = snapshot.data?['is_pro'] as bool;

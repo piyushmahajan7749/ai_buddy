@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+// const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
+const String baseUrl = 'http://192.168.1.2:5000';
 
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
