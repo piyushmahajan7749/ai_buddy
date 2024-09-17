@@ -111,7 +111,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                         ),
                       )
                     else
-                      const SizedBox()
+                      const SizedBox(),
                   ],
                 ),
               ),

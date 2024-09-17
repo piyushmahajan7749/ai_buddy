@@ -25,6 +25,31 @@ class AuthService {
     return '';
   }
 
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (credential) async {
+        // Auto-retrieve verification code
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (e) {
+        // Verification failed
+      },
+      codeSent: (verificationId, resendToken) async {
+        // Save the verification ID for future use
+        const String smsCode = 'xxxxxx'; // Code input by the user
+        final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: smsCode,
+        );
+        // Sign the user in with the credential
+        await auth.signInWithCredential(credential);
+      },
+      codeAutoRetrievalTimeout: (verificationId) {},
+      timeout: const Duration(seconds: 60),
+    );
+  }
+
   Future<String> sendPasswordResetEmail(String email) async {
     try {
       await auth.sendPasswordResetEmail(email: email);

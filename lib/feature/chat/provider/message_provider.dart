@@ -31,10 +31,24 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   bool _isGenerating = false;
   bool get isGenerating => _isGenerating;
   CancelToken? _cancelToken;
+  final Map<String, dynamic> _filters = {};
 
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
   String placeholderId = '';
+
+  void setFilter(String key, dynamic value) {
+    if (value == null || (value is bool && !value)) {
+      _filters.remove(key);
+    } else {
+      _filters[key] = value;
+    }
+    // Trigger a new search with updated filters
+    final lastUserMessage = state.messagesList.lastWhere(
+      (msg) => msg['typeOfMessage'] == TypeOfMessage.user,
+    );
+    getPythonAPIResponse(prompt: lastUserMessage['text'] as String);
+  }
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
     final newMessageList = [...state.messagesList, message.toJson()];
@@ -185,8 +199,11 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       );
       // ignore: inference_failure_on_function_invocation
       final response = await dio.post<dynamic>(
-        '/chat',
-        data: jsonEncode({'message': prompt}),
+        '/search',
+        data: jsonEncode({
+          'message': prompt,
+          'filters': _filters,
+        }),
         options: Options(
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
@@ -197,90 +214,43 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
       if (response.statusCode == 200 && response.data != null) {
         final responseData = response.data;
-        final rawResponse = responseData['response'];
-        final properties = rawResponse['properties'] as List;
+        final List<dynamic> properties =
+            responseData['results'] as List<dynamic>;
 
         if (!isPro) {
           await DbServiceUser(uid: userId).updateCredits();
         }
 
-        final Map<String, Map<String, dynamic>> groupedListings = {};
-        for (final property in properties) {
-          final contact = property['contact'];
-          final name = property['name'];
-          final listings = property['listings'] as List;
-
-          if (!groupedListings.containsKey(contact)) {
-            groupedListings[contact as String] = {
-              'contact': contact,
-              'name': name,
-              // ignore: inference_failure_on_collection_literal
-              'listings': [],
-            };
-          }
-
-          for (final listing in listings) {
-            final existingListings =
-                groupedListings[contact]!['listings'] as List;
-            final isDuplicate = existingListings.any(
-              (existingListing) =>
-                  existingListing['location'] == listing['location'] &&
-                  existingListing['description'] == listing['description'],
-            );
-
-            if (!isDuplicate) {
-              groupedListings[contact]!['listings'].add({
-                'date': listing['date'],
-                'location': listing['location'],
-                'description': listing['description'],
-              });
-            }
-          }
-        }
-
         final List<ChatMessage> rawMessageList = [];
 
-        groupedListings.forEach((contact, data) {
-          final name = data['name'];
-          final listings = data['listings'] as List;
-
-          listings.sort((a, b) {
-            final dateTimeA = parseDate(a['date'] as String);
-            final dateTimeB = parseDate(b['date'] as String);
-            return dateTimeB.compareTo(dateTimeA); // Sort in descending order
-          });
-
-          // Select top 10 most recent listings
-          final topListings = listings.take(10).toList();
-
-          // Combine listings into a single message
+        for (final property in properties) {
           final messageText = StringBuffer();
-          messageText.writeln('Name: $name');
-          messageText.writeln('Contact: $contact');
-          messageText.writeln();
-
-          for (final listing in topListings) {
-            final dateTime = parseDate(listing['date'] as String);
-
-            messageText.writeln(
-              'Listing date: ${DateFormat('dd/MM/yyyy').format(dateTime)}',
-            );
-            messageText.writeln('Location: ${listing['location']}');
-            messageText.writeln('Description: ${listing['description']}');
-            messageText.writeln();
-          }
+          messageText.writeln('${property['description']}');
+          messageText.writeln('');
+          messageText.writeln(
+            // ignore: lines_longer_than_80_chars
+            'Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(property['listingDate'] as String))}',
+          );
+          messageText.writeln('Location: ${property['location']}');
+          messageText.writeln(
+            'Price Range: ${property['price_range'] ?? 'Not specified'}',
+          );
+          messageText.writeln('');
+          messageText.writeln(
+            'Contact: ${property['name']} ${property['contact_number']}',
+          );
 
           final chatMessage = ChatMessage(
             id: uuid.v4(),
             text: messageText.toString(),
             createdAt: DateTime.now(),
             typeOfMessage: TypeOfMessage.bot,
-            contactNumber: contact,
+            contactNumber: property['contact_number'] as String,
             chatBotId: state.id,
           );
 
           rawMessageList.add(chatMessage);
-        });
+        }
 
         final newMessageList =
             List<Map<String, dynamic>>.from(state.messagesList);
