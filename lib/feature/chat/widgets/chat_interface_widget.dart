@@ -53,12 +53,8 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final chatBot = ref.watch(messageListProvider);
-    final shownMessages =
-        widget.messages.take(chatBot.shownMessagesCount).toList();
-
     return Chat(
-      messages: shownMessages,
+      messages: widget.messages,
       scrollToUnreadOptions: ScrollToUnreadOptions(
         lastReadMessageId: widget.lastReadMessageId,
         scrollDuration: const Duration(milliseconds: 800),
@@ -80,41 +76,6 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
-            if (isLastMessage && isAiMessage)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (ref
-                        .read(messageListProvider.notifier)
-                        .hasMoreMessages())
-                      TextButton.icon(
-                        onPressed: () {
-                          ref
-                              .read(messageListProvider.notifier)
-                              .showMoreMessages();
-                        },
-                        label: Text(
-                          'Show More',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                        ),
-                        icon: Icon(
-                          Icons.remove_red_eye_outlined,
-                          size: 24,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      )
-                    else
-                      const SizedBox(),
-                  ],
-                ),
-              ),
           ],
         );
       },
