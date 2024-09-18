@@ -81,7 +81,7 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
           if (_showFilters)
             ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.75,
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
               ),
               child: SingleChildScrollView(
                 child: Padding(
