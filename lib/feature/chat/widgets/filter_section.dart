@@ -28,6 +28,29 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
     ref.read(messageListProvider.notifier).setFilter(key, null);
   }
 
+  void _searchWithFilters() {
+    // Close the filter section
+    setState(() {
+      _showFilters = false;
+    });
+
+    // Prepare the filter message
+    String filterMessage = 'Search for properties with:';
+    selectedFilters.forEach((key, value) {
+      filterMessage += '\n- $key: $value';
+    });
+
+    // Send the filter message as a chat message
+    ref.read(messageListProvider.notifier).addMessage(filterMessage);
+
+    // Clear the filters after sending
+    setState(() {
+      selectedFilters.clear();
+      _priceRange = const RangeValues(0, 10000000);
+      _areaRange = const RangeValues(0, 10000);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -112,6 +135,16 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                               '${values.start.round()}-${values.end.round()}',
                             );
                       }),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: selectedFilters.isNotEmpty
+                              ? _searchWithFilters
+                              : null,
+                          child: const Text('Search with Filters'),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -172,25 +205,27 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
     double max,
     void Function(RangeValues) onChanged,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-        ),
-        RangeSlider(
-          values: values,
-          min: min,
-          max: max,
-          divisions: 100,
-          labels: RangeLabels(
-            values.start.round().toString(),
-            values.end.round().toString(),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
           ),
-          onChanged: onChanged,
-        ),
-      ],
+          RangeSlider(
+            values: values,
+            min: min,
+            max: max,
+            divisions: 100,
+            labels: RangeLabels(
+              values.start.round().toString(),
+              values.end.round().toString(),
+            ),
+            onChanged: onChanged,
+          ),
+        ],
+      ),
     );
   }
 

@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 // const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
-const String baseUrl = 'http://192.168.1.2:5000';
+const String baseUrl = 'http://192.168.29.89:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -381,5 +381,31 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   Future<void> updateChatBot(ChatBot newChatBot) async {
     state = newChatBot;
     await HiveRepository().saveChatBot(chatBot: state);
+  }
+
+  Future<void> addMessage(String message) async {
+    final newMessage = ChatMessage(
+      id: uuid.v4(),
+      text: message,
+      createdAt: DateTime.now(),
+      typeOfMessage: TypeOfMessage.user,
+      chatBotId: state.id,
+    );
+
+    await updateChatBotWithMessage(newMessage);
+
+    // Simulate an AI response
+    // ignore: inference_failure_on_instance_creation
+    await Future.delayed(const Duration(seconds: 1));
+
+    final aiResponse = ChatMessage(
+      id: uuid.v4(),
+      text: 'Searching for properties based on your filters',
+      createdAt: DateTime.now(),
+      typeOfMessage: TypeOfMessage.bot,
+      chatBotId: state.id,
+    );
+
+    await updateChatBotWithMessage(aiResponse);
   }
 }

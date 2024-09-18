@@ -1,3 +1,4 @@
+import 'package:ai_buddy/feature/addlisting/add_listing.dart';
 import 'package:ai_buddy/feature/chat/chat_page.dart';
 import 'package:ai_buddy/feature/home/home_page.dart';
 import 'package:ai_buddy/feature/home/widgets/settings.dart';
@@ -21,6 +22,7 @@ class MainPageState extends State<MainPage> {
   final _pageOptions = [
     const ChatPage(),
     const ChatHistoryPage(),
+    const AddListingPage(),
     const Preferences(),
   ];
 
@@ -51,10 +53,6 @@ class MainPageState extends State<MainPage> {
       iconSize: 30,
       showElevation: false,
       backgroundColor: Theme.of(context).colorScheme.background,
-      // color: Theme.of(context).colorScheme.onSurface,
-      // activeColor: Theme.of(context).colorScheme.secondary,
-      // elevation: 4,
-      // shadowColor: Theme.of(context).colorScheme.surface,
       items: [
         FlashyTabBarItem(
           title: Text(
@@ -80,6 +78,17 @@ class MainPageState extends State<MainPage> {
         ),
         FlashyTabBarItem(
           title: Text(
+            'Add Listing',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          icon: Icon(
+            CupertinoIcons.add,
+            size: width,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        FlashyTabBarItem(
+          title: Text(
             'You',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
@@ -90,7 +99,6 @@ class MainPageState extends State<MainPage> {
           ),
         ),
       ],
-
       onItemSelected: (i) => {
         setState(() {
           _page = i;
