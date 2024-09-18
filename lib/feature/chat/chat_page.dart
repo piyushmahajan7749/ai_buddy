@@ -1,5 +1,4 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
-import 'package:ai_buddy/core/config/type_of_bot.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/chat/widgets/chat_interface_widget.dart';
@@ -15,16 +14,8 @@ class ChatPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatBot = ref.watch(messageListProvider);
-    final color = chatBot.typeOfBot == TypeOfBot.pdf
-        ? context.colorScheme.primary
-        : chatBot.typeOfBot == TypeOfBot.text
-            ? context.colorScheme.secondary
-            : context.colorScheme.tertiary;
-    final imagePath = chatBot.typeOfBot == TypeOfBot.pdf
-        ? AssetConstants.pdfLogo
-        : chatBot.typeOfBot == TypeOfBot.image
-            ? AssetConstants.imageLogo
-            : AssetConstants.textLogo;
+    final color = context.colorScheme.tertiary;
+    const imagePath = AssetConstants.textLogo;
 
     final List<types.Message> messages =
         chatBot.messagesList.take(chatBot.shownMessagesCount).map((msg) {

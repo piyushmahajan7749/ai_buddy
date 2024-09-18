@@ -22,7 +22,6 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
           .toList(),
       id: fields[0] as String,
       title: fields[2] as String,
-      typeOfBot: fields[3] as String,
       attachmentPath: fields[1] as String?,
       embeddings: (fields[5] as Map?)?.map(
         (dynamic k, dynamic v) =>
@@ -44,14 +43,12 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
       ..writeByte(2)
       ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.typeOfBot)
-      ..writeByte(4)
       ..write(obj.messagesList)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.embeddings)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.showSources)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.lastReadMessageId);
   }
 

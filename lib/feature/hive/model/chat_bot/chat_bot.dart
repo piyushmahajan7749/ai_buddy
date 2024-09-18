@@ -8,7 +8,6 @@ class ChatBot extends HiveObject {
     required this.messagesList,
     required this.id,
     required this.title,
-    required this.typeOfBot,
     this.attachmentPath,
     this.embeddings,
     this.showSources,
@@ -25,20 +24,17 @@ class ChatBot extends HiveObject {
   final String title;
 
   @HiveField(3)
-  final String typeOfBot;
-
-  @HiveField(4)
   final List<Map<String, dynamic>> messagesList;
 
-  @HiveField(5)
+  @HiveField(4)
   final Map<String, List<num>>? embeddings;
 
-  @HiveField(6)
+  @HiveField(5)
   final bool? showSources;
 
-  @HiveField(7)
+  @HiveField(6)
   final String? lastReadMessageId;
 
-  @HiveField(8) // Add this field
+  @HiveField(7) // Add this field
   int shownMessagesCount;
 }

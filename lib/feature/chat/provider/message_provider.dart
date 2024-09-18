@@ -17,15 +17,14 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 // const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
-const String baseUrl = 'http://192.168.29.89:5000';
+const String baseUrl = 'http://192.168.169.95:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
 );
 
 class MessageListNotifier extends StateNotifier<ChatBot> {
-  MessageListNotifier()
-      : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
+  MessageListNotifier() : super(ChatBot(messagesList: [], id: '', title: ''));
 
   final uuid = const Uuid();
   bool _isGenerating = false;
@@ -58,7 +57,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         messagesList: newMessageList,
         id: state.id,
         title: state.title.isEmpty ? message.text : state.title,
-        typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
         lastReadMessageId: state.id,
@@ -74,7 +72,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         messagesList: newMessageList,
         id: state.id,
         title: state.title.isEmpty ? message.text : state.title,
-        typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
         lastReadMessageId: state.id,
@@ -90,7 +87,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         messagesList: newMessageList,
         id: state.id,
         title: state.title,
-        typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
       ),
@@ -116,7 +112,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         messagesList: state.messagesList,
         id: state.id,
         title: state.title,
-        typeOfBot: state.typeOfBot,
         attachmentPath: state.attachmentPath,
         embeddings: state.embeddings,
         lastReadMessageId: messageId,
@@ -266,7 +261,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         final newStateWithNewMessage = ChatBot(
           id: state.id,
           title: state.title,
-          typeOfBot: state.typeOfBot,
           messagesList: newMessageList,
           attachmentPath: state.attachmentPath,
           embeddings: state.embeddings,
@@ -294,7 +288,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       messagesList: state.messagesList,
       id: state.id,
       title: state.title,
-      typeOfBot: state.typeOfBot,
       attachmentPath: state.attachmentPath,
       embeddings: state.embeddings,
       lastReadMessageId: state.lastReadMessageId,
@@ -328,7 +321,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     final newStateWithNewMessage = ChatBot(
       id: state.id,
       title: state.title,
-      typeOfBot: state.typeOfBot,
       messagesList: newMessageList,
       attachmentPath: state.attachmentPath,
       embeddings: state.embeddings,
@@ -361,7 +353,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     final newStateWithNewMessage = ChatBot(
       id: state.id,
       title: state.title,
-      typeOfBot: state.typeOfBot,
       messagesList: newMessageList,
       attachmentPath: state.attachmentPath,
       embeddings: state.embeddings,

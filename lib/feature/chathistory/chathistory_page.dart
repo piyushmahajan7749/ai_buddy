@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:ai_buddy/core/config/assets_constants.dart';
-import 'package:ai_buddy/core/config/type_of_bot.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/core/util/utils.dart';
+import 'package:ai_buddy/feature/chathistory/widgets/widgets.dart';
 import 'package:ai_buddy/feature/hive/model/search_item/search_item.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:ai_buddy/feature/home/widgets/search_grid.dart';
-import 'package:ai_buddy/feature/home/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -116,16 +115,8 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                     itemCount: chatBotsList.length,
                     itemBuilder: (context, index) {
                       final chatBot = chatBotsList[index];
-                      final imagePath = chatBot.typeOfBot == TypeOfBot.pdf
-                          ? AssetConstants.pdfLogo
-                          : chatBot.typeOfBot == TypeOfBot.image
-                              ? AssetConstants.imageLogo
-                              : AssetConstants.textLogo;
-                      final tileColor = chatBot.typeOfBot == TypeOfBot.pdf
-                          ? context.colorScheme.primary
-                          : chatBot.typeOfBot == TypeOfBot.text
-                              ? context.colorScheme.secondary
-                              : context.colorScheme.tertiary;
+                      const imagePath = AssetConstants.textLogo;
+                      final tileColor = context.colorScheme.tertiary;
                       return HistoryItem(
                         imagePath: imagePath,
                         label: chatBot.title,
@@ -272,16 +263,9 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                       separatorBuilder: (_, __) => const SizedBox(height: 4),
                       itemBuilder: (context, index) {
                         final chatBot = chatBotsList[index];
-                        final imagePath = chatBot.typeOfBot == TypeOfBot.pdf
-                            ? AssetConstants.pdfLogo
-                            : chatBot.typeOfBot == TypeOfBot.image
-                                ? AssetConstants.imageLogo
-                                : AssetConstants.textLogo;
-                        final tileColor = chatBot.typeOfBot == TypeOfBot.pdf
-                            ? context.colorScheme.primary
-                            : chatBot.typeOfBot == TypeOfBot.text
-                                ? Theme.of(context).colorScheme.secondary
-                                : Theme.of(context).colorScheme.tertiary;
+                        const imagePath = AssetConstants.textLogo;
+                        final tileColor =
+                            Theme.of(context).colorScheme.tertiary;
                         return HistoryItem(
                           label: chatBot.title,
                           imagePath: imagePath,

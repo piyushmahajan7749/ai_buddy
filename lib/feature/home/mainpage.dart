@@ -1,7 +1,7 @@
 import 'package:ai_buddy/feature/addlisting/add_listing.dart';
 import 'package:ai_buddy/feature/chat/chat_page.dart';
-import 'package:ai_buddy/feature/home/home_page.dart';
-import 'package:ai_buddy/feature/home/widgets/settings.dart';
+import 'package:ai_buddy/feature/chathistory/chathistory_page.dart';
+import 'package:ai_buddy/feature/settings/settings.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
