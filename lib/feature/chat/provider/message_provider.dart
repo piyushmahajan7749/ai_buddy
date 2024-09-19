@@ -7,6 +7,7 @@ import 'package:ai_buddy/core/config/type_of_message.dart';
 import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/core/logger/logger.dart';
 import 'package:ai_buddy/core/util/auth.dart';
+import 'package:ai_buddy/core/util/constants.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
@@ -15,9 +16,6 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-// const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
-const String baseUrl = 'http://192.168.29.89:5000';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
   (ref) => MessageListNotifier(),
@@ -189,7 +187,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     try {
       final dio = Dio(
         BaseOptions(
-          baseUrl: baseUrl,
+          baseUrl: endpointUrl,
         ),
       );
       // ignore: inference_failure_on_function_invocation

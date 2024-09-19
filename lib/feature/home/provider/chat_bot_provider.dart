@@ -1,12 +1,10 @@
+import 'package:ai_buddy/core/util/constants.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-// const String baseUrl = 'https://roofai-cr372ioeiq-el.a.run.app';
-const String baseUrl = 'http://192.168.29.89:5000';
 
 final chatBotListProvider =
     StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
@@ -16,7 +14,7 @@ final chatBotListProvider =
 class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   ChatBotListNotifier() : super([]) {
     hiveRepository = HiveRepository();
-    dio = Dio(BaseOptions(baseUrl: baseUrl));
+    dio = Dio(BaseOptions(baseUrl: endpointUrl));
   }
 
   late final HiveRepository hiveRepository;
