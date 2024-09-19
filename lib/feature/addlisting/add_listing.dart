@@ -45,20 +45,25 @@ class AddListingPageState extends State<AddListingPage>
           '/add_listing',
           data: formData,
           options: Options(
-              headers: {HttpHeaders.contentTypeHeader: 'application/json'}),
+            headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+          ),
         );
 
         if (response.statusCode == 200 && response.data != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Listing added successfully')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Listing added successfully')),
+            );
+          }
         } else {
           throw Exception('Failed to add listing');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')),
+          );
+        }
       }
     }
   }
@@ -80,25 +85,32 @@ class AddListingPageState extends State<AddListingPage>
           '/add_listing_from_message',
           data: aiFormData,
           options: Options(
-              headers: {HttpHeaders.contentTypeHeader: 'application/json'}),
+            headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+          ),
         );
 
         if (response.statusCode == 200 && response.data != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Listing added successfully')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Listing added successfully')),
+            );
+          }
         } else {
           throw Exception('Failed to add listing');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')),
+          );
+        }
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all fields')),
+        );
+      }
     }
   }
 
@@ -150,8 +162,9 @@ class AddListingPageState extends State<AddListingPage>
                   controller: _aiDescriptionController,
                   maxLines: 5,
                   decoration: const InputDecoration(
-                    hintText:
-                        'E.g., "A spacious 3BHK apartment in Vijay Nagar, fully furnished, and close to public transport."',
+                    hintText: 'E.g., "A spacious 3BHK apartment in '
+                        'Vijay Nagar, fully furnished, and close to '
+                        'public transport."',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -203,25 +216,36 @@ class AddListingPageState extends State<AddListingPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildFilterGroup('Requirement', ['Buy', 'Sell', 'Rent', 'Lease'],
-                  'requirement'),
               _buildFilterGroup(
-                  'Property Type',
-                  ['Flat', 'Plot', 'Office', 'Shop', 'Hostel', 'House'],
-                  'property_type'),
+                'Requirement',
+                ['Buy', 'Sell', 'Rent', 'Lease'],
+                'requirement',
+              ),
+              _buildFilterGroup(
+                'Property Type',
+                ['Flat', 'Plot', 'Office', 'Shop', 'Hostel', 'House'],
+                'property_type',
+              ),
               _buildLocationInput(),
-              _buildFilterGroup('Bedrooms',
-                  ['1RK', '1BHK', '2BHK', '3BHK', '4BHK', '5+BHK'], 'bedrooms'),
               _buildFilterGroup(
-                  'Property Subtype',
-                  ['Agricultural', 'Commercial', 'Residential'],
-                  'property_subtype'),
+                'Bedrooms',
+                ['1RK', '1BHK', '2BHK', '3BHK', '4BHK', '5+BHK'],
+                'bedrooms',
+              ),
+              _buildFilterGroup(
+                'Property Subtype',
+                ['Agricultural', 'Commercial', 'Residential'],
+                'property_subtype',
+              ),
               _buildNumberInput('Price (₹)', 'price_range', isPrice: true),
               _buildNumberInput('Area (sq ft)', 'area'),
               _buildTextInput('Name', 'name'),
               _buildTextInput('Contact Number', 'contact_number'),
-              _buildTextInput('Additional Features', 'additional_features',
-                  maxLines: 3),
+              _buildTextInput(
+                'Additional Features',
+                'additional_features',
+                maxLines: 3,
+              ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -238,7 +262,10 @@ class AddListingPageState extends State<AddListingPage>
   }
 
   Widget _buildFilterGroup(
-      String title, List<String> options, String filterKey) {
+    String title,
+    List<String> options,
+    String filterKey,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -250,19 +277,21 @@ class AddListingPageState extends State<AddListingPage>
           spacing: 8,
           runSpacing: 4,
           children: options
-              .map((option) => FilterChip(
-                    label: Text(option),
-                    selected: formData[filterKey] == option,
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          formData[filterKey] = option;
-                        } else {
-                          formData.remove(filterKey);
-                        }
-                      });
-                    },
-                  ))
+              .map(
+                (option) => FilterChip(
+                  label: Text(option),
+                  selected: formData[filterKey] == option,
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        formData[filterKey] = option;
+                      } else {
+                        formData.remove(filterKey);
+                      }
+                    });
+                  },
+                ),
+              )
               .toList(),
         ),
       ],
