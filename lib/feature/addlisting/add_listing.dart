@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ai_buddy/core/util/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddListingPage extends StatefulWidget {
   const AddListingPage({super.key});
@@ -19,6 +20,7 @@ class AddListingPageState extends State<AddListingPage>
       TextEditingController();
   final TextEditingController _aiNameController = TextEditingController();
   final TextEditingController _aiContactController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -39,6 +41,10 @@ class AddListingPageState extends State<AddListingPage>
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      setState(() {
+        _isLoading = true;
+      });
+
       try {
         final dio = Dio(BaseOptions(baseUrl: endpointUrl));
         final response = await dio.post<dynamic>(
@@ -49,21 +55,34 @@ class AddListingPageState extends State<AddListingPage>
           ),
         );
 
-        if (response.statusCode == 200 && response.data != null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Listing added successfully')),
-            );
-          }
+        if (response.statusCode == 201 && response.data != null) {
+          _formKey.currentState!.reset();
+          await Fluttertoast.showToast(
+            msg: 'Listing added successfully!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            textColor: Theme.of(context).colorScheme.background,
+            fontSize: 16,
+          );
         } else {
           throw Exception('Failed to add listing');
         }
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
-        }
+        await Fluttertoast.showToast(
+          msg: 'Error: $e',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -79,6 +98,10 @@ class AddListingPageState extends State<AddListingPage>
     };
 
     if (description.isNotEmpty && name.isNotEmpty && contact.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+
       try {
         final dio = Dio(BaseOptions(baseUrl: endpointUrl));
         final response = await dio.post<dynamic>(
@@ -89,51 +112,81 @@ class AddListingPageState extends State<AddListingPage>
           ),
         );
 
-        if (response.statusCode == 200 && response.data != null) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Listing added successfully')),
-            );
-          }
+        if (response.statusCode == 201 && response.data != null) {
+          _aiDescriptionController.clear();
+          _aiNameController.clear();
+          _aiContactController.clear();
+          await Fluttertoast.showToast(
+            msg: 'Listing added successfully!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            textColor: Theme.of(context).colorScheme.background,
+            fontSize: 16,
+          );
         } else {
           throw Exception('Failed to add listing');
         }
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
-        }
+        await Fluttertoast.showToast(
+          msg: 'Error: $e',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please fill in all fields')),
-        );
-      }
+      await Fluttertoast.showToast(
+        msg: 'Please fill in all fields',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Listing'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'AI Assistant'),
-            Tab(text: 'Manual Entry'),
-          ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Add Listing'),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'AI Assistant'),
+                Tab(text: 'Manual Entry'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildAIAssistantTab(),
+              _buildManualEntryTab(),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildAIAssistantTab(),
-          _buildManualEntryTab(),
-        ],
-      ),
+        if (_isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 
@@ -192,7 +245,7 @@ class AddListingPageState extends State<AddListingPage>
               child: ElevatedButton(
                 onPressed: _submitAIDescription,
                 child: Text(
-                  'Add Listing',
+                  'Submit Listing',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -218,7 +271,7 @@ class AddListingPageState extends State<AddListingPage>
             children: [
               _buildFilterGroup(
                 'Requirement',
-                ['Buy', 'Sell', 'Rent', 'Lease'],
+                ['Sell', 'Rent', 'Lease'],
                 'requirement',
               ),
               _buildFilterGroup(
@@ -251,7 +304,14 @@ class AddListingPageState extends State<AddListingPage>
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit Listing'),
+                  child: Text(
+                    'Submit Listing',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.background,
+                    ),
+                  ),
                 ),
               ),
             ],
