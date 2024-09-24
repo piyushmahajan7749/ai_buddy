@@ -142,7 +142,14 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                           onPressed: selectedFilters.isNotEmpty
                               ? _searchWithFilters
                               : null,
-                          child: const Text('Search with Filters'),
+                          child: Text(
+                            'Search with Filters',
+                            style: TextStyle(
+                              color: selectedFilters.isNotEmpty
+                                  ? Theme.of(context).colorScheme.background
+                                  : Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                     ],

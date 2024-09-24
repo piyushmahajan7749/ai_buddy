@@ -290,7 +290,7 @@ class AddListingPageState extends State<AddListingPage>
                 ['Agricultural', 'Commercial', 'Residential'],
                 'property_subtype',
               ),
-              _buildNumberInput('Price (₹)', 'price_range', isPrice: true),
+              _buildNumberInput('Price (₹)', 'price', isPrice: true),
               _buildNumberInput('Area (sq ft)', 'area'),
               _buildTextInput('Name', 'name'),
               _buildTextInput('Contact Number', 'contact_number'),
