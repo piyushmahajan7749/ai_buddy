@@ -33,15 +33,13 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
     setState(() {
       _showFilters = false;
     });
-
-    // Prepare the filter message
     String filterMessage = 'Search for properties with:';
     selectedFilters.forEach((key, value) {
       filterMessage += '\n- $key: $value';
     });
 
     // Send the filter message as a chat message
-    ref.read(messageListProvider.notifier).addMessage(filterMessage);
+    ref.read(messageListProvider.notifier).addFilterMessage(filterMessage);
 
     // Clear the filters after sending
     setState(() {

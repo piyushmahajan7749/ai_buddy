@@ -40,11 +40,6 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     } else {
       _filters[key] = value;
     }
-    // Trigger a new search with updated filters
-    final lastUserMessage = state.messagesList.lastWhere(
-      (msg) => msg['typeOfMessage'] == TypeOfMessage.user,
-    );
-    getPythonAPIResponse(prompt: lastUserMessage['text'] as String);
   }
 
   Future<void> updateChatBotWithMessage(ChatMessage message) async {
@@ -382,7 +377,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     await HiveRepository().saveChatBot(chatBot: state);
   }
 
-  Future<void> addMessage(String message) async {
+  Future<void> addFilterMessage(String message) async {
     final newMessage = ChatMessage(
       id: uuid.v4(),
       text: message,
@@ -392,19 +387,17 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     );
 
     await updateChatBotWithMessage(newMessage);
-
-    // Simulate an AI response
-    // ignore: inference_failure_on_instance_creation
-    await Future.delayed(const Duration(seconds: 1));
-
-    final aiResponse = ChatMessage(
-      id: uuid.v4(),
-      text: 'Searching for properties based on your filters',
-      createdAt: DateTime.now(),
-      typeOfMessage: TypeOfMessage.bot,
-      chatBotId: state.id,
+    await getPythonAPIResponse(
+      prompt: newMessage.text,
     );
-
-    await updateChatBotWithMessage(aiResponse);
+    await updateChatBot(
+      ChatBot(
+        messagesList: state.messagesList,
+        id: state.id,
+        title: state.title,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+      ),
+    );
   }
 }
