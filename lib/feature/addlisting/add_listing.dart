@@ -21,6 +21,7 @@ class AddListingPageState extends State<AddListingPage>
   final TextEditingController _aiNameController = TextEditingController();
   final TextEditingController _aiContactController = TextEditingController();
   bool _isLoading = false;
+  bool isOwnerListing = true; // Add this line
 
   @override
   void initState() {
@@ -40,6 +41,9 @@ class AddListingPageState extends State<AddListingPage>
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      // Add this line to include isOwnerListing in the form data
+      formData['isOwnerListing'] = isOwnerListing;
 
       setState(() {
         _isLoading = true;
@@ -95,6 +99,7 @@ class AddListingPageState extends State<AddListingPage>
       'description': description,
       'name': name,
       'contact': contact,
+      'isOwnerListing': isOwnerListing, // Add this line
     };
 
     if (description.isNotEmpty && name.isNotEmpty && contact.isNotEmpty) {
@@ -238,6 +243,8 @@ class AddListingPageState extends State<AddListingPage>
                   ),
                   keyboardType: TextInputType.phone,
                 ),
+                const SizedBox(height: 30),
+                _buildOwnerListingSwitch(), // Add this line
               ],
             ),
             SizedBox(
@@ -299,6 +306,8 @@ class AddListingPageState extends State<AddListingPage>
                 'additional_features',
                 maxLines: 3,
               ),
+              const SizedBox(height: 16),
+              _buildOwnerListingSwitch(), // Add this line
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -421,6 +430,36 @@ class AddListingPageState extends State<AddListingPage>
         maxLines: maxLines,
         onSaved: (value) => formData[key] = value,
       ),
+    );
+  }
+
+  // Add this new method
+  Widget _buildOwnerListingSwitch() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Are you the owner of this listing?',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        Row(
+          children: [
+            Text(
+              isOwnerListing ? 'Yes' : 'No',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(width: 8),
+            Switch(
+              value: isOwnerListing,
+              onChanged: (value) {
+                setState(() {
+                  isOwnerListing = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
