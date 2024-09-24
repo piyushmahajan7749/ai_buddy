@@ -12,20 +12,21 @@ class FilterSection extends ConsumerStatefulWidget {
 
 class _FilterSectionState extends ConsumerState<FilterSection> {
   bool _showFilters = false;
-  RangeValues _priceRange = const RangeValues(0, 10000000);
-  RangeValues _areaRange = const RangeValues(0, 10000);
   Map<String, dynamic> selectedFilters = {};
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
 
-  void removeFilter(String key) {
+  @override
+  void dispose() {
+    _priceController.dispose();
+    _areaController.dispose();
+    super.dispose();
+  }
+
+  void _toggleFilters() {
     setState(() {
-      selectedFilters.remove(key);
-      if (key == 'price_range') {
-        _priceRange = const RangeValues(0, 10000000);
-      } else if (key == 'area') {
-        _areaRange = const RangeValues(0, 10000);
-      }
+      _showFilters = !_showFilters;
     });
-    ref.read(messageListProvider.notifier).setFilter(key, null);
   }
 
   void _searchWithFilters() {
@@ -44,9 +45,32 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
     // Clear the filters after sending
     setState(() {
       selectedFilters.clear();
-      _priceRange = const RangeValues(0, 10000000);
-      _areaRange = const RangeValues(0, 10000);
+      _priceController.clear();
+      _areaController.clear();
     });
+  }
+
+  Widget _buildNumberInput(
+      String label, TextEditingController controller, String key) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          suffixText: key == 'price' ? '₹' : 'sq ft',
+        ),
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          if (value.isNotEmpty) {
+            selectedFilters[key] = int.parse(value);
+          } else {
+            selectedFilters.remove(key);
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -72,7 +96,7 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
               children: selectedFilters.entries.map((entry) {
                 return Chip(
                   label: Text('${entry.key}: ${entry.value}'),
-                  onDeleted: () => removeFilter(entry.key),
+                  onDeleted: _toggleFilters,
                 );
               }).toList(),
             ),
@@ -108,31 +132,8 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                         ['Agricultural', 'Commercial', 'Residential'],
                         'property_subtype',
                       ),
-                      _buildRangeSlider(
-                          'Price Range (₹)', _priceRange, 0, 10000000,
-                          (values) {
-                        setState(() {
-                          _priceRange = values;
-                          selectedFilters['price_range'] =
-                              '${values.start.round()}-${values.end.round()}';
-                        });
-                        ref.read(messageListProvider.notifier).setFilter(
-                              'price_range',
-                              '${values.start.round()}-${values.end.round()}',
-                            );
-                      }),
-                      _buildRangeSlider('Area (sq ft)', _areaRange, 0, 10000,
-                          (values) {
-                        setState(() {
-                          _areaRange = values;
-                          selectedFilters['area'] =
-                              '${values.start.round()}-${values.end.round()}';
-                        });
-                        ref.read(messageListProvider.notifier).setFilter(
-                              'area',
-                              '${values.start.round()}-${values.end.round()}',
-                            );
-                      }),
+                      _buildNumberInput('Price', _priceController, 'price'),
+                      _buildNumberInput('Area', _areaController, 'area'),
                       const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
@@ -200,37 +201,6 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
               .toList(),
         ),
       ],
-    );
-  }
-
-  Widget _buildRangeSlider(
-    String title,
-    RangeValues values,
-    double min,
-    double max,
-    void Function(RangeValues) onChanged,
-  ) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-          ),
-          RangeSlider(
-            values: values,
-            min: min,
-            max: max,
-            divisions: 100,
-            labels: RangeLabels(
-              values.start.round().toString(),
-              values.end.round().toString(),
-            ),
-            onChanged: onChanged,
-          ),
-        ],
-      ),
     );
   }
 
