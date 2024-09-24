@@ -215,6 +215,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         }
 
         final List<ChatMessage> rawMessageList = [];
+        final List<ChatMessage> ownerListings = [];
 
         for (final property in properties) {
           final messageText = StringBuffer();
@@ -237,12 +238,18 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
             id: uuid.v4(),
             text: messageText.toString(),
             createdAt: DateTime.now(),
-            typeOfMessage: TypeOfMessage.bot,
+            typeOfMessage: property['isOwnerListing'] == true
+                ? TypeOfMessage.ownerListing
+                : TypeOfMessage.bot,
             contactNumber: property['contact_number'] as String,
             chatBotId: state.id,
           );
 
-          rawMessageList.add(chatMessage);
+          if (property['isOwnerListing'] == true) {
+            ownerListings.add(chatMessage);
+          } else {
+            rawMessageList.add(chatMessage);
+          }
         }
 
         final newMessageList =
@@ -254,6 +261,9 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           newMessageList.removeAt(placeholderIndex);
         }
 
+        // Add owner listings at the top
+        newMessageList.addAll(ownerListings.map((msg) => msg.toJson()));
+        // Add other listings
         newMessageList.addAll(rawMessageList.map((msg) => msg.toJson()));
 
         final newStateWithNewMessage = ChatBot(

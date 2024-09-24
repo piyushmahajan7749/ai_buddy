@@ -62,18 +62,52 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
       textMessageBuilder: (p0, {required messageWidth, required showName}) {
         final isLastMessage = widget.messages.first.id == p0.id;
         final isAiMessage = p0.author.id == TypeOfMessage.bot;
+        final isOwnerListing = p0.author.id == TypeOfMessage.ownerListing;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20)
                   .copyWith(
                 bottom: (isLastMessage && isAiMessage) ? 10 : 20,
               ),
-              child: Text(
-                p0.text.trim(),
-                style: Theme.of(context).textTheme.bodyLarge,
+              decoration: isOwnerListing
+                  ? BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      ),
+                    )
+                  : null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isOwnerListing)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        'Owner Listing',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                  Text(
+                    p0.text.trim(),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: isOwnerListing
+                              ? Theme.of(context).colorScheme.onSecondary
+                              : null,
+                        ),
+                  ),
+                ],
               ),
             ),
           ],
