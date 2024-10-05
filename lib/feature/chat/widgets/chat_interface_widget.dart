@@ -147,7 +147,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                 text: text.text,
                 imageFilePath: widget.chatBot.attachmentPath,
               ),
-      customMessageBuilder: (message, {required int messageWidth}) {
+      customMessageBuilder: (message, {required messageWidth}) {
         if (message.metadata != null &&
             message.metadata!['custom_type'] == 'show_more') {
           return Padding(

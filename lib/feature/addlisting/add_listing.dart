@@ -66,7 +66,9 @@ class AddListingPageState extends State<AddListingPage>
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 3,
+            // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            // ignore: use_build_context_synchronously
             textColor: Theme.of(context).colorScheme.background,
             fontSize: 16,
           );
@@ -126,7 +128,9 @@ class AddListingPageState extends State<AddListingPage>
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 3,
+            // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            // ignore: use_build_context_synchronously
             textColor: Theme.of(context).colorScheme.background,
             fontSize: 16,
           );
@@ -185,7 +189,7 @@ class AddListingPageState extends State<AddListingPage>
           ),
         ),
         if (_isLoading)
-          Container(
+          ColoredBox(
             color: Colors.black.withOpacity(0.5),
             child: const Center(
               child: CircularProgressIndicator(),

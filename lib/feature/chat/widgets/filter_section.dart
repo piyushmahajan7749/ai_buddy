@@ -51,7 +51,10 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
   }
 
   Widget _buildNumberInput(
-      String label, TextEditingController controller, String key) {
+    String label,
+    TextEditingController controller,
+    String key,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(

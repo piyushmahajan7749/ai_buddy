@@ -23,8 +23,10 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
       id: fields[0] as String,
       title: fields[2] as String,
       attachmentPath: fields[1] as String?,
-      embeddings: (fields[4] as Map?)?.map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<num>())),
+      embeddings: (fields[4] as Map?)?.map(
+        (dynamic k, dynamic v) =>
+            MapEntry(k as String, (v as List).cast<num>()),
+      ),
       showSources: fields[5] as bool?,
       lastReadMessageId: fields[6] as String?,
     );

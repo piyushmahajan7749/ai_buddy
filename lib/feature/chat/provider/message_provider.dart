@@ -10,7 +10,6 @@ import 'package:ai_buddy/core/util/auth.dart';
 import 'package:ai_buddy/core/util/constants.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
-import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
@@ -19,7 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
-  (ref) => MessageListNotifier(ref),
+  MessageListNotifier.new,
 );
 
 final messagesToShowProvider =

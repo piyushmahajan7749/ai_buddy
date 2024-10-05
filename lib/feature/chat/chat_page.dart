@@ -4,7 +4,6 @@ import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/chat/widgets/chat_interface_widget.dart';
 import 'package:ai_buddy/feature/chat/widgets/filter_section.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_riverpod/flutter_riverpod.dart';

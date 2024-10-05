@@ -28,7 +28,7 @@ Future<void> initHive() async {
       await box.add(ChatBot.defaultInstance());
     }
   } catch (e) {
-    print('Error initializing Hive: $e');
+    logError('Error initializing Hive: $e');
     await Hive.deleteBoxFromDisk('chatBots');
     final box = await Hive.openBox<ChatBot>('chatBots');
     await box.add(ChatBot.defaultInstance());

@@ -97,11 +97,11 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (BuildContext context) {
+      builder: (context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.9,
           minChildSize: 0.5,
-          maxChildSize: 1.0,
+          maxChildSize: 1,
           expand: false,
           builder: (context, scrollController) {
             return Consumer(
