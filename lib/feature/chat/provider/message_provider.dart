@@ -11,6 +11,7 @@ import 'package:ai_buddy/core/util/constants.dart';
 import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/hive/repository/hive_repository.dart';
+import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,8 +40,10 @@ class MessagesToShowNotifier extends StateNotifier<int> {
 }
 
 class MessageListNotifier extends StateNotifier<ChatBot> {
-  MessageListNotifier(this.ref)
-      : super(ChatBot(messagesList: [], id: '', title: ''));
+  MessageListNotifier(this.ref) : super(ChatBot.defaultInstance()) {
+    // Load the most recent chat bot if available
+    _loadMostRecentChatBot();
+  }
 
   final Ref ref;
   final uuid = const Uuid();
@@ -52,6 +55,22 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
   String placeholderId = '';
+
+  Future<void> _loadMostRecentChatBot() async {
+    final chatBots = ref.read(chatBotListProvider);
+    if (chatBots.isNotEmpty) {
+      state = chatBots.first;
+    }
+  }
+
+  Future<void> createNewChatBot(String text) async {
+    final newChatBot = ChatBot.defaultInstance().copyWith(
+      id: uuid.v4(),
+      title: text,
+    );
+    state = newChatBot;
+    await ref.read(chatBotListProvider.notifier).addOrUpdateChatBot(newChatBot);
+  }
 
   void setFilter(String key, dynamic value) {
     if (value == null || (value is bool && !value)) {
@@ -109,6 +128,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     required String text,
     String? imageFilePath,
   }) async {
+    if (state.id.isEmpty) {
+      await createNewChatBot(text);
+    }
+
     ref.read(messagesToShowProvider.notifier).resetMessagesToShow();
 
     final messageId = uuid.v4();
@@ -393,7 +416,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
   Future<void> updateChatBot(ChatBot newChatBot) async {
     state = newChatBot;
-    await HiveRepository().saveChatBot(chatBot: state);
+    await ref.read(chatBotListProvider.notifier).addOrUpdateChatBot(newChatBot);
   }
 
   Future<void> addFilterMessage(String message) async {

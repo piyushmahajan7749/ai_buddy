@@ -26,7 +26,7 @@ class DbServiceUser {
     await prefCollection.doc(uid).set({
       'name': 'New User',
       'is_pro': false,
-      'credits_left': 9,
+      'credits_left': 2,
       'credits_used': 0,
       'show_notification': false,
       'signup_date': Timestamp.now(),

@@ -15,6 +15,7 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   ChatBotListNotifier() : super([]) {
     hiveRepository = HiveRepository();
     dio = Dio(BaseOptions(baseUrl: endpointUrl));
+    fetchChatBots();
   }
 
   late final HiveRepository hiveRepository;
@@ -58,6 +59,20 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   Future<void> deleteChatBot(ChatBot chatBot) async {
     await hiveRepository.deleteChatBot(chatBot: chatBot);
     state = state.where((item) => item.id != chatBot.id).toList();
+  }
+
+  Future<void> addOrUpdateChatBot(ChatBot chatBot) async {
+    final index = state.indexWhere((element) => element.id == chatBot.id);
+    if (index != -1) {
+      // Update existing chat bot
+      final updatedList = List<ChatBot>.from(state);
+      updatedList[index] = chatBot;
+      state = updatedList;
+    } else {
+      // Add new chat bot
+      state = [chatBot, ...state];
+    }
+    await hiveRepository.saveChatBot(chatBot: chatBot);
   }
 
   Future<void> uploadFiles(List<String> filePaths) async {

@@ -28,6 +28,9 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
   void initState() {
     super.initState();
     initSharingIntent();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(chatBotListProvider.notifier).fetchChatBots();
+    });
   }
 
   Future<void> initSharingIntent() async {
@@ -93,42 +96,75 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
   void _showAllHistory(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) {
-        return Consumer(
-          builder: (context, ref, child) {
-            final chatBotsList = ref.watch(chatBotListProvider);
-            return Column(
-              children: [
-                Container(
-                  height: 4,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.onSurface,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  margin: const EdgeInsets.only(top: 8, bottom: 16),
-                ),
-                const SearchGridView(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: ListView.separated(
-                    itemCount: chatBotsList.length,
-                    itemBuilder: (context, index) {
-                      final chatBot = chatBotsList[index];
-                      const imagePath = AssetConstants.textLogo;
-                      final tileColor = context.colorScheme.tertiary;
-                      return HistoryItem(
-                        imagePath: imagePath,
-                        label: chatBot.title,
-                        color: tileColor,
-                        chatBot: chatBot,
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 4),
-                  ),
-                ),
-              ],
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 1.0,
+          expand: false,
+          builder: (context, scrollController) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final chatBotsList = ref.watch(chatBotListProvider);
+                return Column(
+                  children: [
+                    Container(
+                      height: 4,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.onSurface,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      margin: const EdgeInsets.only(top: 8, bottom: 16),
+                    ),
+                    Expanded(
+                      child: CustomScrollView(
+                        controller: scrollController,
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 120, // Adjust this height as needed
+                              child: Center(
+                                child: Text(
+                                  'All searches',
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final reversedIndex =
+                                    chatBotsList.length - 1 - index;
+
+                                final chatBot = chatBotsList[reversedIndex];
+                                const imagePath = AssetConstants.textLogo;
+                                final tileColor = context.colorScheme.tertiary;
+                                return Column(
+                                  children: [
+                                    HistoryItem(
+                                      imagePath: imagePath,
+                                      label: chatBot.title,
+                                      color: tileColor,
+                                      chatBot: chatBot,
+                                    ),
+                                    if (reversedIndex > 0)
+                                      const SizedBox(height: 4),
+                                  ],
+                                );
+                              },
+                              childCount: chatBotsList.length,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         );
@@ -262,7 +298,9 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                           chatBotsList.length > 3 ? 3 : chatBotsList.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 4),
                       itemBuilder: (context, index) {
-                        final chatBot = chatBotsList[index];
+                        final reversedIndex = chatBotsList.length - 1 - index;
+
+                        final chatBot = chatBotsList[reversedIndex];
                         const imagePath = AssetConstants.textLogo;
                         final tileColor =
                             Theme.of(context).colorScheme.tertiary;
