@@ -39,4 +39,24 @@ class ChatBot extends HiveObject {
 
   @HiveField(6)
   final String? lastReadMessageId;
+
+  ChatBot copyWith({
+    String? id,
+    String? title,
+    String? attachmentPath,
+    List<Map<String, dynamic>>? messagesList,
+    Map<String, List<num>>? embeddings,
+    bool? showSources,
+    String? lastReadMessageId,
+  }) {
+    return ChatBot(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      attachmentPath: attachmentPath ?? this.attachmentPath,
+      messagesList: messagesList ?? this.messagesList,
+      embeddings: embeddings ?? this.embeddings,
+      showSources: showSources ?? this.showSources,
+      lastReadMessageId: lastReadMessageId ?? this.lastReadMessageId,
+    );
+  }
 }

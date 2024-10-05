@@ -147,56 +147,88 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                 text: text.text,
                 imageFilePath: widget.chatBot.attachmentPath,
               ),
-      customMessageBuilder: (p0, {required messageWidth}) {
-        return SizedBox(
-          width: messageWidth.toDouble(),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Lottie.asset(
-                      AssetConstants.onboardingAnimation,
-                      height: 60,
-                      fit: BoxFit.fitHeight,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(
-                        'Searching for results...',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
+      customMessageBuilder: (message, {required int messageWidth}) {
+        if (message.metadata != null &&
+            message.metadata!['custom_type'] == 'show_more') {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+            child: Center(
+              child: OutlinedButton(
+                onPressed: () {
+                  ref.read(messagesToShowProvider.notifier).showMoreMessages();
+                },
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton.icon(
-                      label: Text(
-                        'Cancel',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
-                      icon: Icon(
-                        CupertinoIcons.stop_fill,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      onPressed: () {
-                        ref.read(messageListProvider.notifier).stopGeneration();
-                      },
-                    ),
+                    Text('Show more'),
+                    SizedBox(width: 8),
+                    Icon(LineIcons.arrowUp, size: 16),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        );
+          );
+        } else if (message.metadata != null &&
+            message.metadata!['custom_type'] == 'searching') {
+          // Existing code for the "Searching for results..." message
+          return SizedBox(
+            width: messageWidth.toDouble(),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Lottie.asset(
+                        AssetConstants.onboardingAnimation,
+                        height: 60,
+                        fit: BoxFit.fitHeight,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(
+                          'Searching for results...',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton.icon(
+                        label: Text(
+                          'Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                        ),
+                        icon: Icon(
+                          CupertinoIcons.stop_fill,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(messageListProvider.notifier)
+                              .stopGeneration();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          // Handle other custom messages or return an empty container
+          return const SizedBox.shrink();
+        }
       },
       onMessageDoubleTap: (context, message) {
         final Map<String, dynamic> newMsg = message.toJson();

@@ -18,12 +18,31 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
-  (ref) => MessageListNotifier(),
+  (ref) => MessageListNotifier(ref),
 );
 
-class MessageListNotifier extends StateNotifier<ChatBot> {
-  MessageListNotifier() : super(ChatBot(messagesList: [], id: '', title: ''));
+final messagesToShowProvider =
+    StateNotifierProvider<MessagesToShowNotifier, int>(
+  (ref) => MessagesToShowNotifier(),
+);
 
+class MessagesToShowNotifier extends StateNotifier<int> {
+  MessagesToShowNotifier() : super(4);
+
+  void showMoreMessages() {
+    state += 4;
+  }
+
+  void resetMessagesToShow() {
+    state = 4;
+  }
+}
+
+class MessageListNotifier extends StateNotifier<ChatBot> {
+  MessageListNotifier(this.ref)
+      : super(ChatBot(messagesList: [], id: '', title: ''));
+
+  final Ref ref;
   final uuid = const Uuid();
   bool _isGenerating = false;
   bool get isGenerating => _isGenerating;
@@ -90,6 +109,8 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     required String text,
     String? imageFilePath,
   }) async {
+    ref.read(messagesToShowProvider.notifier).resetMessagesToShow();
+
     final messageId = uuid.v4();
     final ChatMessage message = ChatMessage(
       id: messageId,
