@@ -14,6 +14,27 @@ import 'package:path_provider/path_provider.dart';
 
 late FirebaseAuth auth;
 
+Future<void> initHive() async {
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+
+  Hive
+    ..init(appDocumentDir.path)
+    ..registerAdapter(ChatBotAdapter());
+
+  try {
+    final box = await Hive.openBox<ChatBot>('chatBots');
+    if (box.isEmpty) {
+      // Add a default ChatBot if the box is empty
+      await box.add(ChatBot.defaultInstance());
+    }
+  } catch (e) {
+    print('Error initializing Hive: $e');
+    await Hive.deleteBoxFromDisk('chatBots');
+    final box = await Hive.openBox<ChatBot>('chatBots');
+    await box.add(ChatBot.defaultInstance());
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -22,12 +43,7 @@ Future<void> main() async {
   auth = FirebaseAuth.instance;
   _initLoggy();
   _initGoogleFonts();
-
-  final appDocumentDir = await getApplicationDocumentsDirectory();
-  Hive
-    ..init(appDocumentDir.path)
-    ..registerAdapter(ChatBotAdapter());
-  await Hive.openBox<ChatBot>('chatbots');
+  await initHive();
 
   runApp(
     const ProviderScope(

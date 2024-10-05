@@ -12,24 +12,34 @@ class ChatBotAdapter extends TypeAdapter<ChatBot> {
 
   @override
   ChatBot read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return ChatBot(
-      messagesList: (fields[4] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
-      id: fields[0] as String,
-      title: fields[2] as String,
-      attachmentPath: fields[1] as String?,
-      embeddings: (fields[5] as Map?)?.map(
-        (dynamic k, dynamic v) =>
-            MapEntry(k as String, (v as List).cast<num>()),
-      ),
-      showSources: fields[6] as bool?,
-      lastReadMessageId: fields[7] as String?,
-    );
+    try {
+      final numOfFields = reader.readByte();
+      final fields = <int, dynamic>{
+        for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+      };
+      return ChatBot(
+        messagesList: (fields[4] as List)
+            .map((dynamic e) => (e as Map).cast<String, dynamic>())
+            .toList(),
+        id: fields[0] as String,
+        title: fields[2] as String,
+        attachmentPath: fields[1] as String?,
+        embeddings: (fields[5] as Map?)?.map(
+          (dynamic k, dynamic v) =>
+              MapEntry(k as String, (v as List).cast<num>()),
+        ),
+        showSources: fields[6] as bool?,
+        lastReadMessageId: fields[7] as String?,
+      );
+    } catch (e) {
+      print('Error reading ChatBot: $e');
+      // Return a default ChatBot object if reading fails
+      return ChatBot(
+        messagesList: [],
+        id: '',
+        title: 'Error Reading Chat',
+      );
+    }
   }
 
   @override

@@ -113,27 +113,34 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
           ],
         );
       },
-      emptyState: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Lottie.asset(
-                AssetConstants.onboardingAnimation,
-                height: 120,
-                fit: BoxFit.fitHeight,
+      emptyState: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Let the Search Begin',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    AssetConstants.onboardingAnimation,
+                    height: 120,
+                    fit: BoxFit.fitHeight,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Let the Search Begin',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  const SearchGridView(),
+                ],
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
-          const SearchGridView(),
-        ],
+            ),
+          );
+        },
       ),
       onSendPressed: (text) =>
           ref.watch(messageListProvider.notifier).handleSendPressed(

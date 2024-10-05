@@ -12,8 +12,13 @@ class ChatBot extends HiveObject {
     this.embeddings,
     this.showSources,
     this.lastReadMessageId,
-    this.shownMessagesCount = 4, // Add this line
   });
+
+  factory ChatBot.defaultInstance() => ChatBot(
+        messagesList: [],
+        id: '',
+        title: 'New Chat',
+      );
   @HiveField(0)
   final String id;
 
@@ -34,7 +39,4 @@ class ChatBot extends HiveObject {
 
   @HiveField(6)
   final String? lastReadMessageId;
-
-  @HiveField(7) // Add this field
-  int shownMessagesCount;
 }
