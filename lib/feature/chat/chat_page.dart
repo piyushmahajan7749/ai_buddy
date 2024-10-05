@@ -3,6 +3,8 @@ import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
 import 'package:ai_buddy/feature/chat/widgets/chat_interface_widget.dart';
 import 'package:ai_buddy/feature/chat/widgets/filter_section.dart';
+import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,13 +49,39 @@ class ChatPage extends ConsumerWidget {
         id: 'show_more',
         createdAt: DateTime.now().millisecondsSinceEpoch,
         author: const types.User(id: 'system'),
-        metadata: {'custom_type': 'show_more'},
+        metadata: const {'custom_type': 'show_more'},
       );
 
       messages.add(showMoreMessage);
     }
 
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: FloatingActionButton.small(
+          backgroundColor: context.colorScheme.primary,
+          onPressed: () async {
+            // Save current chat if it's not empty
+            if (chatBot.messagesList.isNotEmpty) {
+              await ref
+                  .read(chatBotListProvider.notifier)
+                  .addOrUpdateChatBot(chatBot);
+            }
+
+            // Create a new chat
+            await ref
+                .read(messageListProvider.notifier)
+                .createNewChatBot('New Chat');
+
+            // Reset messages to show
+            ref.read(messagesToShowProvider.notifier).resetMessagesToShow();
+
+            // Show a snackbar to confirm the action
+          },
+          tooltip: 'Start a new chat',
+          child: const Icon(Icons.refresh),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
