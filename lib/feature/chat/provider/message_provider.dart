@@ -269,7 +269,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
           );
           messageText.writeln('');
           messageText.writeln(
-            'Contact: ${property['name']} ${property['contact_number']}',
+            'Added by: ${property['name']} ${property['contact_number'].toString().replaceFirst("+91", '').replaceAll(' ', '')}',
           );
 
           final chatMessage = ChatMessage(
