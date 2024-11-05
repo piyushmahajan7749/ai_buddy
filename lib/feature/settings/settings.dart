@@ -403,20 +403,20 @@ class _PreferencesState extends ConsumerState<Preferences> {
             ),
       ),
       tiles: [
-        SettingsTile(
-          title: Text(
-            'Upload chats',
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-          ),
-          trailing: const SizedBox(),
-          leading: const Icon(CupertinoIcons.cloud_upload),
-          onPressed: (context) async {
-            await _onUploadPressed();
-          },
-        ),
+        // SettingsTile(
+        //   title: Text(
+        //     'Upload chats',
+        //     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+        //           fontWeight: FontWeight.w500,
+        //           color: Theme.of(context).colorScheme.onPrimary,
+        //         ),
+        //   ),
+        //   trailing: const SizedBox(),
+        //   leading: const Icon(CupertinoIcons.cloud_upload),
+        //   onPressed: (context) async {
+        //     await _onUploadPressed();
+        //   },
+        // ),
         SettingsTile(
           title: Text(
             'Sign out',
