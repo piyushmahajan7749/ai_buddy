@@ -54,50 +54,54 @@ class ChatPage extends ConsumerWidget {
       messages.add(showMoreMessage);
     }
 
-    return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60),
-        child: FloatingActionButton.small(
-          backgroundColor: context.colorScheme.primary,
-          onPressed: () async {
-            // Save current chat if it's not empty
-            if (chatBot.messagesList.isNotEmpty) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 60),
+          child: FloatingActionButton.small(
+            backgroundColor: context.colorScheme.primary,
+            onPressed: () async {
+              // Save current chat if it's not empty
+              if (chatBot.messagesList.isNotEmpty) {
+                await ref
+                    .read(chatBotListProvider.notifier)
+                    .addOrUpdateChatBot(chatBot);
+              }
+
+              // Create a new chat
               await ref
-                  .read(chatBotListProvider.notifier)
-                  .addOrUpdateChatBot(chatBot);
-            }
+                  .read(messageListProvider.notifier)
+                  .createNewChatBot('New Chat');
 
-            // Create a new chat
-            await ref
-                .read(messageListProvider.notifier)
-                .createNewChatBot('New Chat');
+              // Reset messages to show
+              ref.read(messagesToShowProvider.notifier).resetMessagesToShow();
 
-            // Reset messages to show
-            ref.read(messagesToShowProvider.notifier).resetMessagesToShow();
-
-            // Show a snackbar to confirm the action
-          },
-          tooltip: 'Start a new chat',
-          child: const Icon(Icons.refresh),
+              // Show a snackbar to confirm the action
+            },
+            tooltip: 'Start a new chat',
+            child: const Icon(Icons.refresh),
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const FilterSection(),
-              Expanded(
-                child: ChatInterfaceWidget(
-                  messages: messages,
-                  chatBot: chatBot,
-                  color: color,
-                  imagePath: imagePath,
-                  lastReadMessageId: chatBot.lastReadMessageId ?? '',
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const FilterSection(),
+                Expanded(
+                  child: ChatInterfaceWidget(
+                    messages: messages,
+                    chatBot: chatBot,
+                    color: color,
+                    imagePath: imagePath,
+                    lastReadMessageId: chatBot.lastReadMessageId ?? '',
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

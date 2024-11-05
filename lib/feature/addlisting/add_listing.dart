@@ -169,23 +169,27 @@ class AddListingPageState extends State<AddListingPage>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Scaffold(
-          appBar: AppBar(
-            title: const Text('Add Listing'),
-            bottom: TabBar(
+        GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              title: const Text('Add Listing'),
+              bottom: TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(text: 'AI Assistant'),
+                  Tab(text: 'Manual Entry'),
+                ],
+              ),
+            ),
+            body: TabBarView(
               controller: _tabController,
-              tabs: const [
-                Tab(text: 'AI Assistant'),
-                Tab(text: 'Manual Entry'),
+              children: [
+                _buildAIAssistantTab(),
+                _buildManualEntryTab(),
               ],
             ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildAIAssistantTab(),
-              _buildManualEntryTab(),
-            ],
           ),
         ),
         if (_isLoading)
@@ -200,72 +204,74 @@ class AddListingPageState extends State<AddListingPage>
   }
 
   Widget _buildAIAssistantTab() {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height -
-            AppBar().preferredSize.height -
-            MediaQuery.of(context).padding.top,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Describe your property',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _aiDescriptionController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    hintText: 'E.g., "A spacious 3BHK apartment in '
-                        'Vijay Nagar, fully furnished, and close to '
-                        'public transport."',
-                    border: OutlineInputBorder(),
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height -
+              AppBar().preferredSize.height -
+              MediaQuery.of(context).padding.top,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Describe your property',
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: _aiNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Your Name',
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _aiDescriptionController,
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                      hintText: 'E.g., "A spacious 3BHK apartment in '
+                          'Vijay Nagar, fully furnished, and close to '
+                          'public transport."',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _aiContactController,
-                  decoration: const InputDecoration(
-                    labelText: 'Contact Number',
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: _aiNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Your Name',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                  keyboardType: TextInputType.phone,
-                ),
-                const SizedBox(height: 30),
-                _buildOwnerListingSwitch(), // Add this line
-              ],
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _submitAIDescription,
-                child: Text(
-                  'Submit Listing',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.background,
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _aiContactController,
+                    decoration: const InputDecoration(
+                      labelText: 'Contact Number',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.phone,
+                  ),
+                  const SizedBox(height: 30),
+                  _buildOwnerListingSwitch(), // Add this line
+                ],
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _submitAIDescription,
+                  child: Text(
+                    'Submit Listing',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.background,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
