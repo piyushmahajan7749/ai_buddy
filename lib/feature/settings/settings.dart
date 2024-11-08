@@ -150,6 +150,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
     }
   }
 
+  // ignore: unused_element
   Future<void> _onUploadPressed() async {
     setState(() {
       _isBuildingChatBot = true;
