@@ -143,7 +143,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
     } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          backgroundColor: Theme.of(context).colorScheme.onSurface,
           content: const Text('Unable to open WhatsApp'),
         ),
       );
@@ -177,7 +177,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 3,
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            textColor: Theme.of(context).colorScheme.background,
+            textColor: Theme.of(context).colorScheme.surface,
             fontSize: 16,
           );
 
@@ -196,7 +196,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 2,
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            textColor: Theme.of(context).colorScheme.background,
+            textColor: Theme.of(context).colorScheme.surface,
             fontSize: 16,
           );
         } finally {

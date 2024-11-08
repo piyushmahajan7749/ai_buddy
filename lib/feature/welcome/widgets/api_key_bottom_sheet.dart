@@ -40,7 +40,7 @@ class _APIKeyBottomSheetState extends State<APIKeyBottomSheet> {
                 height: 4,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: context.colorScheme.onSurface.withOpacity(0.9),
+                  color: context.colorScheme.surfaceBright.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 margin: const EdgeInsets.only(bottom: 8),
@@ -75,17 +75,17 @@ class _APIKeyBottomSheetState extends State<APIKeyBottomSheet> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: context.colorScheme.onSurface,
+                  backgroundColor: context.colorScheme.surfaceBright,
                   minimumSize: const Size(double.infinity, 56),
                 ),
                 child: _isLoading
                     ? CircularProgressIndicator(
-                        color: context.colorScheme.surface,
+                        color: context.colorScheme.surfaceContainer,
                       )
                     : Text(
                         'Submit',
                         style: context.textTheme.labelLarge!.copyWith(
-                          color: context.colorScheme.surface,
+                          color: context.colorScheme.surfaceContainer,
                         ),
                       ),
               ),

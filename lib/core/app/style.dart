@@ -40,12 +40,12 @@ final _darkColorScheme = ColorScheme(
   // Error
   error: _red,
   onError: _lightest,
-  // Background
-  background: _background,
-  onBackground: _onBackground,
   // Surface
-  surface: _darkest,
-  onSurface: _lightest,
+  surface: _background,
+  onSurface: _onBackground,
+
+  surfaceContainer: _darkest,
+  surfaceBright: _lightest,
   // Outline
   outline: _divider,
 );
@@ -73,7 +73,7 @@ ThemeData _getTheme() {
     colorScheme: colorScheme,
     textTheme: textTheme,
     primaryTextTheme: primaryTextTheme,
-    scaffoldBackgroundColor: colorScheme.background,
+    scaffoldBackgroundColor: colorScheme.surface,
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
       color: _divider,
@@ -107,7 +107,7 @@ ThemeData _getTheme() {
     ),
     popupMenuTheme: PopupMenuThemeData(
       color: _background,
-      surfaceTintColor: colorScheme.background,
+      surfaceTintColor: colorScheme.surface,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       showDragHandle: false,
@@ -133,8 +133,8 @@ ThemeData _getTheme() {
       backgroundColor: _background,
     ),
     dialogTheme: DialogTheme(
-      backgroundColor: colorScheme.background,
-      surfaceTintColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
+      surfaceTintColor: colorScheme.surface,
       titleTextStyle: textTheme.titleLarge,
     ),
     snackBarTheme: SnackBarThemeData(

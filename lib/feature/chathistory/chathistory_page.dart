@@ -66,7 +66,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 3,
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          textColor: Theme.of(context).colorScheme.background,
+          textColor: Theme.of(context).colorScheme.surface,
           fontSize: 16,
         );
       } catch (e) {
@@ -80,7 +80,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 2,
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          textColor: Theme.of(context).colorScheme.background,
+          textColor: Theme.of(context).colorScheme.surface,
           fontSize: 16,
         );
       }
@@ -113,7 +113,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                       height: 4,
                       width: 50,
                       decoration: BoxDecoration(
-                        color: context.colorScheme.onSurface,
+                        color: context.colorScheme.surfaceBright,
                         borderRadius: BorderRadius.circular(2),
                       ),
                       margin: const EdgeInsets.only(top: 8, bottom: 16),
@@ -253,7 +253,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                                       fontSize: 14,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onSurface
+                                          .surfaceBright
                                           .withOpacity(0.8),
                                     ),
                           ),

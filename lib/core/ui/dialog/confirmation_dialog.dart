@@ -65,7 +65,7 @@ class _AndroidConfirmationDialog extends StatelessWidget {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: context.colorScheme.onBackground,
+            foregroundColor: context.colorScheme.onSurface,
           ),
           onPressed: () => context.pop(),
           child: const Text('Cancel'),
@@ -74,7 +74,7 @@ class _AndroidConfirmationDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: isDestructive
                 ? context.colorScheme.error
-                : context.colorScheme.onBackground,
+                : context.colorScheme.onSurface,
           ),
           onPressed: () {
             onConfirm();
@@ -114,7 +114,7 @@ class _IosConfirmationDialog extends StatelessWidget {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: context.colorScheme.onBackground,
+            foregroundColor: context.colorScheme.onSurface,
             shape: buttonShape,
           ),
           onPressed: () => context.pop(),
@@ -124,7 +124,7 @@ class _IosConfirmationDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: isDestructive
                 ? context.colorScheme.error
-                : context.colorScheme.onBackground,
+                : context.colorScheme.onSurface,
             shape: buttonShape,
           ),
           onPressed: () {

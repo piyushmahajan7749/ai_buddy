@@ -27,7 +27,7 @@ class WelcomePage extends StatelessWidget {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: context.colorScheme.onSurface,
+                      color: context.colorScheme.surfaceBright,
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
@@ -44,7 +44,7 @@ class WelcomePage extends StatelessWidget {
                         Text(
                           '9Roof AI',
                           style: TextStyle(
-                            color: context.colorScheme.background,
+                            color: context.colorScheme.surface,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -79,13 +79,13 @@ class WelcomePage extends StatelessWidget {
                       AppRoute.login.go(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colorScheme.onSurface,
+                      backgroundColor: context.colorScheme.surfaceBright,
                       minimumSize: const Size(double.infinity, 56),
                     ),
                     child: Text(
                       'Get Started',
                       style: context.textTheme.labelLarge!.copyWith(
-                        color: context.colorScheme.surface,
+                        color: context.colorScheme.surfaceContainer,
                       ),
                     ),
                   ),

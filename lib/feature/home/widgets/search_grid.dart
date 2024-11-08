@@ -52,7 +52,7 @@ class _SearchGridViewState extends ConsumerState<SearchGridView> {
             ),
           ],
         ),
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        backgroundColor: Theme.of(context).colorScheme.onSurface,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(30),

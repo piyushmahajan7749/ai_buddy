@@ -69,7 +69,7 @@ class AddListingPageState extends State<AddListingPage>
             // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
             // ignore: use_build_context_synchronously
-            textColor: Theme.of(context).colorScheme.background,
+            textColor: Theme.of(context).colorScheme.surface,
             fontSize: 16,
           );
         } else {
@@ -131,7 +131,7 @@ class AddListingPageState extends State<AddListingPage>
             // ignore: use_build_context_synchronously
             backgroundColor: Theme.of(context).colorScheme.onPrimary,
             // ignore: use_build_context_synchronously
-            textColor: Theme.of(context).colorScheme.background,
+            textColor: Theme.of(context).colorScheme.surface,
             fontSize: 16,
           );
         } else {
@@ -265,7 +265,7 @@ class AddListingPageState extends State<AddListingPage>
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                 ),
@@ -328,7 +328,7 @@ class AddListingPageState extends State<AddListingPage>
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                 ),

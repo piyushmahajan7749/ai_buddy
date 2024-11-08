@@ -307,7 +307,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                           SnackBar(
                             backgroundColor:
                                 // ignore: use_build_context_synchronously
-                                Theme.of(context).colorScheme.onBackground,
+                                Theme.of(context).colorScheme.onSurface,
                             content: const Text('Unable to open WhatsApp'),
                           ),
                         );
@@ -329,9 +329,9 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
       theme: DarkChatTheme(
         backgroundColor: Colors.transparent,
         primaryColor: context.colorScheme.secondary,
-        secondaryColor: context.colorScheme.onBackground,
-        inputBackgroundColor: context.colorScheme.onBackground,
-        inputTextColor: context.colorScheme.onSurface,
+        secondaryColor: context.colorScheme.onSurface,
+        inputBackgroundColor: context.colorScheme.onSurface,
+        inputTextColor: context.colorScheme.surfaceBright,
         messageMaxWidth: 600,
         sentMessageBodyLinkTextStyle: Theme.of(context)
             .textTheme
@@ -339,17 +339,17 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
             .copyWith(color: Theme.of(context).colorScheme.secondary),
         sendingIcon: Icon(
           Icons.send,
-          color: context.colorScheme.onSurface,
+          color: context.colorScheme.surfaceBright,
         ),
-        inputTextCursorColor: context.colorScheme.onSurface,
+        inputTextCursorColor: context.colorScheme.surfaceBright,
         receivedMessageBodyTextStyle: TextStyle(
-          color: context.colorScheme.onSurface,
+          color: context.colorScheme.surfaceBright,
           fontSize: 16,
           fontWeight: FontWeight.w500,
           height: 1.5,
         ),
         sentMessageBodyTextStyle: TextStyle(
-          color: context.colorScheme.onSurface,
+          color: context.colorScheme.surfaceBright,
           fontSize: 16,
           fontWeight: FontWeight.w500,
           height: 1.5,
@@ -364,13 +364,13 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
           fontSize: 16,
           fontWeight: FontWeight.w500,
           height: 1.5,
-          color: context.colorScheme.onSurface,
+          color: context.colorScheme.surfaceBright,
         ),
         inputTextDecoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
           isCollapsed: true,
-          fillColor: context.colorScheme.onBackground,
+          fillColor: context.colorScheme.onSurface,
         ),
         inputBorderRadius: const BorderRadius.vertical(
           top: Radius.circular(20),

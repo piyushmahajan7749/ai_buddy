@@ -29,7 +29,7 @@ class HistoryItem extends ConsumerWidget {
           AppRoute.home.push(context);
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: context.colorScheme.onBackground,
+          backgroundColor: context.colorScheme.onSurface,
           foregroundColor: color,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -68,7 +68,7 @@ class HistoryItem extends ConsumerWidget {
             IconButton(
               icon: Icon(
                 Icons.delete,
-                color: context.colorScheme.onSurface,
+                color: context.colorScheme.surfaceBright,
               ),
               onPressed: () {
                 ref.read(chatBotListProvider.notifier).deleteChatBot(chatBot);

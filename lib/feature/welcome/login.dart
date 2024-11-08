@@ -35,17 +35,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: FlutterLogin(
           theme: LoginTheme(
-            primaryColor: Theme.of(context).colorScheme.background,
+            primaryColor: Theme.of(context).colorScheme.surface,
             accentColor: Theme.of(context).colorScheme.primary,
             buttonStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.background,
+                  color: Theme.of(context).colorScheme.surface,
                 ),
             cardTheme: CardTheme(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               margin: const EdgeInsets.symmetric(vertical: 80),
             ),
             errorColor: Theme.of(context).colorScheme.primary,

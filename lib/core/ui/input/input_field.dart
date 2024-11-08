@@ -85,7 +85,7 @@ class _InputFieldState extends State<InputField> {
             : null,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: context.colorScheme.onSurface),
+          borderSide: BorderSide(color: context.colorScheme.surfaceBright),
         ),
       ),
     );

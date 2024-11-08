@@ -52,7 +52,7 @@ class MainPageState extends State<MainPage> {
       selectedIndex: _page,
       iconSize: 30,
       showElevation: false,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       items: [
         FlashyTabBarItem(
           title: Text(
