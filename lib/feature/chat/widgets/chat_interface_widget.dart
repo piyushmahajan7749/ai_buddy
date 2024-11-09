@@ -189,7 +189,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Text(
-                          'Searching for results...',
+                          'Searching for properties...',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),

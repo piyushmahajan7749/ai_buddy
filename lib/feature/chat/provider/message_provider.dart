@@ -12,7 +12,6 @@ import 'package:ai_buddy/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -109,8 +108,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     );
   }
 
-  Future<void> updateChatBotWithCustomMessage(CustomMessage message) async {
-    final newMessageList = [...state.messagesList, message.toJson()];
+  Future<void> updateChatBotWithCustomMessage(
+    Map<String, dynamic> message,
+  ) async {
+    final newMessageList = [...state.messagesList, message];
 
     await updateChatBot(
       ChatBot(
@@ -181,8 +182,31 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
 
   Future<void> getPythonAPIResponse({required String prompt}) async {
     _isGenerating = true;
-    _cancelToken = CancelToken(); // Create a new token for this request
+    _cancelToken = CancelToken();
     _errorMessage = '';
+
+    // Add searching message
+    placeholderId = uuid.v4();
+    final placeholderMessage = {
+      'id': placeholderId,
+      'type': 'custom',
+      'custom_type': 'searching',
+      'createdAt': DateTime.now().toIso8601String(),
+      'typeOfMessage': TypeOfMessage.bot,
+      'text': '',
+    };
+
+    // Update state with placeholder message
+    final newMessageList = [...state.messagesList, placeholderMessage];
+    await updateChatBot(
+      ChatBot(
+        messagesList: newMessageList,
+        id: state.id,
+        title: state.title,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+      ),
+    );
 
     final String? userId = AuthService().getCurrentUserId();
     if (userId == null) {
@@ -205,22 +229,12 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
       return;
     }
 
-    final List<Map<String, String>> chatParts = state.messagesList.map((msg) {
+    final List<Map<String, String>> chatParts =
+        state.messagesList.where((msg) => msg['text'] != null).map((msg) {
       return {'text': msg['text'] as String};
     }).toList();
 
     chatParts.add({'text': prompt});
-    placeholderId = uuid.v4();
-    final placeholderMessage = CustomMessage(
-      id: placeholderId,
-      author: User(
-        id: placeholderId,
-        createdAt: DateTime.now().day,
-      ),
-      type: MessageType.custom,
-    );
-
-    await updateChatBotWithCustomMessage(placeholderMessage);
 
     try {
       final dio = Dio(
@@ -419,26 +433,51 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
   }
 
   Future<void> addFilterMessage(String message) async {
-    final newMessage = ChatMessage(
+    // Find the last search query message from user
+    final lastSearchMessage = state.messagesList.lastWhere(
+      (msg) => msg['typeOfMessage'] == TypeOfMessage.user,
+      orElse: () => {'text': ''}, // Default empty if no message found
+    );
+
+    if (lastSearchMessage['text'] == '') {
+      // No previous search found, show error
+      _errorMessage =
+          'Please search for properties first before applying filters';
+      await addErrorMessage(uuid.v4());
+      return;
+    }
+
+    // Remove all previous bot and owner listing messages
+    final filteredMessages = state.messagesList.where((msg) {
+      final typeStr = msg['typeOfMessage'].toString();
+      return typeStr != TypeOfMessage.bot &&
+          typeStr != TypeOfMessage.ownerListing;
+    }).toList();
+
+    // Update state with only user messages
+    await updateChatBot(
+      ChatBot(
+        messagesList: filteredMessages,
+        id: state.id,
+        title: state.title,
+        attachmentPath: state.attachmentPath,
+        embeddings: state.embeddings,
+      ),
+    );
+
+    // Add filter message
+    final filterMsg = ChatMessage(
       id: uuid.v4(),
       text: message,
       createdAt: DateTime.now(),
       typeOfMessage: TypeOfMessage.user,
       chatBotId: state.id,
     );
+    await updateChatBotWithMessage(filterMsg);
 
-    await updateChatBotWithMessage(newMessage);
+    // Make API call with original search query and updated filters
     await getPythonAPIResponse(
-      prompt: newMessage.text,
-    );
-    await updateChatBot(
-      ChatBot(
-        messagesList: state.messagesList,
-        id: state.id,
-        title: state.title,
-        attachmentPath: state.attachmentPath,
-        embeddings: state.embeddings,
-      ),
+      prompt: lastSearchMessage['text'] as String,
     );
   }
 }
