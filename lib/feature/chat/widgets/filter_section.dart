@@ -145,7 +145,7 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                               ? _searchWithFilters
                               : null,
                           child: Text(
-                            'Search with Filters',
+                            'Apply',
                             style: TextStyle(
                               color: selectedFilters.isNotEmpty
                                   ? Theme.of(context).colorScheme.surface
