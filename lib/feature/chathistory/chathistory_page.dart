@@ -226,12 +226,12 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'History',
+                          'Search History',
                           style:
                               Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.w400,
@@ -261,7 +261,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   if (chatBotsList.isEmpty)
                     Center(
                       child: Padding(

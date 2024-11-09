@@ -175,6 +175,8 @@ class AddListingPageState extends State<AddListingPage>
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
               title: const Text('Add Listing'),
+              automaticallyImplyLeading:
+                  false, // This line removes the back button
               bottom: TabBar(
                 controller: _tabController,
                 tabs: const [
