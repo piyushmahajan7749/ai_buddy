@@ -1,8 +1,10 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
+import 'package:ai_buddy/feature/welcome/phone_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -76,7 +78,7 @@ class WelcomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: ElevatedButton(
                     onPressed: () {
-                      AppRoute.login.go(context);
+                      AppRoute.onboarding.go(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colorScheme.surfaceBright,
@@ -89,6 +91,35 @@ class WelcomePage extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account?',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        PageTransition<dynamic>(
+                          type: PageTransitionType.leftToRight,
+                          child: const PhoneAuthScreen(),
+                        ),
+                      ),
+                      child: Text(
+                        'Log in',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              decoration: TextDecoration.underline,
+                            ),
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),

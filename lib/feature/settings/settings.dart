@@ -430,7 +430,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
           leading: const Icon(LineIcons.alternateSignOut),
           onPressed: (context) async {
             await auth.signOut();
-            AppRoute.login.go(context);
+            AppRoute.welcome.go(context);
           },
         ),
         SettingsTile(

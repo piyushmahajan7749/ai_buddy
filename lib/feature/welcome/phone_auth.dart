@@ -1,8 +1,12 @@
+import 'package:ai_buddy/core/config/assets_constants.dart';
+import 'package:ai_buddy/core/util/btnutils.dart';
 import 'package:easy_container/easy_container.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:lottie/lottie.dart';
 
 bool isNullOrBlank(String? data) => data?.trim().isEmpty ?? true;
 
@@ -23,39 +27,67 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "We'll send an SMS with a verification code...",
-                style: TextStyle(fontSize: 22),
-              ),
-              const SizedBox(height: 15),
-              EasyContainer(
-                elevation: 0,
-                borderRadius: 10,
-                color: Colors.transparent,
-                child: Form(
-                  key: _formKey,
-                  child: IntlPhoneField(
-                    autofocus: true,
-                    invalidNumberMessage: 'Invalid Phone Number!',
-                    textAlignVertical: TextAlignVertical.center,
-                    style: const TextStyle(fontSize: 25),
-                    onChanged: (phone) => phoneNumber = phone.completeNumber,
-                    initialCountryCode: 'IN',
-                    flagsButtonPadding: const EdgeInsets.only(right: 10),
-                    showDropdownIcon: false,
-                    keyboardType: TextInputType.phone,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              CupertinoIcons.back,
+              size: 28,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            onPressed: () => GoRouter.of(context).go('/'),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Lottie.asset(
+                  AssetConstants.onboardingAnimation,
+                  height: 120,
+                  fit: BoxFit.fitHeight,
+                ),
+                Text(
+                  'Login to 9Roof AI',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 80),
+                Text(
+                  'Enter your phone number',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Text(
+                  "We'll send you a verification code via SMS",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 20),
+                EasyContainer(
+                  elevation: 0,
+                  borderRadius: 10,
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Form(
+                    key: _formKey,
+                    child: IntlPhoneField(
+                      autofocus: true,
+                      invalidNumberMessage: 'Invalid Phone Number!',
+                      textAlignVertical: TextAlignVertical.center,
+                      style: const TextStyle(fontSize: 25),
+                      onChanged: (phone) => phoneNumber = phone.completeNumber,
+                      initialCountryCode: 'IN',
+                      flagsButtonPadding: const EdgeInsets.only(right: 10),
+                      showDropdownIcon: false,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          fillColor: Theme.of(context).colorScheme.onSurface),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              EasyContainer(
-                width: double.infinity,
-                onTap: () async {
+                const SizedBox(height: 24),
+                buildOutlinedButton('Send Verification Code', () async {
                   if (isNullOrBlank(phoneNumber) ||
                       !_formKey.currentState!.validate()) {
                     await Fluttertoast.showToast(
@@ -70,13 +102,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   } else {
                     GoRouter.of(context).go('/verifynumber/$phoneNumber');
                   }
-                },
-                child: const Text(
-                  'Verify',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
+                }, context)
+              ],
+            ),
           ),
         ),
       ),

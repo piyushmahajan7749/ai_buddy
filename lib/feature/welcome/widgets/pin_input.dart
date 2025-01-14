@@ -66,7 +66,7 @@ class _PinInputFieldState extends State<PinInputField> {
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(7.5),
       ),
     );

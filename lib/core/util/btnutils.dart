@@ -189,7 +189,7 @@ Widget buildOutlinedButton(
     onPressed: () => onPressed(),
     child: Text(
       label,
-      style: Theme.of(context).textTheme.bodyMedium,
+      style: Theme.of(context).textTheme.bodyLarge,
     ),
   );
 }
@@ -201,8 +201,8 @@ Widget buildElevatedButton(
 ) {
   return ElevatedButton(
     style: TextButton.styleFrom(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(25),
@@ -212,8 +212,9 @@ Widget buildElevatedButton(
     onPressed: () => onPressed(),
     child: Text(
       label,
-      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            fontSize: 20,
+            color: Theme.of(context).colorScheme.surface,
           ),
     ),
   );

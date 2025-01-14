@@ -17,7 +17,8 @@ class DbServiceUser {
   }
 
   Future<Map<String, dynamic>> getUserData() async {
-    final DocumentSnapshot doc = await prefCollection.doc(uid).get();
+    final DocumentSnapshot doc =
+        await prefCollection.doc("00wGdhsxQ9c0NI0DjulFyWp6RE62").get();
     return doc.data()! as Map<String, dynamic>;
   }
 

@@ -152,18 +152,22 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                     padding: const EdgeInsets.all(20),
                     controller: scrollController,
                     children: [
+                      const SizedBox(height: 20),
                       Text(
                         // ignore: lines_longer_than_80_chars
                         "We've sent a verification code to ${widget.phoneNumber}",
-                        style: const TextStyle(fontSize: 25),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontSize: 20,
+                            ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       const Divider(),
                       if (controller.isListeningForOtpAutoRetrieve)
                         const Column(
                           children: [
                             CustomLoader(),
-                            SizedBox(height: 50),
+                            SizedBox(height: 40),
                             Text(
                               'Listening for OTP',
                               textAlign: TextAlign.center,
@@ -172,7 +176,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(height: 15),
+                            SizedBox(height: 20),
                             Divider(),
                             Text('OR', textAlign: TextAlign.center),
                             Divider(),

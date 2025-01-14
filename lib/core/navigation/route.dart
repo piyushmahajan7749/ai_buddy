@@ -8,6 +8,7 @@ enum AppRoute {
   home('/home'),
   chat('/chat'),
   welcome('/welcome'),
+  onboarding('/onboarding'),
   preferences('/preferences'),
   ;
 
