@@ -51,10 +51,11 @@ class InviteFriendsScreen extends StatelessWidget {
                               right: 20,
                               bottom: 15,
                             ),
-                            child: Text('FREE TRIAL PASS',
-                                textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall!),
+                            child: Text(
+                              'FREE TRIAL PASS',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineSmall!,
+                            ),
                           ),
                         ],
                       ),

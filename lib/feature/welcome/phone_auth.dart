@@ -82,7 +82,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       showDropdownIcon: false,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                          fillColor: Theme.of(context).colorScheme.onSurface),
+                        fillColor: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -106,7 +107,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                     }
                   },
                   context,
-                )
+                ),
               ],
             ),
           ),

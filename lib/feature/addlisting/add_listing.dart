@@ -14,7 +14,6 @@ class AddListingPage extends StatefulWidget {
 
 class AddListingPageState extends State<AddListingPage>
     with SingleTickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
   Map<String, dynamic> formData = {};
   late TabController _tabController;
   final TextEditingController _aiDescriptionController =
@@ -37,61 +36,6 @@ class AddListingPageState extends State<AddListingPage>
     _aiNameController.dispose();
     _aiContactController.dispose();
     super.dispose();
-  }
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      // Add this line to include isOwnerListing in the form data
-      formData['isOwnerListing'] = isOwnerListing;
-
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        final dio = Dio(BaseOptions(baseUrl: endpointUrl));
-        final response = await dio.post<dynamic>(
-          '/add_listing',
-          data: formData,
-          options: Options(
-            headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-          ),
-        );
-
-        if (response.statusCode == 201 && response.data != null) {
-          _formKey.currentState!.reset();
-          await Fluttertoast.showToast(
-            msg: 'Listing added successfully!',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 3,
-            // ignore: use_build_context_synchronously
-            backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            // ignore: use_build_context_synchronously
-            textColor: Theme.of(context).colorScheme.surface,
-            fontSize: 16,
-          );
-        } else {
-          throw Exception('Failed to add listing');
-        }
-      } catch (e) {
-        await Fluttertoast.showToast(
-          msg: 'Error: $e',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 3,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16,
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   Future<void> _submitAIDescription() async {

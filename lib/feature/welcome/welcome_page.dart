@@ -118,7 +118,7 @@ class WelcomePage extends StatelessWidget {
                               decoration: TextDecoration.underline,
                             ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],

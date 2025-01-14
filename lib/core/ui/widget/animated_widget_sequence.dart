@@ -5,7 +5,9 @@ import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 typedef NextCallback = void Function({Duration delay});
 // ignore: lines_longer_than_80_chars
 typedef SequenceItemBuilder = Widget Function(
-    NextCallback next, NextCallback? previous);
+  NextCallback next,
+  NextCallback? previous,
+);
 
 class AnimatedSwitcherSequenceController with ChangeNotifier {
   void skipToNext() {

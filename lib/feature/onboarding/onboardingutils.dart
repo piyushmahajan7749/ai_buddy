@@ -4,7 +4,11 @@ import 'package:sizer/sizer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 Row buildProgressHeader(
-    BuildContext context, Function previous, int step, int totalSteps) {
+  BuildContext context,
+  Function previous,
+  int step,
+  int totalSteps,
+) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

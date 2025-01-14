@@ -32,39 +32,40 @@ class _ReminderScreenState extends State<ReminderScreen> {
     return SingleChildScrollView(
       child: SafeArea(
         child: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Text(
-                'Select Time to receive notifications',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Text(
+                  'Select Time to receive notifications',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // Render inline widget
-                showPicker(
-                  isInlinePicker: true,
-                  elevation: 8,
-                  value: Time.fromTimeOfDay(_time, null),
-                  onChange: onTimeChanged,
-                  minuteInterval: TimePickerInterval.FIVE,
-                  accentColor: Theme.of(context).colorScheme.primary,
-                  unselectedColor: Theme.of(context).colorScheme.secondary,
-                  isOnChangeValueMode: true,
-                ) as Widget,
-              ],
-            ),
-            const SizedBox(height: 10),
-            buildElevatedButton('Save', onIntroEnd),
-          ],
-        )),
+              const SizedBox(height: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Render inline widget
+                  showPicker(
+                    isInlinePicker: true,
+                    elevation: 8,
+                    value: Time.fromTimeOfDay(_time, null),
+                    onChange: onTimeChanged,
+                    minuteInterval: TimePickerInterval.FIVE,
+                    accentColor: Theme.of(context).colorScheme.primary,
+                    unselectedColor: Theme.of(context).colorScheme.secondary,
+                    isOnChangeValueMode: true,
+                  ) as Widget,
+                ],
+              ),
+              const SizedBox(height: 10),
+              buildElevatedButton('Save', onIntroEnd),
+            ],
+          ),
+        ),
       ),
     );
   }

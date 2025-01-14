@@ -252,6 +252,7 @@ Future<Widget> buildSubscriptionbutton(BuildContext context) async {
   final userData = await DbServiceUser(uid: userId!).getUserData();
 
   return buildRoundedIconButton(
+    // ignore: use_build_context_synchronously
     context,
     () {
       showBarModalBottomSheet<void>(

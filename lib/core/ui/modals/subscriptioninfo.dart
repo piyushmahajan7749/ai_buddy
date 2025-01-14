@@ -43,7 +43,7 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
   Widget build(BuildContext context) {
     final isPro = widget.userData['is_pro'] as bool;
     final creditsUsed = widget.userData['credits_used'] as int;
-    final credits_remaining = maxCredits - creditsUsed;
+    final creditsRemaining = maxCredits - creditsUsed;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -89,12 +89,12 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
                               bottom: 15,
                             ),
                             child: Text(
-                                isPro
-                                    ? 'Your subscription is active'
-                                    : 'You have $credits_remaining credits left',
-                                textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall!),
+                              isPro
+                                  ? 'Your subscription is active'
+                                  : 'You have $creditsRemaining credits left',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineSmall!,
+                            ),
                           ),
                         ],
                       ),

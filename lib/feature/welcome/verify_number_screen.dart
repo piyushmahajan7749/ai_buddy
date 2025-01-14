@@ -95,6 +95,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
               await dbService.createUserPref();
             }
           }
+          // ignore: use_build_context_synchronously
           AppRoute.home.go(context);
         },
         onLoginFailed: (authException, stackTrace) {
