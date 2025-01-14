@@ -1,3 +1,4 @@
+import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/feature/welcome/widgets/custom_loader.dart';
 import 'package:ai_buddy/feature/welcome/widgets/pin_input.dart';
@@ -82,6 +83,12 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
           );
 
           // ignore: use_build_context_synchronously
+          final user = userCredential.user;
+
+          if (user != null) {
+            // Check if user is new or already exists
+            await DbServiceUser(uid: user.uid).createUserPref();
+          }
           AppRoute.home.go(context);
         },
         onLoginFailed: (authException, stackTrace) {

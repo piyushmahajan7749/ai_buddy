@@ -34,7 +34,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               size: 28,
               color: Theme.of(context).colorScheme.primary,
             ),
-            onPressed: () => GoRouter.of(context).go('/'),
+            onPressed: () => GoRouter.of(context).go('/welcome'),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -87,22 +87,26 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                buildOutlinedButton('Send Verification Code', () async {
-                  if (isNullOrBlank(phoneNumber) ||
-                      !_formKey.currentState!.validate()) {
-                    await Fluttertoast.showToast(
-                      msg: 'Please enter a valid phone number!',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 3,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16,
-                    );
-                  } else {
-                    GoRouter.of(context).go('/verifynumber/$phoneNumber');
-                  }
-                }, context)
+                buildOutlinedButton(
+                  'Send Verification Code',
+                  () async {
+                    if (isNullOrBlank(phoneNumber) ||
+                        !_formKey.currentState!.validate()) {
+                      await Fluttertoast.showToast(
+                        msg: 'Please enter a valid phone number!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 3,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16,
+                      );
+                    } else {
+                      GoRouter.of(context).go('/verifynumber/$phoneNumber');
+                    }
+                  },
+                  context,
+                )
               ],
             ),
           ),

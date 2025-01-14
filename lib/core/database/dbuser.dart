@@ -17,8 +17,7 @@ class DbServiceUser {
   }
 
   Future<Map<String, dynamic>> getUserData() async {
-    final DocumentSnapshot doc =
-        await prefCollection.doc("00wGdhsxQ9c0NI0DjulFyWp6RE62").get();
+    final DocumentSnapshot doc = await prefCollection.doc(uid).get();
     return doc.data()! as Map<String, dynamic>;
   }
 
@@ -27,7 +26,7 @@ class DbServiceUser {
     await prefCollection.doc(uid).set({
       'name': 'New User',
       'is_pro': false,
-      'credits_left': 2,
+      'credits_left': 30,
       'credits_used': 0,
       'show_notification': false,
       'signup_date': Timestamp.now(),

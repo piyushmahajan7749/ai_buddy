@@ -89,7 +89,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
               child: const Text('Contact on WhatsApp'),
               onPressed: () {
                 Navigator.of(context).pop();
-                _launchWhatsApp();
+                launchWhatsApp();
               },
             ),
           ],
@@ -127,7 +127,7 @@ class _PreferencesState extends ConsumerState<Preferences> {
     );
   }
 
-  Future<void> _launchWhatsApp() async {
+  Future<void> launchWhatsApp() async {
     const contact = '+91-8818888870';
     const androidUrl =
         'whatsapp://send?phone=$contact&text=Hi, I would like to upgrade my 9Roof AI account to Pro.';
@@ -245,7 +245,8 @@ class _PreferencesState extends ConsumerState<Preferences> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox();
               }
-              final userId = AuthService().getCurrentUserEmail() ?? 'N/A';
+              final String name = snapshot.data?['name'] as String;
+              final userId = name;
               return Text(
                 userId,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(

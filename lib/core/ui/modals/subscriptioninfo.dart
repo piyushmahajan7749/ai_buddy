@@ -1,9 +1,42 @@
+import 'dart:io';
+
 import 'package:ai_buddy/core/util/btnutils.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
-import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SubscriptionInfoScreen extends StatelessWidget {
-  const SubscriptionInfoScreen({super.key});
+class SubscriptionInfoScreen extends StatefulWidget {
+  const SubscriptionInfoScreen({required this.isPro, super.key});
+  final bool isPro;
+
+  @override
+  State<SubscriptionInfoScreen> createState() => _SubscriptionInfoScreenState();
+}
+
+class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
+  Future<void> _launchWhatsApp() async {
+    const contact = '+91-8818888870';
+    const androidUrl =
+        'whatsapp://send?phone=$contact&text=Hi, I would like to upgrade my 9Roof AI account to Pro.';
+    final iosUrl =
+        "https://wa.me/$contact?text=${Uri.parse('Hi, I would like to upgrade my 9Roof AI account to Pro.')}";
+
+    try {
+      if (Platform.isIOS) {
+        await launchUrl(Uri.parse(iosUrl));
+      } else {
+        await launchUrl(Uri.parse(androidUrl));
+      }
+    } on Exception {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          // ignore: use_build_context_synchronously
+          backgroundColor: Theme.of(context).colorScheme.onSurface,
+          content: const Text('Unable to open WhatsApp'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +53,7 @@ class SubscriptionInfoScreen extends StatelessWidget {
                 children: [
                   const SizedBox(width: 50),
                   Text(
-                    'Invite friends',
+                    'Your Subscription',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   buildCloseButton(context),
@@ -51,7 +84,10 @@ class SubscriptionInfoScreen extends StatelessWidget {
                               right: 20,
                               bottom: 15,
                             ),
-                            child: Text('FREE TRIAL PASS',
+                            child: Text(
+                                widget.isPro
+                                    ? 'Your subscription is active'
+                                    : 'Free trial active',
                                 textAlign: TextAlign.center,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall!),
@@ -63,14 +99,16 @@ class SubscriptionInfoScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
-                    'Send your colleagues a free pass',
+                    widget.isPro
+                        ? 'You have unlimited access to all features'
+                        : 'Upgrade to Pro for unlimited access',
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
-                        .headlineSmall!
-                        .copyWith(fontWeight: FontWeight.bold),
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
               ],
@@ -78,12 +116,13 @@ class SubscriptionInfoScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 40),
               child: buildElevatedButton(
-                'Share 9Roof AI',
+                widget.isPro ? 'Close' : 'Subscribe Now',
                 () {
-                  Share.share(
-                    'I have been using 9Roof AI to search for properties finding it very helpful.\n\nI wanted to share this guest pass with you, they are offering 1 month free trial for new users, check it out here:\n\nhttps://www.9roof.com/',
-                    subject: '9Roof AI Free Trial Offer',
-                  );
+                  if (!widget.isPro) {
+                    _launchWhatsApp();
+                  } else {
+                    Navigator.of(context).pop();
+                  }
                 },
                 context,
               ),

@@ -1,6 +1,5 @@
 import 'package:ai_buddy/core/util/btnutils.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
-import 'package:line_icons/line_icons.dart';
 import 'package:sizer/sizer.dart';
 
 class ChatHeader extends StatelessWidget {
@@ -18,12 +17,15 @@ class ChatHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             buildSharebutton(context),
-            buildRoundedIconButton(
-              context,
-              () {
-                // showSubscriptionScreen(context);
+            FutureBuilder<Widget>(
+              future: buildSubscriptionbutton(context),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data ?? const SizedBox.shrink();
+                } else {
+                  return const CircularProgressIndicator();
+                }
               },
-              LineIcons.crown,
             ),
           ],
         ),
