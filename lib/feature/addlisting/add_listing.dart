@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ai_buddy/core/util/btnutils.dart';
 import 'package:ai_buddy/core/util/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -177,20 +178,10 @@ class AddListingPageState extends State<AddListingPage>
               title: const Text('Add Listing'),
               automaticallyImplyLeading:
                   false, // This line removes the back button
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: 'AI Assistant'),
-                  Tab(text: 'Manual Entry'),
-                ],
-              ),
             ),
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildAIAssistantTab(),
-                _buildManualEntryTab(),
-              ],
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: _buildAIAssistantTab(),
             ),
           ),
         ),
@@ -207,240 +198,57 @@ class AddListingPageState extends State<AddListingPage>
 
   Widget _buildAIAssistantTab() {
     return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height -
-              AppBar().preferredSize.height -
-              MediaQuery.of(context).padding.top,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Describe your property',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _aiDescriptionController,
-                    maxLines: 5,
-                    decoration: const InputDecoration(
-                      hintText: 'E.g., "A spacious 3BHK apartment in '
-                          'Vijay Nagar, fully furnished, and close to '
-                          'public transport."',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _aiNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Your Name',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _aiContactController,
-                    decoration: const InputDecoration(
-                      labelText: 'Contact Number',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.phone,
-                  ),
-                  const SizedBox(height: 30),
-                  _buildOwnerListingSwitch(), // Add this line
-                ],
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitAIDescription,
-                  child: Text(
-                    'Submit Listing',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildManualEntryTab() {
-    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildFilterGroup(
-                'Requirement',
-                ['Sell', 'Rent', 'Lease'],
-                'requirement',
-              ),
-              _buildFilterGroup(
-                'Property Type',
-                ['Flat', 'Plot', 'Office', 'Shop', 'Hostel', 'House'],
-                'property_type',
-              ),
-              _buildLocationInput(),
-              _buildFilterGroup(
-                'Bedrooms',
-                ['1RK', '1BHK', '2BHK', '3BHK', '4BHK', '5+BHK'],
-                'bedrooms',
-              ),
-              _buildFilterGroup(
-                'Property Subtype',
-                ['Agricultural', 'Commercial', 'Residential'],
-                'property_subtype',
-              ),
-              _buildNumberInput('Price (₹)', 'price', isPrice: true),
-              _buildNumberInput('Area (sq ft)', 'area'),
-              _buildTextInput('Name', 'name'),
-              _buildTextInput('Contact Number', 'contact_number'),
-              _buildTextInput(
-                'Additional Features',
-                'additional_features',
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              _buildOwnerListingSwitch(), // Add this line
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  child: Text(
-                    'Submit Listing',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterGroup(
-    String title,
-    List<String> options,
-    String filterKey,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 4,
-          children: options
-              .map(
-                (option) => FilterChip(
-                  label: Text(option),
-                  selected: formData[filterKey] == option,
-                  onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        formData[filterKey] = option;
-                      } else {
-                        formData.remove(filterKey);
-                      }
-                    });
-                  },
-                ),
-              )
-              .toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNumberInput(String label, String key, {bool isPrice = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
-        keyboardType: TextInputType.number,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a value';
-          }
-          if (double.tryParse(value) == null) {
-            return 'Please enter a valid number';
-          }
-          return null;
-        },
-        onSaved: (value) {
-          if (isPrice) {
-            formData[key] = value; // Store price as String
-          } else {
-            formData[key] = double.parse(value!);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildLocationInput() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child:
-                Text('Location', style: Theme.of(context).textTheme.bodyLarge),
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Location',
-              border: OutlineInputBorder(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Describe your property',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-            onSaved: (value) => formData['location'] = value,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextInput(String label, String key, {int maxLines = 1}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _aiDescriptionController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                hintText: 'E.g., "A spacious 3BHK apartment in '
+                    'Vijay Nagar, fully furnished, and close to '
+                    'public transport."',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _aiNameController,
+              decoration: const InputDecoration(
+                labelText: 'Your Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _aiContactController,
+              decoration: const InputDecoration(
+                labelText: 'Contact Number',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 30),
+            _buildOwnerListingSwitch(), // Add this line
+            const SizedBox(height: 60),
+            SizedBox(
+              width: double.infinity,
+              child: buildOutlinedButton(
+                'Submit Listing',
+                _submitAIDescription,
+                context,
+              ),
+            ),
+          ],
         ),
-        maxLines: maxLines,
-        onSaved: (value) => formData[key] = value,
       ),
     );
   }
