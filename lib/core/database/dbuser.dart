@@ -1,4 +1,6 @@
+import 'package:ai_buddy/core/util/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class DbServiceUser {
   DbServiceUser({required this.uid});
@@ -9,11 +11,15 @@ class DbServiceUser {
 
   /* *** Preferences db operations *** */
 
-  Future<void> updateCredits() async {
+  Future<int> updateCredits() async {
     await prefCollection.doc(uid).update({
       'credits_left': FieldValue.increment(-1),
       'credits_used': FieldValue.increment(1),
     });
+    final DocumentSnapshot doc = await prefCollection.doc(uid).get();
+    final data = doc.data()! as Map<String, dynamic>;
+    final creditsUsed = data['credits_used'] as int;
+    return creditsUsed;
   }
 
   Future<Map<String, dynamic>> getUserData() async {
@@ -26,7 +32,7 @@ class DbServiceUser {
     await prefCollection.doc(uid).set({
       'name': 'New User',
       'is_pro': false,
-      'credits_left': 30,
+      'credits_left': maxCredits,
       'credits_used': 0,
       'show_notification': false,
       'signup_date': Timestamp.now(),

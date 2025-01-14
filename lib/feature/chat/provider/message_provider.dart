@@ -13,6 +13,7 @@ import 'package:ai_buddy/feature/hive/model/chat_message/chat_message.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -220,10 +221,10 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
     final bool isPro = userData['is_pro'] as bool;
     final int creditsUsed = userData['credits_used'] as int;
 
-    if (!isPro && creditsUsed >= 9) {
+    if (!isPro && creditsUsed >= maxCredits) {
       _errorMessage =
           // ignore: lines_longer_than_80_chars
-          'You have reached your limit. Please upgrade to Pro from settings tab.';
+          'You have reached your free trial limit. Please upgrade to Pro by clicking the crown icon on the top right of the screen.';
       await addErrorMessage(placeholderId);
       _isGenerating = false;
       return;
@@ -262,10 +263,14 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         final List<dynamic> properties =
             responseData['results'] as List<dynamic>;
 
-        if (!isPro) {
-          await DbServiceUser(uid: userId).updateCredits();
-        }
+        final creditsUsed = await DbServiceUser(uid: userId).updateCredits();
+        if (creditsUsed % 5 == 0) {
+          final InAppReview inAppReview = InAppReview.instance;
 
+          if (await inAppReview.isAvailable()) {
+            await inAppReview.requestReview();
+          }
+        }
         final List<ChatMessage> rawMessageList = [];
         final List<ChatMessage> ownerListings = [];
 

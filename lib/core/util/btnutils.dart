@@ -264,8 +264,7 @@ Future<Widget> buildSubscriptionbutton(BuildContext context) async {
           borderRadius: BorderRadius.circular(25),
         ),
         backgroundColor: Theme.of(context).colorScheme.onSurface,
-        builder: (context) =>
-            SubscriptionInfoScreen(isPro: userData['is_pro'] as bool),
+        builder: (context) => SubscriptionInfoScreen(userData: userData),
       );
     },
     LineIcons.crown,

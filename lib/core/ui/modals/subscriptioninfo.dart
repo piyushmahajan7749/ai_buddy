@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:ai_buddy/core/util/btnutils.dart';
+import 'package:ai_buddy/core/util/constants.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionInfoScreen extends StatefulWidget {
-  const SubscriptionInfoScreen({required this.isPro, super.key});
-  final bool isPro;
+  const SubscriptionInfoScreen({required this.userData, super.key});
+  final Map<String, dynamic> userData;
 
   @override
   State<SubscriptionInfoScreen> createState() => _SubscriptionInfoScreenState();
@@ -40,6 +41,9 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPro = widget.userData['is_pro'] as bool;
+    final creditsUsed = widget.userData['credits_used'] as int;
+    final credits_remaining = maxCredits - creditsUsed;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -85,9 +89,9 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
                               bottom: 15,
                             ),
                             child: Text(
-                                widget.isPro
+                                isPro
                                     ? 'Your subscription is active'
-                                    : 'Free trial active',
+                                    : 'You have $credits_remaining credits left',
                                 textAlign: TextAlign.center,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall!),
@@ -101,7 +105,7 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
-                    widget.isPro
+                    isPro
                         ? 'You have unlimited access to all features'
                         : 'Upgrade to Pro for unlimited access',
                     textAlign: TextAlign.center,
@@ -116,9 +120,9 @@ class _SubscriptionInfoScreenState extends State<SubscriptionInfoScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 40),
               child: buildElevatedButton(
-                widget.isPro ? 'Close' : 'Subscribe Now',
+                isPro ? 'Close' : 'Subscribe Now',
                 () {
-                  if (!widget.isPro) {
+                  if (!isPro) {
                     _launchWhatsApp();
                   } else {
                     Navigator.of(context).pop();

@@ -5,6 +5,7 @@ import 'package:ai_buddy/feature/settings/settings.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
+import 'package:upgrader/upgrader.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -39,9 +40,12 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pageOptions[_page],
-      bottomNavigationBar: buildConvexAppBar(),
+    return UpgradeAlert(
+      dialogStyle: UpgradeDialogStyle.cupertino,
+      child: Scaffold(
+        body: _pageOptions[_page],
+        bottomNavigationBar: buildConvexAppBar(),
+      ),
     );
   }
 
