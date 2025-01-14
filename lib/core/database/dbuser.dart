@@ -30,6 +30,15 @@ class DbServiceUser {
     return creditsUsed;
   }
 
+  Future<void> updateName(
+    String newName,
+  ) async {
+    await prefCollection.doc(uid).update({
+      'name': newName,
+      'updatedAt': Timestamp.now(),
+    });
+  }
+
   Future<Map<String, dynamic>> getUserData() async {
     final DocumentSnapshot doc = await prefCollection.doc(uid).get();
     return doc.data()! as Map<String, dynamic>;

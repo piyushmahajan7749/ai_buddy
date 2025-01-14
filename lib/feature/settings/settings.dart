@@ -53,6 +53,48 @@ class _PreferencesState extends ConsumerState<Preferences> {
     return DbServiceUser(uid: userId).getUserData();
   }
 
+  Future<void> _editName(BuildContext context, String currentName) async {
+    final TextEditingController controller =
+        TextEditingController(text: currentName);
+
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Name'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Enter your name',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (newName != null && newName.isNotEmpty) {
+      try {
+        final String? userId = AuthService().getCurrentUserId();
+        await DbServiceUser(uid: userId!).updateName(newName);
+
+        setState(() {}); // Refresh UI
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update name')),
+          );
+        }
+      }
+    }
+  }
+
   Widget _buildLoadingIndicator(String currentState) {
     return Center(
       child: Column(
@@ -238,25 +280,36 @@ class _PreferencesState extends ConsumerState<Preferences> {
       ),
       tiles: [
         SettingsTile(
-          leading: const Icon(CupertinoIcons.person),
-          trailing: const SizedBox(),
-          title: FutureBuilder<Map<String, dynamic>>(
+          title: Text(
+            'Name',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          leading: const Icon(CupertinoIcons.person_fill),
+          trailing: FutureBuilder<Map<String, dynamic>>(
             future: getUserData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox();
               }
-              final String name = snapshot.data?['name'] as String;
-              final userId = name;
-              return Text(
-                userId,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+              final name = snapshot.data?['name'] as String? ?? 'Unknown';
+              return Flexible(
+                child: Text(
+                  name,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               );
             },
           ),
+          onPressed: (context) async {
+            final userData = await getUserData();
+            final currentName = userData['name'] as String? ?? '';
+            await _editName(context, currentName);
+          },
         ),
         SettingsTile(
           leading: const Icon(CupertinoIcons.star),
