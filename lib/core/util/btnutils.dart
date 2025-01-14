@@ -4,6 +4,7 @@ import 'package:ai_buddy/core/ui/modals/subscriptioninfo.dart';
 import 'package:ai_buddy/core/util/auth.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sizer/sizer.dart';
 
@@ -268,5 +269,14 @@ Future<Widget> buildSubscriptionbutton(BuildContext context) async {
       );
     },
     LineIcons.crown,
+  );
+}
+
+Widget buildLottie(String assetName, double width, double height) {
+  return Lottie.asset(
+    'assets/lottie/$assetName',
+    width: Device.screenType == ScreenType.mobile ? width : width * 1.4,
+    height: Device.screenType == ScreenType.mobile ? height : height * 1.4,
+    fit: BoxFit.fill,
   );
 }

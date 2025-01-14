@@ -64,10 +64,7 @@ SafeArea buildInfoPage(
                       ),
                 ),
               ),
-              SizedBox(
-                height: 30.h,
-                child: Image.asset('assets/images/onboarding$step.jpg'),
-              ),
+              buildLottie('onboarding$step.json', 280, 280),
               Column(
                 children: [
                   Padding(

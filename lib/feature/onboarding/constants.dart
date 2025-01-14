@@ -23,7 +23,7 @@ List<IntroStep> introSteps = [
     title: 'Search Smarter, Not Harder',
     description:
         // ignore: lines_longer_than_80_chars
-        'Find your perfect home with our intelligent search tools that understand your preferences and lifestyle needs.',
+        'Use the power of AI and find the properties you are looking for, in seconds.',
   ),
   IntroStep(
     title: 'Connect Instantly',
@@ -32,7 +32,7 @@ List<IntroStep> introSteps = [
         'Direct access to property owners and real estate agents. Schedule viewings and get responses in real-time.',
   ),
   IntroStep(
-    title: 'Grow Your Business',
+    title: 'Unlock Your 10x Growth',
     description:
         // ignore: lines_longer_than_80_chars
         "List your properties and get connected with thousands of potential buyers and tenants. It's fast, easy, and free.",

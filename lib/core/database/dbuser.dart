@@ -1,9 +1,17 @@
 import 'package:ai_buddy/core/util/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:in_app_review/in_app_review.dart';
 
 class DbServiceUser {
   DbServiceUser({required this.uid});
+
+  final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  Future<bool> userPrefsExist() async {
+    final docSnapshot = await _userCollection.doc(uid).get();
+    return docSnapshot.exists;
+  }
+
   final String uid;
 
   final CollectionReference prefCollection =

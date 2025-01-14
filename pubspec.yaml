@@ -95,4 +95,5 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/
+    - assets/lottie/
     - assets/animations/

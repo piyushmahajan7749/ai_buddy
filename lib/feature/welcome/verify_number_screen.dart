@@ -86,8 +86,14 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
           final user = userCredential.user;
 
           if (user != null) {
-            // Check if user is new or already exists
-            await DbServiceUser(uid: user.uid).createUserPref();
+            final dbService = DbServiceUser(uid: user.uid);
+            // Check if user prefs already exist
+            final prefsExist = await dbService.userPrefsExist();
+
+            if (!prefsExist) {
+              // Only create if they don't exist
+              await dbService.createUserPref();
+            }
           }
           AppRoute.home.go(context);
         },

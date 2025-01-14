@@ -5,6 +5,7 @@ import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/database/dbuser.dart';
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/core/util/auth.dart';
+import 'package:ai_buddy/core/util/constants.dart';
 import 'package:ai_buddy/core/util/secure_storage.dart';
 import 'package:ai_buddy/core/util/utils.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
@@ -304,7 +305,8 @@ class _PreferencesState extends ConsumerState<Preferences> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox();
               }
-              final creditsLeft = snapshot.data?['credits_left'] ?? 'N/A';
+              final creditsUsed = snapshot.data?['credits_used'] as int;
+              final creditsLeft = maxCredits - creditsUsed;
               final bool isPro = snapshot.data?['is_pro'] as bool;
 
               return Text(
