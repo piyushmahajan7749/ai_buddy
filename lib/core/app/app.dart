@@ -1,17 +1,25 @@
 import 'package:ai_buddy/core/app/style.dart';
 import 'package:ai_buddy/core/navigation/router.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:sizer/sizer.dart';
 
-class AIBuddy extends StatelessWidget {
-  const AIBuddy({super.key});
+class RoofAI extends StatelessWidget {
+  const RoofAI({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: '9Roof AI',
-      theme: darkTheme,
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    return OverlaySupport(
+      child: Sizer(
+        builder: (context, orientation, deviceType) {
+          return MaterialApp.router(
+            title: '9Roof AI',
+            theme: darkTheme,
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
+          );
+        },
+      ),
     );
   }
 }

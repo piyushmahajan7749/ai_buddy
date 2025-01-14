@@ -1,8 +1,8 @@
 import 'package:ai_buddy/core/config/assets_constants.dart';
 import 'package:ai_buddy/core/extension/context.dart';
 import 'package:ai_buddy/feature/chat/provider/message_provider.dart';
+import 'package:ai_buddy/feature/chat/widgets/chat_header_section.dart';
 import 'package:ai_buddy/feature/chat/widgets/chat_interface_widget.dart';
-import 'package:ai_buddy/feature/chat/widgets/filter_section.dart';
 import 'package:ai_buddy/feature/home/provider/chat_bot_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -90,7 +90,7 @@ class ChatPage extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const FilterSection(),
+                const ChatHeader(),
                 Expanded(
                   child: ChatInterfaceWidget(
                     messages: messages,
