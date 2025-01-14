@@ -38,6 +38,7 @@ Future<void> initHive() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: '9roof-ai',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   auth = FirebaseAuth.instance;

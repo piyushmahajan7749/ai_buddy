@@ -38,7 +38,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.mahajanwellness.roofai"
-    compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInteger()
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

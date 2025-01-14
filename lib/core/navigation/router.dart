@@ -2,7 +2,7 @@
 
 import 'package:ai_buddy/core/navigation/route.dart';
 import 'package:ai_buddy/feature/home/mainpage.dart';
-import 'package:ai_buddy/feature/welcome/login.dart';
+import 'package:ai_buddy/feature/welcome/phone_auth.dart';
 import 'package:ai_buddy/feature/welcome/verify_number_screen.dart';
 import 'package:ai_buddy/feature/welcome/welcome_page.dart';
 import 'package:ai_buddy/splash_page.dart';
@@ -15,11 +15,15 @@ final GoRouter router = GoRouter(
       path: AppRoute.splash.path,
       builder: (context, state) => const SplashPage(),
     ),
+    // GoRoute(
+    //   path: AppRoute.login.path,
+    //   builder: (context, state) => const LoginScreen(
+    //     showClose: false,
+    //   ),
+    // ),
     GoRoute(
       path: AppRoute.login.path,
-      builder: (context, state) => const LoginScreen(
-        showClose: false,
-      ),
+      builder: (context, state) => const PhoneAuthScreen(),
     ),
     GoRoute(
       path: AppRoute.verifyNumber.path,
