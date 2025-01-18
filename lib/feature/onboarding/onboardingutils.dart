@@ -50,7 +50,7 @@ SafeArea buildInfoPage(
       children: [
         SizedBox(
           height: 5.h,
-          child: buildProgressHeader(context, previous, step, 3),
+          child: buildProgressHeader(context, previous, step, 4),
         ),
         SizedBox(
           height: 82.h,

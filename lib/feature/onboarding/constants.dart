@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 class IntroStep {
   IntroStep({
     required this.title,
@@ -20,21 +22,23 @@ class Review {
 
 List<IntroStep> introSteps = [
   IntroStep(
-    title: 'Search Smarter, Not Harder',
+    title: 'Aap ka personal real estate assistant',
     description:
-        // ignore: lines_longer_than_80_chars
-        'Use the power of AI and find the properties you are looking for, in seconds.',
+        '9Roof aap ka ek personal assistant hai, jo aapko property search karne me help karta hai.',
   ),
   IntroStep(
-    title: 'Connect Instantly',
+    title: 'Aap ka Network hi aap ki Networth hai',
     description:
-        // ignore: lines_longer_than_80_chars
-        'Direct access to property owners and real estate agents. Schedule viewings and get responses in real-time.',
+        '9Roof aapko apni city ke 1000s of realtors se instantly connect karwa deta hai.',
   ),
   IntroStep(
-    title: 'Unlock Your 10x Growth',
+    title: 'Har client ke liye right property',
     description:
-        // ignore: lines_longer_than_80_chars
-        "List your properties and get connected with thousands of potential buyers and tenants. It's fast, easy, and free.",
+        '9Roof ke paas sabse bada property listing database hai. Aapko har client ke liye right property milti hai.',
+  ),
+  IntroStep(
+    title: 'Aapki 10x Growth unlocked',
+    description:
+        'AI ki help se \n better network + better properties = 10x growth in your business.',
   ),
 ];

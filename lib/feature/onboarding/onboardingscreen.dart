@@ -111,6 +111,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               3,
             );
           },
+          (next, previous) {
+            return buildInfoPage(
+              introSteps[3].title,
+              introSteps[3].description,
+              next,
+              previous!,
+              context,
+              4,
+            );
+          },
         ],
       ),
     );

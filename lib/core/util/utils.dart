@@ -17,11 +17,12 @@ Future<void> launchInWebViewOrVC(Uri url) async {
 }
 
 String? extractPhoneNumber(String text) {
+  final trimmedText = text.replaceAll(' ', '').replaceFirst('+91', '');
   // Regular expression to find a 10-digit number
   final RegExp regExp = RegExp(r'\b\d{10}\b');
 
   // Find the first match
-  final Match? match = regExp.firstMatch(text);
+  final Match? match = regExp.firstMatch(trimmedText);
 
   if (match != null) {
     final String contactNumber = match.group(0)!;
