@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "984079280576",
+    "project_id": "roof-58b29",
+    "storage_bucket": "roof-58b29.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984079280576:android:ab96d65aee442cdb2a0025",
+        "android_client_info": {
+          "package_name": "com.mahajanwellness.roofai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984079280576-26b7rmviq4sc0pmmtnm595qmcvlkkv3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahajanwellness.roofai",
+            "certificate_hash": "34b8b366095294b8fc8771a8580ae328c78b8d7e"
+          }
+        },
+        {
+          "client_id": "984079280576-5qnb77gio95c26nracc00odb8gv83muo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahajanwellness.roofai",
+            "certificate_hash": "88f2cadf2a4c35867ed3dcad6fc6354697231fd3"
+          }
+        },
+        {
+          "client_id": "984079280576-aab0o3upag3g3nloa97sgfqqkgjq2jv0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahajanwellness.roofai",
+            "certificate_hash": "d59a3c3ebd4044d76f220d71bd1e0c9354607692"
+          }
+        },
+        {
+          "client_id": "984079280576-t971e2hbokd3ninq2qh25i90l3c73ffd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZqlqPrB0hNFvUb9jmlivgEhYK90_wxPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984079280576-t971e2hbokd3ninq2qh25i90l3c73ffd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984079280576-8hnm5s62rv33u2o7u1uopeo75f98na15.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mahajanwellness.vibeup"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
