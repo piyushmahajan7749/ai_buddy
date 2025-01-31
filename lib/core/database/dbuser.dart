@@ -5,7 +5,7 @@ class DbServiceUser {
   DbServiceUser({required this.uid});
 
   final CollectionReference _userCollection =
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('userprofile');
 
   Future<bool> userPrefsExist() async {
     final docSnapshot = await _userCollection.doc(uid).get();

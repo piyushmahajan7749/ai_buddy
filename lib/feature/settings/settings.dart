@@ -295,7 +295,8 @@ class _PreferencesState extends ConsumerState<Preferences> {
                 return const SizedBox();
               }
               final name = snapshot.data?['name'] as String? ?? 'Unknown';
-              return Flexible(
+              return SizedBox(
+                width: 120,
                 child: Text(
                   name,
                   style: Theme.of(context).textTheme.headlineSmall,
