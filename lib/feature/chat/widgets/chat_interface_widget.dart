@@ -77,7 +77,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                       color: Theme.of(context)
                           .colorScheme
                           .secondary
-                          .withOpacity(0.1),
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
