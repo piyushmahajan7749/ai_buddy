@@ -78,7 +78,7 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                           .colorScheme
                           .secondary
                           .withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
                         width: 2,
@@ -91,12 +91,17 @@ class _ChatInterfaceWidgetState extends ConsumerState<ChatInterfaceWidget> {
                   if (isOwnerListing)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        'Owner Listing',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Center(
+                        child: Text(
+                          '**Owner Listing**',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                       ),
                     ),
                   Text(
