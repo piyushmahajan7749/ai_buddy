@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:ai_buddy/feature/voice_chat/chatutils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:just_audio/just_audio.dart';
 
 class VoiceChatPage extends StatefulWidget {
@@ -28,11 +31,13 @@ class _VoiceChatPageState extends State<VoiceChatPage>
   void _initializeChat() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _provider.history = List.from(_provider.history)
-        ..add(ChatMessage(
-          origin: MessageOrigin.llm,
-          text: "Hello! I'm your voice assistant. How can I help you today?",
-          attachments: [],
-        ));
+        ..add(
+          ChatMessage(
+            origin: MessageOrigin.llm,
+            text: 'Hello! aap kis type ki properties dhoond rahe hain?',
+            attachments: [],
+          ),
+        );
       setState(() {});
     });
   }
@@ -66,21 +71,56 @@ class _VoiceChatPageState extends State<VoiceChatPage>
         ],
       ),
       body: LlmChatView(
-        provider: _provider,
-        style: _getChatStyle(context),
-        messageSender: (
-          prompt, {
-          required Iterable<Attachment> attachments,
-        }) async* {
-          final response = _provider.sendMessageStream(
-            prompt,
-            attachments: attachments,
-          );
-          final text = await response.join();
-          await playTextToSpeech(text);
-          yield text;
-        },
-      ),
+          provider: _provider,
+          style: _getChatStyle(context),
+          messageSender: (prompt, {required attachments}) async* {
+            await for (final message in _provider.sendMessageStream(
+              prompt,
+              attachments: attachments,
+            )) {
+              debugPrint("Received message: $message");
+
+              // Check if the message is likely JSON (starts with '{')
+              if (message.trim().startsWith('{')) {
+                try {
+                  final decoded = json.decode(message);
+                  debugPrint("Decoded JSON: $decoded");
+
+                  if (decoded is Map<String, dynamic> &&
+                      decoded.containsKey('functionCall')) {
+                    // Extract function call details.
+                    final functionCallData = decoded['functionCall'];
+                    debugPrint("Extracted functionCallData: $functionCallData");
+
+                    // Create a FunctionCall object.
+                    final call = FunctionCall(
+                      functionCallData['name'] as String,
+                      Map<String, Object?>.from(
+                        functionCallData['args'] as Map<dynamic, dynamic>,
+                      ),
+                    );
+                    debugPrint("Created FunctionCall: $call");
+
+                    // Dispatch the function call.
+                    final functionResponse = dispatchFunctionCall(call);
+                    debugPrint(
+                        "Function response: ${functionResponse.response}");
+                    yield functionResponse.response.toString();
+                    continue;
+                  } else {
+                    debugPrint(
+                        "No functionCall key found in JSON. Processing as plain text.");
+                  }
+                } catch (e, stacktrace) {
+                  debugPrint("Error decoding JSON: $e");
+                  debugPrint("Stacktrace: $stacktrace");
+                }
+              }
+              // If not JSON or if JSON doesn't include functionCall, process as plain text.
+              await playTextToSpeech(message);
+              yield message;
+            }
+          }),
     );
   }
 
