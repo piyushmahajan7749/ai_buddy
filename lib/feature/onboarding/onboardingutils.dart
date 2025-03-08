@@ -82,7 +82,7 @@ SafeArea buildInfoPage(
                     ),
                   ),
                   buildOutlinedButton('Tap to continue', next, context),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
                 ],
               ),
             ],
