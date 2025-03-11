@@ -7,7 +7,7 @@ import 'package:just_audio/just_audio.dart';
 
 // API Keys
 const String EL_API_KEY = 'sk_817fe8b8b146ba0acf3a0ecbcc9f93d1f1bb5687b00ee4a3';
-const String GEMINI_API_KEY = "AIzaSyAxrZhU0GJrRb4wUrK0fxte-s5fmsZ_ibE";
+const String GEMINI_API_KEY = 'AIzaSyAxrZhU0GJrRb4wUrK0fxte-s5fmsZ_ibE';
 
 // Schema Definitions
 
@@ -32,7 +32,7 @@ Map<String, Object?> searchProperties(Map<String, Object?> args) {
       'price': price ?? 25000,
       'area': area ?? 1200,
       'requirement': requirement ?? 'Rent',
-      'subtype': propertySubtype ?? '2BHK Flat'
+      'subtype': propertySubtype ?? '2BHK Flat',
     },
     // ... up to 5 properties
   ];
@@ -50,9 +50,13 @@ final searchPropertiesFunction = FunctionDeclaration(
           Schema.string(description: 'Rent, Sale, Ratio Deal', nullable: true),
       'area': Schema.number(description: 'Area in square feet', nullable: true),
       'location': Schema.string(
-          description: 'Location mentioned (city or area)', nullable: true),
+        description: 'Location mentioned (city or area)',
+        nullable: true,
+      ),
       'price': Schema.number(
-          description: 'Budget for property in rupees', nullable: true),
+        description: 'Budget for property in rupees',
+        nullable: true,
+      ),
       'property_subtype': Schema.string(
         description: 'e.g. Office, Shop, 2BHK flat, 3BHK house, etc.',
         nullable: true,
@@ -109,11 +113,16 @@ const String welcomeMessage = 'Hi, kaise ho aap?';
 
 // Text to Speech Utility
 Future<void> playTextToSpeech(
-    String text, bool isMuted, AudioPlayer player) async {
-  if (isMuted) return;
+  String text,
+  bool isMuted,
+  AudioPlayer player,
+) async {
+  if (isMuted) {
+    return;
+  }
 
-  String voiceRachel = 'SGbOfpm28edC83pZ9iGb';
-  String url = 'https://api.elevenlabs.io/v1/text-to-speech/$voiceRachel';
+  const String voiceRachel = 'SGbOfpm28edC83pZ9iGb';
+  const String url = 'https://api.elevenlabs.io/v1/text-to-speech/$voiceRachel';
 
   final response = await http.post(
     Uri.parse(url),
@@ -123,23 +132,23 @@ Future<void> playTextToSpeech(
       'Content-Type': 'application/json',
     },
     body: json.encode({
-      "text": text,
-      "model_id": "eleven_flash_v2_5",
-      "voice_settings": {"stability": .45, "similarity_boost": .40}
+      'text': text,
+      'model_id': 'eleven_flash_v2_5',
+      'voice_settings': {'stability': .45, 'similarity_boost': .40},
     }),
   );
 
   if (response.statusCode == 200) {
     final bytes = response.bodyBytes;
     await player.setAudioSource(MyCustomSource(bytes));
-    player.play();
+    await player.play();
   }
 }
 
 // Custom Audio Source
 class MyCustomSource extends StreamAudioSource {
-  final List<int> bytes;
   MyCustomSource(this.bytes);
+  final List<int> bytes;
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {

@@ -38,7 +38,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       animationCurve: Curves.easeIn,
       context: context,
       isDismissible: false,
-      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+      barrierColor:
+          Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),

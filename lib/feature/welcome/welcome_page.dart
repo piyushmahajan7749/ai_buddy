@@ -33,7 +33,7 @@ class WelcomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.25),
+                          color: Colors.white.withValues(alpha: 0.25),
                           offset: const Offset(4, 4),
                           blurRadius: 8,
                         ),

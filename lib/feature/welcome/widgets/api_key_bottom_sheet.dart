@@ -40,7 +40,8 @@ class _APIKeyBottomSheetState extends State<APIKeyBottomSheet> {
                 height: 4,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: context.colorScheme.surfaceBright.withOpacity(0.9),
+                  color:
+                      context.colorScheme.surfaceBright.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 margin: const EdgeInsets.only(bottom: 8),

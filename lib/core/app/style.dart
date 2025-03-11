@@ -23,18 +23,18 @@ final _darkColorScheme = ColorScheme(
   // Primary
   primary: _primary,
   onPrimary: _lightest,
-  primaryContainer: _primary.withOpacity(0.2),
+  primaryContainer: _primary.withValues(alpha: 0.2),
   onPrimaryContainer: _lightest,
   // Secondary
   secondary: _secondary,
   onSecondary: _lightest,
-  secondaryContainer: _secondary.withOpacity(0.2),
+  secondaryContainer: _secondary.withValues(alpha: 0.2),
   onSecondaryContainer: _primaryBlue,
 
   // Tertiary
   tertiary: _tertiary,
   onTertiary: _lightest,
-  tertiaryContainer: _tertiary.withOpacity(0.2),
+  tertiaryContainer: _tertiary.withValues(alpha: 0.2),
   onTertiaryContainer: _lightest,
 
   // Error
@@ -102,7 +102,7 @@ ThemeData _getTheme() {
     ),
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: _lightest,
-      selectionColor: _lightest.withOpacity(0.5),
+      selectionColor: _lightest.withValues(alpha: 0.5),
       selectionHandleColor: _lightest,
     ),
     popupMenuTheme: PopupMenuThemeData(

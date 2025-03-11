@@ -203,7 +203,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onPrimary
-                                .withOpacity(0.95),
+                                .withValues(alpha: 0.95),
                           ),
                     ),
                     const SizedBox(width: 5),
@@ -239,7 +239,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onPrimary
-                                        .withOpacity(0.95),
+                                        .withValues(alpha: 0.95),
                                   ),
                         ),
                         TextButton(
@@ -254,7 +254,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .surfaceBright
-                                          .withOpacity(0.8),
+                                          .withValues(alpha: 0.8),
                                     ),
                           ),
                         ),
@@ -281,7 +281,7 @@ class _ChatHistoryPageState extends ConsumerState<ChatHistoryPage> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onPrimary
-                                        .withOpacity(0.95),
+                                        .withValues(alpha: 0.95),
                                   ),
                             ),
                             const Icon(CupertinoIcons.cube_box),

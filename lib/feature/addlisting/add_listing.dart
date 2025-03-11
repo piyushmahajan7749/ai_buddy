@@ -131,7 +131,7 @@ class AddListingPageState extends State<AddListingPage>
         ),
         if (_isLoading)
           ColoredBox(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             child: const Center(
               child: CircularProgressIndicator(),
             ),

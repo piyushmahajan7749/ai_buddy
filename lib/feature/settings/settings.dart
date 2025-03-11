@@ -375,21 +375,26 @@ class _PreferencesState extends ConsumerState<Preferences> {
             'Location',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w500,
-                  color:
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onPrimary
+                      .withValues(alpha: 0.4),
                 ),
           ),
           trailing: Text(
             'Indore',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   fontWeight: FontWeight.w500,
-                  color:
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onPrimary
+                      .withValues(alpha: 0.4),
                 ),
           ),
           leading: Icon(
             CupertinoIcons.location,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+            color:
+                Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.4),
           ),
           onPressed: (context) async {},
         ),

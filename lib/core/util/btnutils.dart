@@ -233,7 +233,8 @@ Widget buildSharebutton(BuildContext context) {
         animationCurve: Curves.easeIn,
         context: context,
         isDismissible: false,
-        barrierColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+        barrierColor:
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
@@ -260,7 +261,8 @@ Future<Widget> buildSubscriptionbutton(BuildContext context) async {
         animationCurve: Curves.easeIn,
         context: context,
         isDismissible: false,
-        barrierColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+        barrierColor:
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),

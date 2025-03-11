@@ -43,7 +43,9 @@ class _VoiceChatPageState extends State<VoiceChatPage>
   }
 
   Future<void> playTextToSpeech(String text) async {
-    if (_isMuted) return;
+    if (_isMuted) {
+      return;
+    }
     // Implement text-to-speech functionality here
   }
 
@@ -64,63 +66,68 @@ class _VoiceChatPageState extends State<VoiceChatPage>
             onPressed: () {
               setState(() {
                 _isMuted = !_isMuted;
-                if (_isMuted) player.stop();
+                if (_isMuted) {
+                  player.stop();
+                }
               });
             },
           ),
         ],
       ),
       body: LlmChatView(
-          provider: _provider,
-          style: _getChatStyle(context),
-          messageSender: (prompt, {required attachments}) async* {
-            await for (final message in _provider.sendMessageStream(
-              prompt,
-              attachments: attachments,
-            )) {
-              debugPrint("Received message: $message");
+        provider: _provider,
+        style: _getChatStyle(context),
+        messageSender: (prompt, {required attachments}) async* {
+          await for (final message in _provider.sendMessageStream(
+            prompt,
+            attachments: attachments,
+          )) {
+            debugPrint('Received message: $message');
 
-              // Check if the message is likely JSON (starts with '{')
-              if (message.trim().startsWith('{')) {
-                try {
-                  final decoded = json.decode(message);
-                  debugPrint("Decoded JSON: $decoded");
+            // Check if the message is likely JSON (starts with '{')
+            if (message.trim().startsWith('{')) {
+              try {
+                final decoded = json.decode(message);
+                debugPrint('Decoded JSON: $decoded');
 
-                  if (decoded is Map<String, dynamic> &&
-                      decoded.containsKey('functionCall')) {
-                    // Extract function call details.
-                    final functionCallData = decoded['functionCall'];
-                    debugPrint("Extracted functionCallData: $functionCallData");
+                if (decoded is Map<String, dynamic> &&
+                    decoded.containsKey('functionCall')) {
+                  // Extract function call details.
+                  final functionCallData = decoded['functionCall'];
+                  debugPrint('Extracted functionCallData: $functionCallData');
 
-                    // Create a FunctionCall object.
-                    final call = FunctionCall(
-                      functionCallData['name'] as String,
-                      Map<String, Object?>.from(
-                        functionCallData['args'] as Map<dynamic, dynamic>,
-                      ),
-                    );
-                    debugPrint("Created FunctionCall: $call");
+                  // Create a FunctionCall object.
+                  final call = FunctionCall(
+                    functionCallData['name'] as String,
+                    Map<String, Object?>.from(
+                      functionCallData['args'] as Map<dynamic, dynamic>,
+                    ),
+                  );
+                  debugPrint('Created FunctionCall: $call');
 
-                    // Dispatch the function call.
-                    final functionResponse = dispatchFunctionCall(call);
-                    debugPrint(
-                        "Function response: ${functionResponse.response}");
-                    yield functionResponse.response.toString();
-                    continue;
-                  } else {
-                    debugPrint(
-                        "No functionCall key found in JSON. Processing as plain text.");
-                  }
-                } catch (e, stacktrace) {
-                  debugPrint("Error decoding JSON: $e");
-                  debugPrint("Stacktrace: $stacktrace");
+                  // Dispatch the function call.
+                  final functionResponse = dispatchFunctionCall(call);
+                  debugPrint(
+                    'Function response: ${functionResponse.response}',
+                  );
+                  yield functionResponse.response.toString();
+                  continue;
+                } else {
+                  debugPrint(
+                    'No functionCall key found in JSON. Processing as text.',
+                  );
                 }
+              } catch (e, stacktrace) {
+                debugPrint('Error decoding JSON: $e');
+                debugPrint('Stacktrace: $stacktrace');
               }
-              // If not JSON or if JSON doesn't include functionCall, process as plain text.
-              await playTextToSpeech(message);
-              yield message;
             }
-          }),
+            // If not JSON or if JSON doesn't include functionCall
+            await playTextToSpeech(message);
+            yield message;
+          }
+        },
+      ),
     );
   }
 
