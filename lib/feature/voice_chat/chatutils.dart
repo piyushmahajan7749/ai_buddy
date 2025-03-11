@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 
 // API Keys
+// ignore: constant_identifier_names
 const String EL_API_KEY = 'sk_817fe8b8b146ba0acf3a0ecbcc9f93d1f1bb5687b00ee4a3';
+// ignore: constant_identifier_names
 const String GEMINI_API_KEY = 'AIzaSyAxrZhU0GJrRb4wUrK0fxte-s5fmsZ_ibE';
 
 // Schema Definitions
@@ -114,6 +116,7 @@ const String welcomeMessage = 'Hi, kaise ho aap?';
 // Text to Speech Utility
 Future<void> playTextToSpeech(
   String text,
+  // ignore: avoid_positional_boolean_parameters
   bool isMuted,
   AudioPlayer player,
 ) async {
